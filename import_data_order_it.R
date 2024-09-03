@@ -252,4 +252,4 @@ df_for_all_data_1 <- df_for_all_data_1 %>% select(
    
 
 
-write.csv(df_for_all_data_1 , "X:/Riskwi$e/Bute/2_Sims_post_Sep2024/APSIM_Classic_output_long.csv", row.names = FALSE )
+write.csv(df_for_all_data_1 , "X:/Riskwi$e/Bute/2_Sims_post_Sep2024/To_compare_etc/APSIM_Classic_Rotations.csv", row.names = FALSE )
