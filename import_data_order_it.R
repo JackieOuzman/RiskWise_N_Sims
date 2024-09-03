@@ -143,70 +143,113 @@ rm(list=ls()[ls()!= "df_for_all_data"])
 
 str(df_for_all_data)
 names(df_for_all_data)
-df_for_all_data <- df_for_all_data %>% mutate_at(c("sow_NO3",
-                                                   "sow_NH4",
-                                                   "sow_sw",
-                                                   "Wheat_biomass",
-                                                   "Barley_biomass",
-                                                   "Wheat_yield",
-                                                   "Barley_yield",
-                                                   "harv_NO3",
-                                                   "harv_NH4",
-                                                   "harv_sw",
-                                                   "InCropFert",
-                                                   "startSim_sw",
-                                                   "startSim_NO3",
-                                                   "startSim_NH4",
-                                                   "InCropRain"), as.numeric)
 
-
-#Add year clm
-
-df_for_all_data <- df_for_all_data %>% 
-  separate(dd_mm_yyyy, into = c("dd", "mm", "Year"), remove=FALSE) %>% 
-  select(-dd, -mm)%>% 
-  mutate(
-    Event =case_when(
-      dd_mm_yyyy == "03_06_2022"~ "sow",
-      dd_mm_yyyy == "21_11_2022" ~ "harvest",
-      dd_mm_yyyy == "31_12_2022" ~ "end_year",
-      dd_mm_yyyy == "16_05_2023"~ "sow",
-      dd_mm_yyyy == "16_10_2023" ~ "harvest",
-      dd_mm_yyyy == "31_12_2023" ~ "end_year"))
-
-
-
+df_for_all_data_1 <- df_for_all_data %>%
+  separate(dd_mm_yyyy,
+           into = c("dd", "mm", "Year"),
+           remove = FALSE) %>%
+  select(
+    dd_mm_yyyy,
+    Year,
+    soil_water_start =   startSim_sw,
+    soil_water_sowing =  sow_sw,
+    soil_water_harvest = harv_sw,
     
+    soil_NO3_start =   startSim_NO3,
+    soil_N03_sowing =  sow_NO3,
+    soil_NO3_harvest = harv_NO3,
+    
+    soil_NH4_start =   startSim_NH4,
+    soil_NH4_sowing =  sow_NH4,
+    soil_NH4_harvest = harv_NH4,
+    
+    Wheat_biomass,
+    Barley_biomass,
+    
+    Wheat_yield,
+    Barley_yield,
+    
+    InCropFert,
+    InCropRain
+  )
 
-df_for_all_data_long <- df_for_all_data %>% 
-  pivot_longer(
-    cols = sow_NO3:InCropRain,
-    names_to = "variable",
-    values_to = "value"
-  )
-df_for_all_data_long
 
-df_for_all_data_long <- df_for_all_data_long %>% 
-  mutate(variable= case_when(
-    variable == "Barley_biomass"~ "biomass",
-    variable == "Wheat_biomass"~ "biomass",
-    variable == "Barley_yield"~ "yield",
-    variable == "Wheat_yield"~ "yield",
-         .default = variable
+str(df_for_all_data_1)
+
+## keep only one row with the harvest dates this is manual
+harvest_dates <- c("31_12_2022", "16_10_2023")
+
+
+### filter based on harvest dates
+
+
+df_for_all_data_1 <- df_for_all_data_1 %>% 
+  filter(dd_mm_yyyy %in%  harvest_dates)
+  
+str(df_for_all_data_1)
+df_for_all_data_1 <- df_for_all_data_1 %>% mutate_at(c(
+  "Year",
+    "soil_water_start",
+    "soil_water_sowing",
+    "soil_water_harvest",
+    
+    "soil_NO3_start",
+    "soil_N03_sowing",
+    "soil_NO3_harvest",
+    
+    "soil_NH4_start",
+    "soil_NH4_sowing",
+    "soil_NH4_harvest",
+    
+    "Wheat_biomass",
+    "Barley_biomass",
+    
+    "Wheat_yield",
+    "Barley_yield",
+    
+    "InCropFert"), as.numeric)
+
+
+#Add some clm
+
+
+df_for_all_data_1 <- df_for_all_data_1 %>% mutate(
+  Source = "APISM_Classic_Rotation",
+  Treatment = "0N_applied",
+  Crop = case_when(
+    Year  == 2022 ~ "Wheat",
+    Year  == 2023 ~ "Barley"),
+  Cultivar = case_when(
+    Year  == 2022 ~ "mace",
+    Year  == 2023 ~ "commander"),
+  Biomass = case_when(
+    Year  == 2022 ~ Wheat_biomass,
+    Year  == 2023 ~ Barley_biomass),
+  Yield = case_when(
+    Year  == 2022 ~ Wheat_yield/1000,
+    Year  == 2023 ~ Barley_yield/1000)
   )
-  )
+
+# drop some clms
+str(df_for_all_data_1)
+names(df_for_all_data_1)
  
+df_for_all_data_1 <- df_for_all_data_1 %>% select(
+  "Year",
+  "Source",
+  "Treatment",
+  "InCropFert" ,
+  "Crop",
+  "Cultivar",
+  
+  "soil_water_start" ,  "soil_water_sowing",    "soil_water_harvest",
+  "soil_NO3_start" ,    "soil_N03_sowing",      "soil_NO3_harvest", 
+  "soil_NH4_start",     "soil_NH4_sowing",      "soil_NH4_harvest" ,
+  "Biomass",            "Yield",  "InCropRain"
+  
+)
 
-## filter out rows that I don't need   Its very messy but that will do!     
-df_for_all_data_long <- df_for_all_data_long %>% 
-  filter(!is.na(value)) %>% 
-  filter(value!=0)
+   
 
 
-df_for_all_data_long <- df_for_all_data_long %>% 
-  mutate(treatment = "Control",
-         for_join = paste0(Year ,"_", treatment))
-
-df_for_all_data_long
-
-write.csv(df_for_all_data_long , "X:/Riskwi$e/Bute/2_Sims_post_Sep2024/APSIM_Classic_output_long.csv", row.names = FALSE )
+write.csv(df_for_all_data_1 , "X:/Riskwi$e/Bute/2_Sims_post_Sep2024/APSIM_Classic_output_long.csv", row.names = FALSE )
