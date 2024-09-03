@@ -38,29 +38,29 @@ Bute_selection  <- Bute_trial_setup_outputs %>%
          # 
          # Biomass = "Not_provided",
          Yield = `Yield (t/ha)` ,
-        #InCropRain= "Not_provided"
+         #InCropRain= "Not_provided"
   )
 
 Bute_selection  <- Bute_selection %>% 
   mutate(
-        Source = "Trial" ,
-         
-         
-         soil_water_start = "0.396",
-         soil_water_sowing = "Not_provided",
-         soil_water_harvest = "Not_provided",
-         
-         soil_NO3_start = "116",
-         
-         soil_NO3_harvest = "Not_provided",
-         
-          soil_NH4_start= "30",
-          soil_NH4_sowing= "Not_provided",
-          soil_NH4_harvest= "Not_provided",
-          
-          Biomass = "Not_provided",
-         
-         InCropRain= "Not_provided"
+    Source = "Trial" ,
+    
+    
+    soil_water_start = "0.396",
+    soil_water_sowing = "Not_provided",
+    soil_water_harvest = "Not_provided",
+    
+    soil_NO3_start = "116",
+    
+    soil_NO3_harvest = "Not_provided",
+    
+    soil_NH4_start= "30",
+    soil_NH4_sowing= "Not_provided",
+    soil_NH4_harvest= "Not_provided",
+    
+    Biomass = "Not_provided",
+    
+    InCropRain= "Not_provided"
   )
 
 
