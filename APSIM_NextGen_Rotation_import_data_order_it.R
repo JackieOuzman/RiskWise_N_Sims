@@ -40,7 +40,7 @@ soil_NO3_sowing_value = APSIM_NextGen %>%
 soil_NH4_start_value = APSIM_NextGen %>% 
   filter(StartYear  == 2022 & CurrentState == "S_fallow_1" & SimulationName == "Bute_Nil") %>% 
   select(NH4Start)
-soil_NO3_sowing_value = APSIM_NextGen %>% 
+soil_NH4_sowing_value = APSIM_NextGen %>% 
   filter(StartYear  == 2022 & CurrentState == "wheat_1" & SimulationName == "Bute_Nil") %>% 
   select(NH4Start)
 
@@ -48,9 +48,9 @@ soil_NO3_sowing_value = APSIM_NextGen %>%
 soil_water_start <- soil_water_start_value$SwStart 
 soil_water_sowing <- soil_water_sowing_value$SwStart
 soil_NO3_start<- soil_NO3_start_value$NO3Start
-soil_NO3_sowing<- soil_NO3_sowing_value$NH4Start
+soil_NO3_sowing<- soil_NO3_sowing_value$NO3Start
 soil_NH4_start<- soil_NH4_start_value$NH4Start
-soil_NO3_sowing<- soil_NO3_sowing_value$NH4Start
+soil_NH4_sowing<- soil_NH4_sowing_value$NH4Start
 
 
 APSIM_NextGen  <- APSIM_NextGen %>% 
@@ -92,7 +92,7 @@ APSIM_NextGen <- APSIM_NextGen %>% mutate(
   soil_NO3_start = soil_NO3_start,
   soil_NO3_sowing = soil_NO3_sowing,
   soil_NH4_start = soil_NH4_start,
-  soil_NO3_sowing = soil_NO3_sowing,
+  soil_NH4_sowing = soil_NH4_sowing,
   
   Crop = case_when(
     Year  == 2022 & Crop_temp == "wheat_1" ~ "Wheat",
@@ -125,7 +125,7 @@ APSIM_NextGen  <- APSIM_NextGen %>%
          soil_NO3_harvest,
          
          soil_NH4_start,
-         soil_NO3_sowing,
+         soil_NH4_sowing,
          soil_NH4_harvest,
          
          Biomass ,
@@ -136,4 +136,8 @@ str(APSIM_NextGen)
 
 
 #remove the fallow rows
-APSIM_NextGen  <- APSIM_NextGen %>% 
+APSIM_NextGen  <- APSIM_NextGen %>% filter(!is.na(Crop ))
+
+
+write.csv(APSIM_NextGen ,
+          "X:/Riskwi$e/Bute/2_Sims_post_Sep2024/To_compare_etc/APSIM_NextGen.csv", row.names = FALSE )
