@@ -176,6 +176,13 @@ df_for_all_data_1 <- df_for_all_data %>%
 
 str(df_for_all_data_1)
 
+# add in 'Soil mineral N' clm NO3+NH4
+
+df_for_all_data_1 <- df_for_all_data_1 %>% 
+  mutate(Soil_mineral_N_sowing = as.double(soil_N03_sowing) + as.double(soil_NH4_sowing))
+
+
+
 ## keep only one row with the harvest dates this is manual
 harvest_dates <- c("31_12_2022", "16_10_2023")
 
@@ -200,6 +207,8 @@ df_for_all_data_1 <- df_for_all_data_1 %>% mutate_at(c(
     "soil_NH4_start",
     "soil_NH4_sowing",
     "soil_NH4_harvest",
+  
+     "Soil_mineral_N_sowing",
     
     "Wheat_biomass",
     "Barley_biomass",
@@ -245,6 +254,7 @@ df_for_all_data_1 <- df_for_all_data_1 %>% select(
   "soil_water_start" ,  "soil_water_sowing",    "soil_water_harvest",
   "soil_NO3_start" ,    "soil_N03_sowing",      "soil_NO3_harvest", 
   "soil_NH4_start",     "soil_NH4_sowing",      "soil_NH4_harvest" ,
+  "Soil_mineral_N_sowing",
   "Biomass",            "Yield",  "InCropRain"
   
 )

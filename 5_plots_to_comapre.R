@@ -25,64 +25,16 @@ list_sim_out_file
 
 # SIM and Trial data --------------------------------------------------------------
 
-Calssic <- read_csv(paste0(path, "APSIM_Classic_Rotations.csv"))
-NextG <- read_csv(paste0(path, "APSIM_NextGen.csv"))
-Trial <- read_csv(paste0(path, "APSIM_Trial_.csv"))
+merged_files <- read_csv(paste0(path, "merge_sim_trial.csv"))
 
-# Check it matches --------------------------------------------------------------
-
-str(Calssic)
-names(Calssic)
-names(NextG) #missing NH4 at sowing
-names(Trial)
 
 
 
 # Make sure treatments are matching ---------------------------------------
 
-Trial <- Trial %>% filter(Treatment == "Control")
+#Trial <- Trial %>% filter(Treatment == "Control")
 
 
-
-
-# Join the 2 data set together --------------------------------------------
-
-#format so they are all the same data type
-
-
-Trial <- Trial %>%
-  mutate(across(-c(Source, Treatment, Crop, Cultivar ), as.numeric))
-NextG <- NextG %>%
-  mutate(across(-c(Source, Treatment, Crop, Cultivar ), as.numeric))
-Calssic <- Calssic %>%
-  mutate(across(-c(Source, Treatment, Crop, Cultivar ), as.numeric))
-
-
-# Year              
-# #Source     #chr      
-# #Treatment  #chr      
-# InCropFert        
-# #Crop       #chr      
-# #Cultivar   #chr     
-# soil_water_start  
-# soil_water_sowing 
-# soil_water_harvest
-# soil_NO3_start    
-# soil_N03_sowing   
-# soil_NO3_harvest  
-# soil_NH4_start    
-# soil_NH4_sowing   
-# soil_NH4_harvest  
-# Biomass           
-# Yield             
-# InCropRain        
-
-
-
-merge_sim_trial <- bind_rows(Calssic, NextG, Trial)
-
-write.csv(merge_sim_trial , 
-          "X:/Riskwi$e/Bute/2_Sims_post_Sep2024/To_compare_etc/merge_sim_trial.csv", row.names = FALSE )
 
 
 
@@ -101,15 +53,39 @@ Classic_Location <- "1_Classic/Bute_Rotation/4_Bute_rotation.apsim"
 #6. response curves
 
 
+str(merged_files)
 
-merge_sim_trial %>% 
+#4. Soil N (we don't have this at site, only initial - I think check)
+Plot_4 <- merged_files %>% 
+  ggplot(aes(x = as.factor(Year), y = soil_N03_sowing , colour =Source ))+
+  geom_point(size = 3)+
+  scale_color_manual(values=c("blue", "purple", "black"))+
+  theme_bw()+
+  labs(title = "NO3 at sowing. Bute Sims vs trial data",
+       subtitle = "No modifcation to organic matter",
+       colour = "",
+       x= "Year",
+       y = "NO3 kg/ha",
+       caption = paste0("Location of Sims: ", Location_of_Sims, '\n',NextG_location, '\n',Classic_Location))+
+  theme(plot.caption = element_text(hjust = 0))
+
+
+
+#5. yield 
+Plot_5 <- merged_files %>% 
   ggplot(aes(x = as.factor(Year), y = Yield , colour =Source ))+
   geom_point(size = 3)+
   scale_color_manual(values=c("blue", "purple", "black"))+
   theme_bw()+
-  labs(title = "Bute Sims vs trial data",
+  labs(title = "Yield. Bute Sims vs trial data",
+       subtitle = "No modifcation to organic matter",
        colour = "",
        x= "Year",
        y = "Yield t/ha",
        caption = paste0("Location of Sims: ", Location_of_Sims, '\n',NextG_location, '\n',Classic_Location))+
   theme(plot.caption = element_text(hjust = 0))
+
+
+
+ggsave(plot = Plot_4,filename =  paste0(path,"Bute_plot4NO3.png"), width = 20, height = 12, units = "cm")
+ggsave(plot = Plot_5, filename =  paste0(path,"Bute_plot5Yld.png"), width = 20, height = 12, units = "cm")

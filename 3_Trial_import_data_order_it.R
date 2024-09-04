@@ -29,12 +29,14 @@ Bute_selection  <- Bute_trial_setup_outputs %>%
          #soil_water_harvest = "Not_provided",
          
          #soil_NO3_start = "116",
-         soil_N03_sowing = `Soil mineral N (kg/ha) - prior to sowing`, #umm is this NO3 + NH4?
+         #soil_N03_sowing = "Not_provided"
          #soil_NO3_harvest = "Not_provided",
          
          # soil_NH4_start= "30",
          # soil_NH4_sowing= "Not_provided",
          # soil_NH4_harvest= "Not_provided",
+         
+         Soil_mineral_N_sowing =`Soil mineral N (kg/ha) - prior to sowing`, #umm is this NO3 + NH4?
          # 
          # Biomass = "Not_provided",
          Yield = `Yield (t/ha)` ,
@@ -51,6 +53,7 @@ Bute_selection  <- Bute_selection %>%
     soil_water_harvest = "Not_provided",
     
     soil_NO3_start = "116",
+    soil_N03_sowing = "Not_provided",
     
     soil_NO3_harvest = "Not_provided",
     
@@ -86,6 +89,7 @@ Bute_selection  <- Bute_selection %>%
           soil_NH4_start,
           soil_NH4_sowing,
           soil_NH4_harvest,
+         Soil_mineral_N_sowing,
           
           Biomass ,
          Yield  ,

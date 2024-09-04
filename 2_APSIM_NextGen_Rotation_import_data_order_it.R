@@ -83,6 +83,7 @@ APSIM_NextGen  <- APSIM_NextGen %>%
 
 APSIM_NextGen <- APSIM_NextGen %>%  filter(Treatment == "Bute_Nil")
 
+# add some extra clms
 APSIM_NextGen <- APSIM_NextGen %>% mutate(
   Source = "APSIM_NextG",
   #Treatment = "0N_applied",
@@ -101,7 +102,8 @@ APSIM_NextGen <- APSIM_NextGen %>% mutate(
     Year  == 2022 ~ "mace",
     Year  == 2023 ~ "commander"))
 
-
+APSIM_NextGen <- APSIM_NextGen %>% mutate(
+Soil_mineral_N_sowing = as.double(soil_NO3_sowing) + as.double(soil_NH4_sowing))
 
 str(APSIM_NextGen)
  
@@ -127,6 +129,8 @@ APSIM_NextGen  <- APSIM_NextGen %>%
          soil_NH4_start,
          soil_NH4_sowing,
          soil_NH4_harvest,
+         
+         Soil_mineral_N_sowing,
          
          Biomass ,
          Yield  ,
