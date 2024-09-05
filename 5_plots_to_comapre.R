@@ -48,24 +48,24 @@ Classic_Location <- "1_Classic/Bute_Rotation/4_Bute_rotation.apsim"
 #1. Phenology (we don't have this site)
 #2. Biomass (we don't have this at site)
 #3. Soilwater (we don't have this at site, only initial)
-#4. Soil N (we don't have this at site, only initial - I think check)
-#5. yield ()
+#4. Soil NO3+NH4 (Yes) - Soil_mineral_N_sowing
+#5. yield (Yes)
 #6. response curves
 
 
 str(merged_files)
 
-#4. Soil N (we don't have this at site, only initial - I think check)
+#4. Soil_mineral_N_sowing 
 Plot_4 <- merged_files %>% 
-  ggplot(aes(x = as.factor(Year), y = soil_N03_sowing , colour =Source ))+
+  ggplot(aes(x = as.factor(Year), y = Soil_mineral_N_sowing , colour =Source ))+
   geom_point(size = 3)+
   scale_color_manual(values=c("blue", "purple", "black"))+
   theme_bw()+
-  labs(title = "NO3 at sowing. Bute Sims vs trial data",
+  labs(title = "Soil mineral N at sowing. Bute Sims vs trial data",
        subtitle = "No modifcation to organic matter",
        colour = "",
        x= "Year",
-       y = "NO3 kg/ha",
+       y = "NO3 + NH4 kg/ha",
        caption = paste0("Location of Sims: ", Location_of_Sims, '\n',NextG_location, '\n',Classic_Location))+
   theme(plot.caption = element_text(hjust = 0))
 
@@ -87,5 +87,5 @@ Plot_5 <- merged_files %>%
 
 
 
-ggsave(plot = Plot_4,filename =  paste0(path,"Bute_plot4NO3.png"), width = 20, height = 12, units = "cm")
+ggsave(plot = Plot_4,filename =  paste0(path,"Soil mineral N at sowing.png"), width = 20, height = 12, units = "cm")
 ggsave(plot = Plot_5, filename =  paste0(path,"Bute_plot5Yld.png"), width = 20, height = 12, units = "cm")
