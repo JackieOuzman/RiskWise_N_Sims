@@ -145,3 +145,7 @@ APSIM_NextGen  <- APSIM_NextGen %>% filter(!is.na(Crop ))
 
 write.csv(APSIM_NextGen ,
           "X:/Riskwi$e/Bute/2_Sims_post_Sep2024/To_compare_etc/APSIM_NextGen.csv", row.names = FALSE )
+
+
+################################################################################
+
