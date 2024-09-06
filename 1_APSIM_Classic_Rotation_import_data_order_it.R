@@ -311,33 +311,33 @@ df_for_all_data <- data.frame(
   Rotation_Bute_N_Bank_Conservative.Wheat.n_stress_photo	= double(),
   Rotation_Bute_N_Bank_Conservative.barley.n_stress_photo	= double(),
   
-  # Rotation_Bute_N_Bank_Conservative.Wheat.sw_stress_photo	= double(),
-  # Rotation_Bute_N_Bank_Conservative.barley.sw_stress_photo	= double(),
-  # Rotation_Bute_N_Bank_Conservative.Wheat.n_stress_photo	= double(),
-  # Rotation_Bute_N_Bank_Conservative.barley.n_stress_photo= double(),
+  Rotation_Bute_N_Bank_Conservative.Wheat.zadok_stage	= double(),
+  Rotation_Bute_N_Bank_Conservative.barley.zadok_stage	= double(),
+  Rotation_Bute_N_Bank_Conservative.Wheat.dlt_dm	= double(),
+  Rotation_Bute_N_Bank_Conservative.barley.dlt_dm = double(),
   
   APSIM_Version 		= character(),
   title		= character()
 )
 
 
-### set the heading names for the data you want to import
+### set the heading names for the data you want to import #The order is important
 ### heading names for file 2,3,5
 heading <- c("dd_mm_yyyy",
              "SW",
-             "NO3",
              "Wheat_biomass",
              "Barley_biomass",
-             "Wheat_yield",
-             "Barley_yield",
-             
+             "NO3",
              "Wheat_sw_stress_photo",
              "barley_sw_stress_photo",
-             
              "Wheat_n_stress_photo",
              "barley_n_stress_photo",
-             
-             
+             "Wheat.zadok_stage",
+             "barley.zadok_stage",
+             "Wheat_dlt_dm",
+             "barley_dlt_dm",
+             "Wheat_yield",
+             "Barley_yield",
              "APSIM_Version ",
              "title")
 
@@ -373,7 +373,7 @@ for (list_sim_out_file in list_sim_out_file){
   ### formatting the above information
   APSIM_version <- version[1,1]
   APSIM_version<-gsub("ApsimVersion = ","",as.character(APSIM_version))
-  
+  APSIM_version
   
   title = title_a[1,1]
   title_a<-gsub("Title = ","",as.character(title))
@@ -382,13 +382,13 @@ for (list_sim_out_file in list_sim_out_file){
   title_b
   title_c<-gsub("Bute Rotation_Bute_","",as.character(title_b)) #this is the leading sim name - will need to change for different sites
   title_c
-  title <- trimws(title_c) #trim the white space
-  title
+  title_d <- trimws(title_c) #trim the white space
+  title_d
   
   ### get sim settings into the df
   df <- df %>% 
     mutate( APSIM_Version = APSIM_version,
-            title = title
+            title = title_d
     )
   names(df)
   
@@ -437,6 +437,11 @@ df_for_all_data_1 <- df_for_all_data %>%
     Wheat_n_stress_photo,
     barley_n_stress_photo,
     
+    Wheat.zadok_stage,
+    barley.zadok_stage,
+    Wheat_dlt_dm,
+    barley_dlt_dm,
+    
     title
   )
 
@@ -468,7 +473,15 @@ df_for_all_data_1 <- df_for_all_data_1 %>% mutate(
     Year  == 2023 ~ barley_sw_stress_photo),
   n_stress_photo= case_when(
     Year  == 2022 ~ Wheat_n_stress_photo,
-    Year  == 2023 ~ barley_n_stress_photo)
+    Year  == 2023 ~ barley_n_stress_photo),
+  zadok_stage = case_when(
+    Year  == 2022 ~ Wheat.zadok_stage,
+    Year  == 2023 ~ barley.zadok_stage),
+  dlt_dm = case_when(
+    Year  == 2022 ~ Wheat_dlt_dm,
+    Year  == 2023 ~ barley_dlt_dm ),
+  HarvestIndex = (Yield*1000)/Biomass
+  
 )
 
 # drop some clms
@@ -492,7 +505,8 @@ df_for_all_data_1 <- df_for_all_data_1 %>% select(
   # "soil_NH4_start",     "soil_NH4_sowing",      "soil_NH4_harvest" ,
   # "Soil_mineral_N_sowing",
   "Biomass",            "Yield",  
-  "sw_stress_photo" , "n_stress_photo"
+  "sw_stress_photo" , "n_stress_photo",
+  "zadok_stage" , "dlt_dm", "HarvestIndex"
   
 )
 

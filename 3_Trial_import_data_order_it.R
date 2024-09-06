@@ -41,6 +41,11 @@ Bute_selection  <- Bute_trial_setup_outputs %>%
          # Biomass = "Not_provided",
          Yield = `Yield (t/ha)` ,
          #InCropRain= "Not_provided"
+         
+         DM_Anthesis = 'Dry matter at anthesis (t/ha)',
+         Biomass ='Dry matter at harvest (t/ha)', # is this the same?
+         Harvest_Index ='Harvest index' 
+         
   )
 
 Bute_selection  <- Bute_selection %>% 
@@ -61,7 +66,7 @@ Bute_selection  <- Bute_selection %>%
     soil_NH4_sowing= "Not_provided",
     soil_NH4_harvest= "Not_provided",
     
-    Biomass = "Not_provided",
+    
     
     InCropRain= "Not_provided"
   )
@@ -93,7 +98,10 @@ Bute_selection  <- Bute_selection %>%
           
           Biomass ,
          Yield  ,
-         InCropRain
+         InCropRain,
+         DM_Anthesis ,
+         DM_Harvest,
+         Harvest_Index 
   )
 
 

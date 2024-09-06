@@ -14,7 +14,7 @@ library(readxl)
 
 
 
-APSIM_NextGen <- read_excel("X:/Riskwi$e/Bute/2_Sims_post_Sep2024/2_NextGen/Bute_5_Rotation_N_bank.xlsx", 
+APSIM_NextGen <- read_excel("X:/Riskwi$e/Bute/2_Sims_post_Sep2024/2_NextGen/Bute_5_Rotation_N_bank_v3.xlsx", 
                                        sheet = "TransitionReport")
 str(APSIM_NextGen)
 
