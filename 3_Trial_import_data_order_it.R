@@ -96,11 +96,10 @@ Bute_selection  <- Bute_selection %>%
           soil_NH4_harvest,
          Soil_mineral_N_sowing,
           
-          Biomass ,
+         Biomass ,
          Yield  ,
          InCropRain,
          DM_Anthesis ,
-         DM_Harvest,
          Harvest_Index 
   )
 

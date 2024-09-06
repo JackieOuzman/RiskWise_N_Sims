@@ -18,30 +18,30 @@ APSIM_NextGen <- read_excel("X:/Riskwi$e/Bute/2_Sims_post_Sep2024/2_NextGen/Bute
                                        sheet = "TransitionReport")
 str(APSIM_NextGen)
 
-
+unique(APSIM_NextGen$SimulationName)
 #look up starting values and sowing values
 
 soil_water_start_value = APSIM_NextGen %>% 
-  filter(StartYear  == 2022 & CurrentState == "S_fallow_1" & SimulationName == "Bute_Nil") %>% 
+  filter(StartYear  == 2022 & CurrentState == "S_fallow_1" & SimulationName == "Bute_Control") %>% 
   select(SwStart)
 soil_water_sowing_value = APSIM_NextGen %>% 
-  filter(StartYear  == 2022 & CurrentState == "wheat_1" & SimulationName == "Bute_Nil") %>% 
+  filter(StartYear  == 2022 & CurrentState == "wheat_1" & SimulationName == "Bute_Control") %>% 
   select(SwStart)
 
 
 soil_NO3_start_value = APSIM_NextGen %>% 
-  filter(StartYear  == 2022 & CurrentState == "S_fallow_1" & SimulationName == "Bute_Nil") %>% 
+  filter(StartYear  == 2022 & CurrentState == "S_fallow_1" & SimulationName == "Bute_Control") %>% 
   select(NO3Start)
 soil_NO3_sowing_value = APSIM_NextGen %>% 
-  filter(StartYear  == 2022 & CurrentState == "wheat_1" & SimulationName == "Bute_Nil") %>% 
+  filter(StartYear  == 2022 & CurrentState == "wheat_1" & SimulationName == "Bute_Control") %>% 
   select(NO3Start)
 
   
 soil_NH4_start_value = APSIM_NextGen %>% 
-  filter(StartYear  == 2022 & CurrentState == "S_fallow_1" & SimulationName == "Bute_Nil") %>% 
+  filter(StartYear  == 2022 & CurrentState == "S_fallow_1" & SimulationName == "Bute_Control") %>% 
   select(NH4Start)
 soil_NH4_sowing_value = APSIM_NextGen %>% 
-  filter(StartYear  == 2022 & CurrentState == "wheat_1" & SimulationName == "Bute_Nil") %>% 
+  filter(StartYear  == 2022 & CurrentState == "wheat_1" & SimulationName == "Bute_Control") %>% 
   select(NH4Start)
 
 
@@ -81,7 +81,7 @@ APSIM_NextGen  <- APSIM_NextGen %>%
 
 ## Just the nil treatment for now
 
-APSIM_NextGen <- APSIM_NextGen %>%  filter(Treatment == "Bute_Nil")
+#APSIM_NextGen <- APSIM_NextGen %>%  filter(Treatment == "Bute_Nil")
 
 # add some extra clms
 APSIM_NextGen <- APSIM_NextGen %>% mutate(
@@ -160,7 +160,8 @@ str(APSIM_NextGen_daily)
 
 ## Create a new clm called year
 APSIM_NextGen_daily <- APSIM_NextGen_daily %>% 
-  mutate(Year = year(Date), Source = "NextGen",
+  mutate(Year = year(Date), 
+         Source = "NextGen",
          Treatment = SimulationName,
          InCropFert = FertNApplied,#check this is the correct clm could be FertAmt 
          
@@ -177,9 +178,10 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>%
          soil_NH4_sowing ="not_reported",
          soil_NH4_harvest ="not_reported"
          
+         
          ) 
 
-
+str(APSIM_NextGen_daily)
 
 #add in crop and cultivar
 APSIM_NextGen_daily <- APSIM_NextGen_daily %>% 
@@ -192,7 +194,21 @@ Cultivar = case_when(
   Year  == 2023 ~ "commander"),
 Biomass = case_when(
   Year  == 2022 ~ AboveGroundW_WtKgha,
-  Year  == 2023 ~ AboveGroundB_WtKgha)
+  Year  == 2023 ~ AboveGroundB_WtKgha),
+Zadok = case_when(
+  Year  == 2022 ~ WheatZadok,
+  Year  == 2023 ~ BarleyZadok),
+WaterStress = case_when(
+  Year  == 2022 ~ W_WaterStress,
+  Year  == 2023 ~ B_WaterStress),
+NSTress = case_when(
+  Year  == 2022 ~ W_NSTress,
+  Year  == 2023 ~ B_NSTress),
+Yield = case_when(
+  Year  == 2022 ~ Yield_W/1000,
+  Year  == 2023 ~ Yield_B/1000),
+
+HarvestIndex = (Yield*1000)/Biomass
 
 )
 
@@ -219,7 +235,8 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>%
 
 #Just ordering it
 APSIM_NextGen_daily  <- APSIM_NextGen_daily %>% 
-  select(Year , 
+  select(Date,
+         Year , 
          Source,
          Treatment  ,
          InCropFert  , # check this is the correct clm could be FertAmt 
@@ -227,23 +244,30 @@ APSIM_NextGen_daily  <- APSIM_NextGen_daily %>%
          Cultivar  ,
          
          soil_water_start,
-         soil_water_sowing,
-         soil_water_harvest,
+         #soil_water_sowing,
+         #soil_water_harvest,
          Soil_Water,
          
          soil_NO3_start,
-         soil_NO3_sowing, #umm is this NO3 + NH4?
-         soil_NO3_harvest,
+         #soil_NO3_sowing, #umm is this NO3 + NH4?
+         #soil_NO3_harvest,
          NO3,
          
-         soil_NH4_start,
-         soil_NH4_sowing,
-         soil_NH4_harvest,
+         # soil_NH4_start,
+         # soil_NH4_sowing,
+         # soil_NH4_harvest,
          
          Soil_mineral_N_sowing,
          
          Biomass ,
-         #Yield  ,
+         Yield  ,
+         Zadok,
+         WaterStress,
+         NSTress,
+         HarvestIndex
+         
+         
+         
          #InCropRain
   )
 write.csv(APSIM_NextGen_daily ,
