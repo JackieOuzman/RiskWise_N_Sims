@@ -1,5 +1,5 @@
 
-# This file is for importing APISM sim files.
+# This file is for importing APISM sim files - DAILY
 library(tidyverse)
 library(dplyr)
 library(readr)
@@ -25,28 +25,76 @@ list_sim_out_file
 
 # SIM and Trial data --------------------------------------------------------------
 
-Classic <- read_csv(paste0(path, "APSIM_Classic_Rotations.csv"))
-NextG <- read_csv(paste0(path, "APSIM_NextGen.csv"))
-Trial <- read_csv(paste0(path, "APSIM_Trial_.csv"))
+Classic_D <- read_csv(paste0(path, "APSIM_Classic_RotationsDaily.csv"))
+NextG_D <- read_csv(paste0(path, "APSIM_NextGen_Daily.csv"))
+
 
 # Check it matches --------------------------------------------------------------
 
 
-names(Classic)
-names(NextG) #missing NH4 at sowing
-names(Trial)
+names(Classic_D)
+names(NextG_D) 
+
+Classic_D <- Classic_D %>% mutate(Date =dd_mm_yyyy,
+                                  WaterStress = sw_stress_photo,
+                                  NSTress = n_stress_photo)
+
+NextG_D <- NextG_D %>% mutate(soil_NO3 = NO3,
+                              zadok_stage = Zadok,
+                              soil_water = Soil_Water)
+
+Classic_D <- Classic_D %>% select(
+ Date, 
+ Year, 
+ Source,           
+ Treatment,            
+ Crop,      
+ Cultivar,   
+ soil_water, 
+ soil_NO3,  
+ Biomass, 
+ Yield, 
+zadok_stage ,
+HarvestIndex,
+WaterStress,       
+NSTress)
+
+NextG_D <- NextG_D %>% select(
+  Date, 
+  Year, 
+  Source,           
+  Treatment,            
+  Crop,      
+  Cultivar,   
+  soil_water, 
+  soil_NO3,  
+  Biomass, 
+  Yield, 
+  zadok_stage ,
+  HarvestIndex,
+  WaterStress,       
+  NSTress)
 
 
 
-# The trial data has some extra clms --------------------------------------
+##These were not included
+#"InCropFert"   
+# "soil_water_start"     
+# "soil_NO3_start" 
+# "NO3"     
+# "Soil_mineral_N_sowing"
+# ""     
+ 
+ 
 
-Trial <- Trial %>% select(- DM_Anthesis)
 
-Classic <- Classic %>% mutate(Biomass = Biomass/1000)
-NextG <- NextG %>% mutate(Biomass = Biomass/1000)
+# The matching units data has some extra clms --------------------------------------
 
-Classic <- Classic %>% mutate(Harvest_Index = (Yield*1000)/ Biomass)
-NextG <- NextG %>% mutate(Harvest_Index = (Yield*1000)/ Biomass)
+
+
+Classic_D <- Classic_D %>% mutate(Biomass = Biomass/1000)
+NextG_D <- NextG_D %>% mutate(Biomass = Biomass/1000)
+
 
 
 
@@ -55,53 +103,25 @@ NextG <- NextG %>% mutate(Harvest_Index = (Yield*1000)/ Biomass)
 
 # Join the 2 data set together --------------------------------------------
 
-#format so they are all the same data type
 
-
-Trial <- Trial %>%
-  mutate(across(-c(Source, Treatment, Crop, Cultivar ), as.numeric))
-NextG <- NextG %>%
-  mutate(across(-c(Source, Treatment, Crop, Cultivar ), as.numeric))
-Classic <- Classic %>%
-  mutate(across(-c(Source, Treatment, Crop, Cultivar ), as.numeric))
-
-
-# Year              
-# #Source     #chr      
-# #Treatment  #chr      
-# InCropFert        
-# #Crop       #chr      
-# #Cultivar   #chr     
-# soil_water_start  
-# soil_water_sowing 
-# soil_water_harvest
-# soil_NO3_start    
-# soil_N03_sowing   
-# soil_NO3_harvest  
-# soil_NH4_start    
-# soil_NH4_sowing   
-# soil_NH4_harvest  
-# Biomass           
-# Yield             
-# InCropRain        
 
 
 
 # Names of treatments need to match ---------------------------------------
-unique(Classic$Treatment)
-unique(NextG$Treatment)
-unique(Trial$Treatment)
+unique(Classic_D$Treatment)
+unique(NextG_D$Treatment)
 
-Classic <- Classic %>% mutate(
+
+Classic_D <- Classic_D %>% mutate(
   Treatment = case_when(
-    Treatment == "Bute Rotation_Bute_N0" ~ "Control",
-    Treatment == "Bute Rotation_Bute_N_DP" ~ "District_Practice",
-    Treatment == "Bute Rotation_Bute_N_Bank_Conservative" ~ "Nbank_Conservative",
-    Treatment == "Bute Rotation_Bute_N_Bank_Profit" ~ "Nbank_Optimum_Profit",
-    Treatment == "Bute Rotation_Bute_N_Bank_OptimumYld" ~ "Nbank_Optimum_Yield"
+    Treatment == "N0" ~ "Control",
+    Treatment == "N_DP" ~ "District_Practice",
+    Treatment == "N_Bank_Conservative" ~ "Nbank_Conservative",
+    Treatment == "N_Bank_Profit" ~ "Nbank_Optimum_Profit",
+    Treatment == "N_Bank_OptimumYld" ~ "Nbank_Optimum_Yield"
   )
 )
-NextG <- NextG %>% mutate(
+NextG_D <- NextG_D %>% mutate(
   Treatment = case_when(
     Treatment == "Bute_Control" ~ "Control",
     Treatment == "Bute_DP" ~ "District_Practice",
@@ -111,21 +131,20 @@ NextG <- NextG %>% mutate(
   )
 )
 
-# choose only the treatments I modelled ---------------------------------------
-
-Trial <- Trial %>% filter(
-  Treatment == "Control" |
-    Treatment == "District_Practice" |
-    Treatment == "Nbank_Conservative" |
-    Treatment == "Nbank_Optimum_Profit" |
-    Treatment == "Nbank_Optimum_Yield"
-)
 
 
 
+# str(Classic_D)
+# 
+# Classic_D$Date <- as.character(Classic_D$Date)
+# Classic_D$Date <- sub("_", "-", Classic_D$Date)
+# Classic_D$Date <- sub("_", "-", Classic_D$Date)
+# Classic_D$Date <-   format(as.Date(Classic_D$Date), "%d-%m-%Y")
+# str(Classic_D)
 
 
-merge_sim_trial <- bind_rows(Classic, NextG, Trial)
+
+merge_sim_trial <- bind_rows(Classic_D, NextG_D)
 
 
 
@@ -134,7 +153,7 @@ merge_sim_trial <- bind_rows(Classic, NextG, Trial)
 
 
 write.csv(merge_sim_trial , 
-          "X:/Riskwi$e/Bute/2_Sims_post_Sep2024/To_compare_etc/merge_sim_trial_harvest.csv", row.names = FALSE )
+          "X:/Riskwi$e/Bute/2_Sims_post_Sep2024/To_compare_etc/merge_sim_Daily.csv", row.names = FALSE )
 
 
 
