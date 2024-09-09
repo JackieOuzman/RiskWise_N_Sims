@@ -29,6 +29,14 @@ Classic_D <- read_csv(paste0(path, "APSIM_Classic_RotationsDaily.csv"))
 NextG_D <- read_csv(paste0(path, "APSIM_NextGen_Daily.csv"))
 
 
+
+# Format the date clm in Classic ------------------------------------------
+str(NextG_D$Date)
+str(Classic_D$dd_mm_yyyy)
+
+
+Classic_D$dd_mm_yyyy <- as.Date(Classic_D$dd_mm_yyyy, format = "%d_%m_%Y")
+
 # Check it matches --------------------------------------------------------------
 
 
