@@ -342,16 +342,16 @@ Biomass_format <- merged_files_Daily %>%
   
   geom_vline(xintercept = sowing_dates[1:2, 1],
              color = "grey",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Fert_dates[1:2, 1],
              color = "lightgreen",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Harvest_dates[1:2, 1],
              color = "grey",
-             lwd = 0.2)+
+             lwd = 0.4)+
   geom_vline(xintercept = Big_rain_dates[1:2, 1],
            color = "lightblue",
-           lwd = 0.2) 
+           lwd = 0.4) 
   
 Biomass_format
 
@@ -383,16 +383,16 @@ NStress_Classic <- merged_files_Daily %>%
         axis.ticks.x=element_blank())+
   geom_vline(xintercept = sowing_dates[1:2, 1],
              color = "grey",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Fert_dates[1:2, 1],
              color = "lightgreen",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Harvest_dates[1:2, 1],
              color = "grey",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Big_rain_dates[1:2, 1],
              color = "lightblue",
-             lwd = 0.2) 
+             lwd = 0.4) 
 
 
 
@@ -423,16 +423,16 @@ NStress_NextG <- merged_files_Daily %>%
         axis.ticks.x=element_blank())+
   geom_vline(xintercept = sowing_dates[1:2, 1],
              color = "grey",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Fert_dates[1:2, 1],
              color = "lightgreen",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Harvest_dates[1:2, 1],
              color = "grey",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Big_rain_dates[1:2, 1],
              color = "lightblue",
-             lwd = 0.2) 
+             lwd = 0.4) 
   
 
 
@@ -454,8 +454,6 @@ names(merged_files_Daily)
 WaterStress_Classic <- merged_files_Daily %>%
   filter(Source == "APISM_Classic_Rotation") %>%
   filter(zadok_stage >= 0) %>%
-  #filter(WaterStress>0) %>% 
-  #filter(WaterStress<1) %>% 
   ggplot(aes(x = (Date), y = WaterStress , colour = Source)) +
   geom_point(colour = "blue") +
   scale_color_manual(values = c("blue", "purple")) +
@@ -472,16 +470,16 @@ WaterStress_Classic <- merged_files_Daily %>%
   theme(legend.position = "none")+
   geom_vline(xintercept = sowing_dates[1:2, 1],
              color = "grey",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Fert_dates[1:2, 1],
              color = "lightgreen",
-             lwd = 0.5) +
+             lwd = 0.4) +
   geom_vline(xintercept = Harvest_dates[1:2, 1],
              color = "grey",
-             lwd = 0.5) +
+             lwd = 0.4) +
   geom_vline(xintercept = Big_rain_dates[1:2, 1],
              color = "lightblue",
-             lwd = 0.5) +
+             lwd = 0.4) +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
@@ -493,8 +491,6 @@ WaterStress_Classic
 WaterStress_NextG <- merged_files_Daily %>%
   filter(Source == "NextGen") %>%
   filter(zadok_stage >= 0) %>%
-  #filter(WaterStress>0) %>% 
-  #filter(WaterStress<1) %>% 
   ggplot(aes(x = (Date), y = WaterStress , colour = Source)) +
   geom_point(colour = "purple") +
   scale_color_manual(values = c("blue", "purple")) +
@@ -511,16 +507,16 @@ WaterStress_NextG <- merged_files_Daily %>%
   theme(legend.position = "none")+
   geom_vline(xintercept = sowing_dates[1:2, 1],
              color = "grey",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Fert_dates[1:2, 1],
              color = "lightgreen",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Harvest_dates[1:2, 1],
              color = "grey",
-             lwd = 0.2) +
+             lwd = 0.4) +
   geom_vline(xintercept = Big_rain_dates[1:2, 1],
              color = "lightblue",
-             lwd = 0.2) +
+             lwd = 0.4) +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
