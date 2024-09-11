@@ -306,15 +306,23 @@ df_for_all_data <- data.frame(
   
   Rotation_Bute_N_Bank_Conservative.barley.biomass	= double(),
   `no3()`	= double(),
-  Rotation_Bute_N_Bank_Conservative.Wheat.sw_stress_photo	= double(),
-  Rotation_Bute_N_Bank_Conservative.barley.sw_stress_photo	= double(),
-  Rotation_Bute_N_Bank_Conservative.Wheat.n_stress_photo	= double(),
-  Rotation_Bute_N_Bank_Conservative.barley.n_stress_photo	= double(),
+  
+  # Rotation_Bute_N_Bank_Conservative.Wheat.sw_stress_photo	= double(),
+  # Rotation_Bute_N_Bank_Conservative.barley.sw_stress_photo	= double(),
+  # Rotation_Bute_N_Bank_Conservative.Wheat.n_stress_photo	= double(),
+  # Rotation_Bute_N_Bank_Conservative.barley.n_stress_photo	= double(),
   
   Rotation_Bute_N_Bank_Conservative.Wheat.zadok_stage	= double(),
   Rotation_Bute_N_Bank_Conservative.barley.zadok_stage	= double(),
   Rotation_Bute_N_Bank_Conservative.Wheat.dlt_dm	= double(),
   Rotation_Bute_N_Bank_Conservative.barley.dlt_dm = double(),
+  
+  Rain = double(),	
+  Rotation_Bute_N_Bank_Conservative.Wheat.swdef_photo	= double(),
+  Rotation_Bute_N_Bank_Conservative.barley.swdef_photo	= double(),
+  Rotation_Bute_N_Bank_Conservative.Wheat.nfact_photo	= double(),
+  Rotation_Bute_N_Bank_Conservative.barley.nfact_photo= double(),
+  
   
   APSIM_Version 		= character(),
   title		= character()
@@ -328,16 +336,18 @@ heading <- c("dd_mm_yyyy",
              "Wheat_biomass",
              "Barley_biomass",
              "NO3",
-             "Wheat_sw_stress_photo",
-             "barley_sw_stress_photo",
-             "Wheat_n_stress_photo",
-             "barley_n_stress_photo",
              "Wheat.zadok_stage",
              "barley.zadok_stage",
              "Wheat_dlt_dm",
              "barley_dlt_dm",
              "Wheat_yield",
              "Barley_yield",
+             "Rain",
+             "Wheat_sw_stress_photo",
+             "barley_sw_stress_photo",
+             "Wheat_n_stress_photo",
+             "barley_n_stress_photo",
+             
              "APSIM_Version ",
              "title")
 
@@ -441,6 +451,7 @@ df_for_all_data_1 <- df_for_all_data %>%
     barley.zadok_stage,
     Wheat_dlt_dm,
     barley_dlt_dm,
+    Rain,
     
     title
   )
@@ -506,7 +517,7 @@ df_for_all_data_1 <- df_for_all_data_1 %>% select(
   # "Soil_mineral_N_sowing",
   "Biomass",            "Yield",  
   "sw_stress_photo" , "n_stress_photo",
-  "zadok_stage" , "dlt_dm", "HarvestIndex"
+  "zadok_stage" , "dlt_dm", "HarvestIndex", "Rain"
   
 )
 
