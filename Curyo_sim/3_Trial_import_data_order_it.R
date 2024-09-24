@@ -12,58 +12,48 @@ library(readxl)
 
 
 
-Bute_trial_setup_outputs <- read_excel("X:/Riskwi$e/Bute/2_Sims_post_Sep2024/Bute_trial_setup_outputs.xlsx", 
-                                       sheet = "Treatments_Jackie", skip = 2)
-str(Bute_trial_setup_outputs)
+Trial_setup_outputs <- read_excel("X:/Riskwi$e/Curyo/2_Sims_post_Sep2024/Curyo_trial_setup_outputs.xlsx", 
+                                       sheet = "Treatments_Jackie", skip = 6)
+names(Trial_setup_outputs)
 
-Bute_selection  <- Bute_trial_setup_outputs %>% 
+df_selection  <- Trial_setup_outputs %>% 
   select(Year , 
          #"Trial" = Source)#,
-         Treatment = System ,
+         Treatment = `!Treatment`, #was System 
          InCropFert =  `Total N applied at sowing and inseason` ,
          Crop = `Crop type` ,
          Cultivar = Variety ,
+         soil_N03_sowing =`Amount of NO3 at sowing (kg/ha) - Soil` ,
+         soil_NH4_sowing = `Amount of NH4 at sowing (kg/ha) - Soil`,  
          
-         #soil_water_start = "0.396",
-         #soil_water_sowing = "Not_provided",
-         #soil_water_harvest = "Not_provided",
+         Soil_mineral_N_sowing =`Amount of total mineral N at sowing (kg/ha) -Soil`, #umm is this NO3 + NH4?
+          
+         Biomass = `Biomass flowering (t/ha)` ,
+         Yield = `Yield (t/ha)`, #,
+         soil_water_sowing = `Sowing total water (mm) - soil`, 
          
-         #soil_NO3_start = "116",
-         #soil_N03_sowing = "Not_provided"
-         #soil_NO3_harvest = "Not_provided",
-         
-         # soil_NH4_start= "30",
-         # soil_NH4_sowing= "Not_provided",
-         # soil_NH4_harvest= "Not_provided",
-         
-         Soil_mineral_N_sowing =`Soil mineral N (kg/ha) - prior to sowing`, #umm is this NO3 + NH4?
-         # 
-         # Biomass = "Not_provided",
-         Yield = `Yield (t/ha)` ,
          #InCropRain= "Not_provided"
          
-         DM_Anthesis = 'Dry matter at anthesis (t/ha)',
-         Biomass ='Dry matter at harvest (t/ha)', # is this the same?
-         Harvest_Index ='Harvest index' 
-         
+         #DM_Anthesis = "Not_provided" ,#'Dry matter at anthesis (t/ha)'
+         #Biomass = "Not_provided", #'Dry matter at harvest (t/ha)', 
+         #Harvest_Index = "Not_provided" #'Harvest index' 
   )
 
-Bute_selection  <- Bute_selection %>% 
+df_selection  <- df_selection %>% 
   mutate(
     Source = "Trial" ,
     
     
-    soil_water_start = "0.396",
-    soil_water_sowing = "Not_provided",
+    soil_water_start = "0.885", #sum value in 2018 check this
+    #soil_water_sowing = "Not_provided", provided in some years
     soil_water_harvest = "Not_provided",
     
-    soil_NO3_start = "116",
-    soil_N03_sowing = "Not_provided",
-    
+    soil_NO3_start = "47",
+   # soil_N03_sowing = "Not_provided",provided in some years
     soil_NO3_harvest = "Not_provided",
     
-    soil_NH4_start= "30",
-    soil_NH4_sowing= "Not_provided",
+    soil_NH4_start= "0",
+    #soil_NH4_sowing= "Not_provided", provided in some years
     soil_NH4_harvest= "Not_provided",
     
     
@@ -72,10 +62,10 @@ Bute_selection  <- Bute_selection %>%
   )
 
 
-str(Bute_selection)
+str(df_selection)
 
 #Just ordering it
-Bute_selection  <- Bute_selection %>% 
+df_selection  <- df_selection %>% 
   select(Year , 
          Source,
          Treatment  ,
@@ -98,12 +88,12 @@ Bute_selection  <- Bute_selection %>%
           
          Biomass ,
          Yield  ,
-         InCropRain,
-         DM_Anthesis ,
-         Harvest_Index 
+         InCropRain#,
+         #DM_Anthesis ,
+         #Harvest_Index 
   )
 
 
-str(Bute_selection)
-
-write.csv(Bute_selection , "X:/Riskwi$e/Bute/2_Sims_post_Sep2024/To_compare_etc/APSIM_Trial_.csv", row.names = FALSE )
+str(df_selection)
+ 
+write.csv(df_selection , "X:/Riskwi$e/Curyo/2_Sims_post_Sep2024/To_compare_etc/APSIM_Trial.csv", row.names = FALSE )

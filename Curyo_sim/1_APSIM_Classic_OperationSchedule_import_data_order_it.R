@@ -240,11 +240,11 @@ str(df_for_all_data_1)
 str(df_for_all_data_1)
 
 df_for_all_data_1 <- df_for_all_data_1 %>% mutate(
-  Source = "APISM_Classic_Rotation",
+  Source = "APISM_Classic_Operation_Sch",
   Treatment = title,
   Crop = case_when(
     Year  == 2018 ~ "Wheat",
-    Year  == 2021 ~ "Canola",
+    Year  == 2021 ~ "canola",
     Year  == 2020 ~ "Wheat",
     Year  == 2021 ~ "Barley",
     Year  == 2022 ~ "Wheat" ),
@@ -262,7 +262,7 @@ df_for_all_data_1 <- df_for_all_data_1 %>% mutate(
     Year  == 2022 ~ Wheat_biomass ),
   Yield = case_when(
     Year  == 2018 ~ Wheat_yield/1000,
-    Year  == 2021 ~ Canola_yield/1000,
+    Year  == 2021 ~ canola_yield/1000,
     Year  == 2020 ~ Wheat_yield/1000,
     Year  == 2021 ~ Barley_yield/1000,
     Year  == 2022 ~ Wheat_yield/1000 ),
