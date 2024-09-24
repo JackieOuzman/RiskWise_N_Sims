@@ -14,8 +14,8 @@ library(readxl)
 
 # Daily output files -------------------------------------------------------
 
-site <-"/Curyo_Rotation"
-#""X:\Riskwi$e\Curyo\2_Sims_post_Sep2024\1_Classic""
+site <-"/Operation_schedule"
+
 file_directory <- paste0("X:/Riskwi$e/Curyo/2_Sims_post_Sep2024/1_Classic",site)
 
 file_directory
@@ -34,14 +34,14 @@ list_sim_out_file
 
 list_sim_out_file <- c(
   
-  "Cuyro Rotation_N0 outputfileDaily.out"
+  "Nil Operation_schedule outputfileDaily.out"
 )
                          
 list_sim_out_file
 
 
 #Test approach
-list_sim_out_file <- c("Cuyro Rotation_N0 outputfileDaily.out")
+list_sim_out_file <- c("Nil Operation_schedule outputfileDaily.out")
 # create a empty data frame -----------------------------------------------
 
 df_for_all_data <- data.frame(
@@ -155,7 +155,7 @@ for (list_sim_out_file in list_sim_out_file){
   title = title_a[1,1]
   title_a<-gsub("Title = ","",as.character(title))
   title_a
-  title_b<-gsub("outputfileDaily","",as.character(title_a)) #daily output
+  title_b<-gsub(" Operation_schedule outputfileDaily","",as.character(title_a)) #daily output remove this
   title_b
   title_c<-gsub("Bute Rotation_Bute_","",as.character(title_b)) #this is the leading sim name - will need to change for different sites
   title_c
@@ -326,5 +326,5 @@ df_for_all_data_1 <- df_for_all_data_1 %>% select(
 )
 
 
-write.csv(df_for_all_data_1 , "X:/Riskwi$e/Curyo/2_Sims_post_Sep2024/To_compare_etc/APSIM_Classic_RotationsDaily.csv", row.names = FALSE )
+write.csv(df_for_all_data_1 , "X:/Riskwi$e/Curyo/2_Sims_post_Sep2024/To_compare_etc/APSIM_Classic_OperationScheduleDaily.csv", row.names = FALSE )
 
