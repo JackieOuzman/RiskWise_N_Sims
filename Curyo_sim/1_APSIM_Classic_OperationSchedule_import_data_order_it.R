@@ -24,7 +24,7 @@ file_directory
 list_sim_out_file <-
   list.files(
     path = file_directory,
-    pattern = ".out",
+    pattern = "Daily.out",
     all.files = FALSE,
     full.names = FALSE
   )
@@ -33,15 +33,19 @@ list_sim_out_file
 
 
 list_sim_out_file <- c(
+  "Operation_schedule Nil outputfileDaily.out",
+  "Operation_schedule National_Average outputfileDaily.out",
+  "Operation_schedule Maint100 outputfileDaily.out",
+  "Operation_schedule Maint150 outputfileDaily.out",
+  "Operation_schedule Maint125 outputfileDaily.out"
   
-  "Nil Operation_schedule outputfileDaily.out"
 )
                          
 list_sim_out_file
 
 
 #Test approach
-list_sim_out_file <- c("Nil Operation_schedule outputfileDaily.out")
+#list_sim_out_file <- c("Operation_schedule Nil outputfileDaily.out")
 # create a empty data frame -----------------------------------------------
 
 df_for_all_data <- data.frame(
@@ -155,9 +159,9 @@ for (list_sim_out_file in list_sim_out_file){
   title = title_a[1,1]
   title_a<-gsub("Title = ","",as.character(title))
   title_a
-  title_b<-gsub(" Operation_schedule outputfileDaily","",as.character(title_a)) #daily output remove this
+  title_b<-gsub(" outputfileDaily","",as.character(title_a)) #daily output remove this
   title_b
-  title_c<-gsub("Bute Rotation_Bute_","",as.character(title_b)) #this is the leading sim name - will need to change for different sites
+  title_c<-gsub("Operation_schedule ","",as.character(title_b)) #this is the leading sim name - will need to change for different sites
   title_c
   title_d <- trimws(title_c) #trim the white space
   title_d
@@ -244,53 +248,53 @@ df_for_all_data_1 <- df_for_all_data_1 %>% mutate(
   Treatment = title,
   Crop = case_when(
     Year  == 2018 ~ "Wheat",
-    Year  == 2021 ~ "canola",
+    Year  == 2019 ~ "canola",
     Year  == 2020 ~ "Wheat",
     Year  == 2021 ~ "Barley",
     Year  == 2022 ~ "Wheat" ),
   Cultivar = case_when(
     Year  == 2018 ~ "mace",
-    Year  == 2021 ~ "early",
+    Year  == 2019 ~ "early",
     Year  == 2020 ~ "mace",
     Year  == 2021 ~ "commander",
     Year  == 2022 ~ "mace" ),
   Biomass = case_when(
     Year  == 2018 ~ Wheat_biomass,
-    Year  == 2021 ~ canola_biomass,
+    Year  == 2019 ~ canola_biomass,
     Year  == 2020 ~ Wheat_biomass,
     Year  == 2021 ~ Barley_biomass,
     Year  == 2022 ~ Wheat_biomass ),
   Yield = case_when(
     Year  == 2018 ~ Wheat_yield/1000,
-    Year  == 2021 ~ canola_yield/1000,
+    Year  == 2019 ~ Canola_yield/1000,
     Year  == 2020 ~ Wheat_yield/1000,
     Year  == 2021 ~ Barley_yield/1000,
     Year  == 2022 ~ Wheat_yield/1000 ),
     
   sw_stress_photo= case_when(
     Year  == 2018 ~ Wheat_sw_stress_photo,
-    Year  == 2021 ~ canola_sw_stress_photo,
+    Year  == 2019 ~ canola_sw_stress_photo,
     Year  == 2020 ~ Wheat_sw_stress_photo,
     Year  == 2021 ~ barley_sw_stress_photo,
     Year  == 2022 ~ Wheat_sw_stress_photo ),
     
   n_stress_photo= case_when(
     Year  == 2018 ~ Wheat_n_stress_photo,
-    Year  == 2021 ~ canola_n_stress_photo,
+    Year  == 2019 ~ canola_n_stress_photo,
     Year  == 2020 ~ Wheat_n_stress_photo,
     Year  == 2021 ~ barley_n_stress_photo,
     Year  == 2022 ~ Wheat_n_stress_photo ),
     
   zadok_stage = case_when(
     Year  == 2018 ~ Wheat.zadok_stage,
-    Year  == 2021 ~ canola.stage,  
+    Year  == 2019 ~ canola.stage,  
     Year  == 2020 ~ Wheat.zadok_stage,
     Year  == 2021 ~ barley.zadok_stage,
     Year  == 2022 ~ Wheat.zadok_stage ),
   
   dlt_dm = case_when(
     Year  == 2018 ~ Wheat_dlt_dm,
-    Year  == 2021 ~ canola_dlt_dm,
+    Year  == 2019 ~ canola_dlt_dm,
     Year  == 2020 ~ Wheat_dlt_dm,
     Year  == 2021 ~ barley_dlt_dm,
     Year  == 2022 ~ Wheat_dlt_dm ),
@@ -298,6 +302,9 @@ df_for_all_data_1 <- df_for_all_data_1 %>% mutate(
   HarvestIndex = (Yield*1000)/Biomass
   
 )
+
+#write.csv(df_for_all_data_1 , "X:/Riskwi$e/Curyo/2_Sims_post_Sep2024/To_compare_etc/TEST1_APSIM_Classic_OperationScheduleDaily.csv", row.names = FALSE )
+
 
 # drop some clms
 str(df_for_all_data_1)

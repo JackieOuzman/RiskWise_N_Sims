@@ -53,52 +53,52 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>%
   mutate(
 Crop = case_when(
   Year  == 2018 & CurrentState  == "wheat_1"~ "Wheat",
-  Year  == 2021 & CurrentState  == "canola_1"~ "Canola",
+  Year  == 2019 & CurrentState  == "canola_1"~ "Canola",
   Year  == 2020 & CurrentState  == "wheat_2"~ "Wheat",
   Year  == 2021 & CurrentState  == "barley_1"~ "Barley",
   Year  == 2022 & CurrentState  == "wheat_3"~ "Wheat" ),
   
 Cultivar = case_when(
   Year  == 2018 ~ "mace",
-  Year  == 2021 ~ "GenericEarly",
+  Year  == 2019 ~ "GenericEarly",
   Year  == 2020 ~ "mace",
   Year  == 2021 ~ "commander",
   Year  == 2022 ~ "mace" ),
   
 Biomass = case_when(
   Year  == 2018 ~ AboveGroundW_WtKgha,
-  Year  == 2021 ~ AboveGroundC_WtKgha,
+  Year  == 2019 ~ AboveGroundC_WtKgha,
   Year  == 2020 ~ AboveGroundW_WtKgha,
   Year  == 2021 ~ AboveGroundB_WtKgha,
   Year  == 2022 ~ AboveGroundW_WtKgha ),
   
 Zadok = case_when(
   Year  == 2018 ~ WheatZadok,
-  Year  == 2021 ~ CanolaStage,
+  Year  == 2019 ~ CanolaStage,
   Year  == 2020 ~ WheatZadok,
   Year  == 2021 ~ BarleyZadok,
   Year  == 2022 ~ WheatZadok ),
   
 WaterStress = case_when(
   Year  == 2018 ~ W_WaterStress,
-  Year  == 2021 ~ C_WaterStress,
+  Year  == 2019 ~ C_WaterStress,
   Year  == 2020 ~ W_WaterStress,
   Year  == 2021 ~ B_WaterStress,
   Year  == 2022 ~ W_WaterStress ),
   
 NSTress = case_when(
   Year  == 2018 ~ W_NSTress,
-  Year  == 2021 ~ C_NSTress,
+  Year  == 2019 ~ C_NSTress,
   Year  == 2020 ~ W_NSTress,
   Year  == 2021 ~ B_NSTress,
   Year  == 2022 ~ W_NSTress ),
   
 Yield = case_when(
-  Year  == 2018 ~ Yield_W/100,
-  Year  == 2021 ~ Yield_C/1000,
-  Year  == 2020 ~ Yield_W/100,
+  Year  == 2018 ~ Yield_W/1000,
+  Year  == 2019 ~ Yield_C/1000,
+  Year  == 2020 ~ Yield_W/1000,
   Year  == 2021 ~ Yield_B/1000,
-  Year  == 2022 ~ Yield_W/100 ),
+  Year  == 2022 ~ Yield_W/1000 ),
   
   
 HarvestIndex = (Yield*1000)/Biomass

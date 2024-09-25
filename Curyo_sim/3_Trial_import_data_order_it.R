@@ -28,7 +28,7 @@ df_selection  <- Trial_setup_outputs %>%
          
          Soil_mineral_N_sowing =`Amount of total mineral N at sowing (kg/ha) -Soil`, #umm is this NO3 + NH4?
           
-         Biomass = `Biomass flowering (t/ha)` ,
+         Biomass_flowering = `Biomass flowering (t/ha)` ,
          Yield = `Yield (t/ha)`, #,
          soil_water_sowing = `Sowing total water (mm) - soil`, 
          
@@ -86,7 +86,7 @@ df_selection  <- df_selection %>%
           soil_NH4_harvest,
          Soil_mineral_N_sowing,
           
-         Biomass ,
+         Biomass_flowering ,
          Yield  ,
          InCropRain#,
          #DM_Anthesis ,

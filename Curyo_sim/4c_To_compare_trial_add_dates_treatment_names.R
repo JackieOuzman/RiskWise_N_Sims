@@ -27,26 +27,53 @@ list_sim_out_file
 Curyo_trial_setup_outputs <- read_excel("X:/Riskwi$e/Curyo/2_Sims_post_Sep2024/Curyo_trial_setup_outputs.xlsx", 
                                        sheet = "Treatments_Jackie", skip = 6)
 
+#remove the empty row
+Curyo_trial_setup_outputs <-Curyo_trial_setup_outputs %>% filter(!is.na(Year))
+
 ## years of trial 2018, 2019, 2020, 2021, 2022
 
 str(Curyo_trial_setup_outputs)
 #get the harvest dates
+Harvest_Dates2018 <- Curyo_trial_setup_outputs %>% 
+  filter(Year == 2018) %>% 
+  select(`Harvest Date`) %>% 
+  summarise(Harvest_date = max(`Harvest Date`,na.rm = TRUE ))
 Harvest_Dates2019 <- Curyo_trial_setup_outputs %>% 
   filter(Year == 2019) %>% 
   select(`Harvest Date`) %>% 
-  summarise(Harvest_date = max(`Harvest Date`))
+  summarise(Harvest_date = max(`Harvest Date`,na.rm = TRUE ))
 Harvest_Dates2020 <- Curyo_trial_setup_outputs %>% 
   filter(Year == 2020) %>% 
   select(`Harvest Date`) %>% 
-  summarise(Harvest_date = max(`Harvest Date`))
+  summarise(Harvest_date = max(`Harvest Date`,na.rm = TRUE ))
 Harvest_Dates2021 <- Curyo_trial_setup_outputs %>% 
   filter(Year == 2021) %>% 
   select(`Harvest Date`) %>% 
-  summarise(Harvest_date = max(`Harvest Date`))
+  summarise(Harvest_date = max(`Harvest Date`,na.rm = TRUE ))
 Harvest_Dates2022 <- Curyo_trial_setup_outputs %>% 
   filter(Year == 2022) %>% 
   select(`Harvest Date`) %>% 
-  summarise(Harvest_date = max(`Harvest Date`))
+  summarise(Harvest_date = max(`Harvest Date`,na.rm = TRUE ))
+
+Harvest_Dates2018
+Harvest_Dates2019
+Harvest_Dates2020
+Harvest_Dates2021
+Harvest_Dates2022
+
+Harvest_Dates2018 <- Harvest_Dates2018$Harvest_date
+Harvest_Dates2019 <- Harvest_Dates2019$Harvest_date
+Harvest_Dates2020 <- Harvest_Dates2020$Harvest_date
+Harvest_Dates2021 <- Harvest_Dates2021$Harvest_date
+Harvest_Dates2022 <- Harvest_Dates2022$Harvest_date
+
+
+
+Flowering_date_2018 <- as.POSIXct(as.Date("2018-10-10"))
+Flowering_date_2019 <- NA #as.POSIXct(as.Date(""))
+Flowering_date_2020 <- NA #as.POSIXct(as.Date(""))
+Flowering_date_2021 <- NA #as.POSIXct(as.Date(""))
+Flowering_date_2022 <- NA #as.POSIXct(as.Date(""))
 
 
 # Anthesis_Dates2022 <- Curyo_trial_setup_outputs %>% 
@@ -60,11 +87,6 @@ Harvest_Dates2022 <- Curyo_trial_setup_outputs %>%
 #   select(`Anthesis date`) %>% 
 #   summarise(date = max(`Anthesis date`))
 
-Harvest_Dates2019 <- Harvest_Dates2019$Harvest_date
-Harvest_Dates2020 <- Harvest_Dates2020$Harvest_date
-Harvest_Dates2021 <- Harvest_Dates2021$Harvest_date
-Harvest_Dates2022 <- Harvest_Dates2022$Harvest_date
-
 # Anthesis_Dates2022 <- Anthesis_Dates2022$date
 # Anthesis_Dates2023 <- Anthesis_Dates2023$date
 
@@ -74,9 +96,26 @@ Harvest_Dates2022 <- Harvest_Dates2022$Harvest_date
 Trial <- read_csv(paste0(path, "APSIM_Trial.csv"))
 
 
-# Stuff around getting DM Anthesis into its own dataset and rename biomass to match trial data-------------------
-
+# Stuff around getting DM Anthesis / flowering into its own dataset and rename biomass to match trial data-------------------
+#1. df with flowering dates and clm called biomass
 names(Trial)
+
+Flowering <- Trial #%>% select(-Biomass) #if I had biomass data at harvest then I would use this
+
+Flowering <- Flowering %>% mutate(
+  Date=case_when(
+    Year == 2018 ~ Flowering_date_2018,
+    Year == 2019 ~ Flowering_date_2019,
+    Year == 2020 ~ Flowering_date_2020,
+    Year == 2021 ~ Flowering_date_2021,
+    Year == 2022 ~ Flowering_date_2022,
+  ))
+
+Flowering <- Flowering %>% rename(Biomass = Biomass_flowering)
+
+
+#Anthesis <- Anthesis %>% rename(Biomass = DM_Anthesis)
+
 # Anthesis <- Trial %>% select(-Biomass)
 # 
 # Anthesis <- Anthesis %>% mutate(
@@ -88,12 +127,12 @@ names(Trial)
 # Anthesis <- Anthesis %>% rename(Biomass = DM_Anthesis)
 # 
 # 
-# 
-# 
-# 
-# # Remove anthesis clm from trial data set and add a date clm ---------------------------------
-# 
-# Trial <- Trial %>% select(-DM_Anthesis)
+
+
+
+#2. df with harevest dates and clm called biomass
+
+#Trial <- Trial %>% select(-DM_Anthesis)
 Trial <- Trial %>% mutate(
   Date=case_when(
     Year == 2019 ~ Harvest_Dates2019,
@@ -102,11 +141,13 @@ Trial <- Trial %>% mutate(
     Year == 2022 ~ Harvest_Dates2022
     
   ))
+## all of the biomass data is flowering 
+Trial <- Trial %>% mutate(Biomass = NA) %>% select(- Biomass_flowering)
 
 names(Trial)
 
 
-#Trail_df <- bind_rows(Trial, Anthesis)
+Trail_df <- bind_rows(Trial, Flowering)
 
 
 
@@ -114,9 +155,9 @@ names(Trial)
 
 
 
-names(Trial)
+names(Trail_df)
 
-unique(Trial$Treatment)
+unique(Trail_df$Treatment)
 
 #Nil
 
@@ -124,7 +165,7 @@ unique(Trial$Treatment)
 # rename the treatments so it matches the modelled values ---------------------------------------
 
 
-Trial <- Trial %>% mutate(
+Trail_df <- Trail_df %>% mutate(
   Treatment = case_when(
     Treatment == "01_Nil" ~ "Control"#,
     # Treatment == "N_DP" ~ "District_Practice",
@@ -135,7 +176,7 @@ Trial <- Trial %>% mutate(
 )
 # choose only the treatments I modelled ---------------------------------------
 
-Trial <- Trial %>% filter(
+Trail_df <- Trail_df %>% filter(
     Treatment == "Control" #|
     # Treatment == "District_Practice" |
     # Treatment == "Nbank_Conservative" |
@@ -150,7 +191,7 @@ Trial <- Trial %>% filter(
 
 
 
-write.csv(Trial , 
+write.csv(Trail_df , 
           "X:/Riskwi$e/Curyo/2_Sims_post_Sep2024/To_compare_etc/merge_trial_harvest.csv", row.names = FALSE )
 
 

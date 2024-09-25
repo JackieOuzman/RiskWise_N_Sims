@@ -92,7 +92,7 @@ plot2 <- merged_files_Daily %>%
   ) +
   theme(plot.caption = element_text(hjust = 0)) +
   facet_wrap(.~Treatment)+
-  trial_data %>%
+  trial_data %>% 
   geom_point(mapping = aes(x = Date, y = Biomass),
              colour = "black")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -139,11 +139,21 @@ ggsave(plot = plot3,filename =  paste0(path,"soilWater.png"), width = 20, height
 
 
 #4. Soil NO3+NH4 (Yes) - Soil_mineral_N_sowing
+trial_data$Date
+
 sowing_dates <-  trial_data %>%
-  filter(Date == "2022-12-07"|Date == "2023-10-27") %>% 
+  filter(  Date == "2018-10-10"|
+           Date == "2019-11-15"|
+           Date == "2020-11-21"|
+           Date == "2021-11-25"|
+           Date == "2022-12-07"  ) %>% 
   mutate(Date = case_when(
-    Date == "2022-12-07" ~ "2022-06-03",
-    Date == "2023-10-27" ~ "2023-05-16"
+    Date == "2018-10-10" ~ "2018-05-14",
+    Date == "2019-11-15" ~ "2019-04-29",
+    Date == "2020-11-21" ~ "2020-05-16",
+    Date == "2021-11-25" ~ "2021-05-14",
+    Date == "2022-12-07" ~ "2022-05-19"
+    
   ))
 
 sowing_dates$Date <- as.Date(sowing_dates$Date)
@@ -178,8 +188,7 @@ plot4 <- merged_files_Daily %>%
   theme(plot.caption = element_text(hjust = 0)) +
  facet_wrap(.~Treatment)+
   sowing_dates %>%
-  #filter(Date == "2022-12-07"|Date == "2023-10-27") %>%
- geom_point(mapping = aes(x = Date, y = Soil_mineral_N_sowing),
+  geom_point(mapping = aes(x = Date, y = Soil_mineral_N_sowing),
             colour = "black")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 plot4
@@ -214,7 +223,7 @@ plot5 <- merged_files_Daily %>%
   theme(plot.caption = element_text(hjust = 0)) +
   facet_wrap(.~Treatment)+
   trial_data %>%
-  filter(Date == "2022-12-07"|Date == "2023-10-27") %>%
+  #filter(Date == "2022-12-07"|Date == "2023-10-27") %>%
   geom_point(mapping = aes(x = Date, y = Yield),
              colour = "black")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -226,7 +235,7 @@ ggsave(plot = plot5,filename =  paste0(path,"Yield.png"), width = 20, height = 1
 # Response curve ----------------------------------------------------------
 
 
-Zadock_Stage90_2022 <- merged_files_Daily %>% #just getting the max yield for each year and treatment
+Zadock_Stage90 <- merged_files_Daily %>% #just getting the max yield for each year and treatment
   group_by(Treatment, Year, Source) %>% 
   summarise(max_yld = max(Yield))
 
@@ -235,7 +244,14 @@ Zadock_Stage90_2022 <- merged_files_Daily %>% #just getting the max yield for ea
 
 
 trial_data_plot <- trial_data %>% 
-  filter(Date == "2022-12-07"|Date == "2023-10-27") %>% #These are the harvest dates
+  filter(  Date == "2018-10-10"|
+           Date == "2019-11-15"|
+           Date == "2020-11-21"|
+           Date == "2021-11-25"|
+           Date == "2022-12-07") %>% #These are the harvest dates
+  
+  
+  
   select( "Year" ,
           "Treatment",
           "InCropFert" ,
@@ -244,14 +260,18 @@ trial_data_plot <- trial_data %>%
           "Source")
 
 trial_data_join <- trial_data %>% 
-  filter(Date == "2022-12-07"|Date == "2023-10-27") %>% #These are the harvest dates
+  filter(   Date == "2018-10-10"|
+            Date == "2019-11-15"|
+            Date == "2020-11-21"|
+            Date == "2021-11-25"|
+            Date == "2022-12-07") %>% #These are the harvest dates
   select( "Year" ,
           "Treatment",
           "InCropFert" ,
           "Date"  )
 
 
-Response_input <- left_join(Zadock_Stage90_2022, trial_data_join, , by = join_by(Year,Treatment )) %>% 
+Response_input <- left_join(Zadock_Stage90, trial_data_join, , by = join_by(Year,Treatment )) %>% 
   rename(Yield = max_yld)
 
 
@@ -291,17 +311,27 @@ ggsave(plot = N_Response,filename =  paste0(path,"N_Response.png"), width = 20, 
 
 
 # NStress Water Stress with Biomass formatted for comparison-----------------------------------------------------------------
-sowing_dates <- data.frame(date = as.Date(c("2022-06-03", "2023-05-16")))
+sowing_dates <- data.frame(date = as.Date(c(
+  "2018-05-14", "2019-04-29", "2020-05-16", "2021-05-14", "2022-05-19"
+)))
 sowing_dates
 
-Fert_dates <- data.frame(date = as.Date(c("2022-07-24", "2023-07-07")))
+Fert_dates <- data.frame(date = as.Date(c("2018-08-28", "2019-06-28")))
 Fert_dates
 
-Harvest_dates <- data.frame(date = as.Date(c("2022-12-07", "2023-10-23")))
+Harvest_dates <- data.frame(date = as.Date(
+  c(
+    "2018-10-10",
+    "2019-11-15",
+    "2020-11-21",
+    "2021-11-25",
+    "2022-12-07"  
+  )
+))
 Harvest_dates
 
-Big_rain_dates<- data.frame(date = as.Date(c("2022-08-09","2022-11-01","2023-04-15","2023-12-10")))
-Big_rain_dates
+# Big_rain_dates<- data.frame(date = as.Date(c("2022-08-09","2022-11-01","2023-04-15","2023-12-10")))
+# Big_rain_dates
 
 
 
@@ -311,7 +341,7 @@ Big_rain_dates
 # Biomass formatted for comparison ----------------------------------------
 
 Biomass_format <- merged_files_Daily %>%
-  filter(zadok_stage >= 0) %>%
+  #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = Biomass , colour = Source)) +
   geom_point(size = 2) +
   scale_color_manual(values = c("blue", "purple")) +
@@ -334,18 +364,18 @@ Biomass_format <- merged_files_Daily %>%
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())+
   
-  geom_vline(xintercept = sowing_dates[1:2, 1],
+  geom_vline(xintercept = sowing_dates[1:5, 1], # 5 years of data select 5 rows
              color = "grey",
              lwd = 0.4) +
-  geom_vline(xintercept = Fert_dates[1:2, 1],
+  geom_vline(xintercept = Fert_dates[1:5, 1],
              color = "lightgreen",
              lwd = 0.4) +
-  geom_vline(xintercept = Harvest_dates[1:2, 1],
+  geom_vline(xintercept = Harvest_dates[1:5, 1],
              color = "grey",
-             lwd = 0.4)+
-  geom_vline(xintercept = Big_rain_dates[1:2, 1],
-           color = "lightblue",
-           lwd = 0.4) 
+             lwd = 0.4)#+
+  # geom_vline(xintercept = Big_rain_dates[1:2, 1],
+  #          color = "lightblue",
+  #          lwd = 0.4) 
   
 Biomass_format
 
@@ -375,18 +405,18 @@ NStress_Classic <- merged_files_Daily %>%
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())+
-  geom_vline(xintercept = sowing_dates[1:2, 1],
+  geom_vline(xintercept = sowing_dates[1:5, 1],
              color = "grey",
              lwd = 0.4) +
-  geom_vline(xintercept = Fert_dates[1:2, 1],
+  geom_vline(xintercept = Fert_dates[1:5, 1],
              color = "lightgreen",
              lwd = 0.4) +
-  geom_vline(xintercept = Harvest_dates[1:2, 1],
+  geom_vline(xintercept = Harvest_dates[1:5, 1],
              color = "grey",
-             lwd = 0.4) +
-  geom_vline(xintercept = Big_rain_dates[1:2, 1],
-             color = "lightblue",
-             lwd = 0.4) 
+             lwd = 0.4) #+
+  # geom_vline(xintercept = Big_rain_dates[1:5, 1],
+  #            color = "lightblue",
+  #            lwd = 0.4) 
 
 
 
@@ -415,18 +445,18 @@ NStress_NextG <- merged_files_Daily %>%
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())+
-  geom_vline(xintercept = sowing_dates[1:2, 1],
+  geom_vline(xintercept = sowing_dates[1:5, 1],
              color = "grey",
              lwd = 0.4) +
-  geom_vline(xintercept = Fert_dates[1:2, 1],
+  geom_vline(xintercept = Fert_dates[1:5, 1],
              color = "lightgreen",
              lwd = 0.4) +
-  geom_vline(xintercept = Harvest_dates[1:2, 1],
+  geom_vline(xintercept = Harvest_dates[1:5, 1],
              color = "grey",
-             lwd = 0.4) +
-  geom_vline(xintercept = Big_rain_dates[1:2, 1],
-             color = "lightblue",
-             lwd = 0.4) 
+              lwd = 0.4) #+
+  # geom_vline(xintercept = Big_rain_dates[1:5, 1],
+  #            color = "lightblue",
+  #            lwd = 0.4) 
   
 
 
@@ -462,18 +492,18 @@ WaterStress_Classic <- merged_files_Daily %>%
   facet_wrap(.~Treatment, nrow = 1)+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
   theme(legend.position = "none")+
-  geom_vline(xintercept = sowing_dates[1:2, 1],
+  geom_vline(xintercept = sowing_dates[1:5, 1],
              color = "grey",
              lwd = 0.4) +
-  geom_vline(xintercept = Fert_dates[1:2, 1],
+  geom_vline(xintercept = Fert_dates[1:5, 1],
              color = "lightgreen",
              lwd = 0.4) +
-  geom_vline(xintercept = Harvest_dates[1:2, 1],
+  geom_vline(xintercept = Harvest_dates[1:5, 1],
              color = "grey",
-             lwd = 0.4) +
-  geom_vline(xintercept = Big_rain_dates[1:2, 1],
-             color = "lightblue",
-             lwd = 0.4) +
+             lwd = 0.4) #+
+  # geom_vline(xintercept = Big_rain_dates[1:5, 1],
+  #            color = "lightblue",
+  #            lwd = 0.4) +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
@@ -507,10 +537,10 @@ WaterStress_NextG <- merged_files_Daily %>%
              lwd = 0.4) +
   geom_vline(xintercept = Harvest_dates[1:2, 1],
              color = "grey",
-             lwd = 0.4) +
-  geom_vline(xintercept = Big_rain_dates[1:2, 1],
-             color = "lightblue",
-             lwd = 0.4) +
+             lwd = 0.4) #+
+  # geom_vline(xintercept = Big_rain_dates[1:2, 1],
+  #            color = "lightblue",
+  #            lwd = 0.4) +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
