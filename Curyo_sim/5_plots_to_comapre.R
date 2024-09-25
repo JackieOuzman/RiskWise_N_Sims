@@ -69,7 +69,7 @@ str(trial_data)
 
 #2. Biomass #Plot_2
 plot2 <- merged_files_Daily %>%
-  #filter(!is.na(Treatment)) %>% 
+  filter(!is.na(Treatment)) %>% 
   ggplot(aes(x = (Date), y = Biomass , colour = Source)) +
   geom_point(size = 2) +
   scale_color_manual(values = c("blue", "purple")) +
@@ -107,7 +107,7 @@ names(merged_files_Daily)
 
 #3. Soilwater 
 plot3 <- merged_files_Daily %>%
-  
+  filter(!is.na(Treatment)) %>% 
   #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = soil_water , colour = Source)) +
   geom_point(size = 1) +
@@ -163,8 +163,8 @@ str(merged_files_Daily$Date)
 
 names(trial_data)
 plot4 <- merged_files_Daily %>%
-  
-  filter(zadok_stage >= 0) %>%
+  filter(!is.na(Treatment)) %>% 
+  #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = soil_NO3 , colour = Source)) +
   geom_point(size = 1) +
   scale_color_manual(values = c("blue", "purple")) +
@@ -198,8 +198,8 @@ ggsave(plot = plot4,filename =  paste0(path,"soilNO3.png"), width = 20, height =
 names(merged_files_Daily)
 names(trial_data)
 plot5 <- merged_files_Daily %>%
-  
-  filter(zadok_stage >= 0) %>%
+  filter(!is.na(Treatment)) %>% 
+ # filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = Yield , colour = Source)) +
   geom_point(size = 1) +
   scale_color_manual(values = c("blue", "purple")) +
@@ -341,6 +341,7 @@ Harvest_dates
 # Biomass formatted for comparison ----------------------------------------
 
 Biomass_format <- merged_files_Daily %>%
+  filter(!is.na(Treatment)) %>% 
   #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = Biomass , colour = Source)) +
   geom_point(size = 2) +
@@ -385,7 +386,8 @@ unique(merged_files_Daily$Source)
 
 NStress_Classic <- merged_files_Daily %>%
   filter(Source == "APISM_Classic_Rotation") %>%
-  filter(zadok_stage >= 0) %>%
+  filter(!is.na(Treatment)) %>% 
+  #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = NSTress , colour = Source
              )) +
   geom_point(size = 1, colour = "blue") +

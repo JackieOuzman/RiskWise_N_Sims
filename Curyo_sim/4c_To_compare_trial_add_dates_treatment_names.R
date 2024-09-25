@@ -167,7 +167,14 @@ unique(Trail_df$Treatment)
 
 Trail_df <- Trail_df %>% mutate(
   Treatment = case_when(
-    Treatment == "01_Nil" ~ "Control"#,
+    
+      Treatment == "01_Nil" ~ "Control",
+      Treatment == "03_National_Average" ~ "National_Av",
+      Treatment == "04_100kgMaint" ~ "Maint_100",
+      Treatment == "05_125kgMaint" ~ "Maint_125",
+      Treatment == "06_150kgMaint" ~ "Maint_150"
+    
+    #Treatment == "01_Nil" ~ "Control"#,
     # Treatment == "N_DP" ~ "District_Practice",
     # Treatment == "N_Bank_Conservative" ~ "Nbank_Conservative",
     # Treatment == "N_Bank_Profit" ~ "Nbank_Optimum_Profit",
@@ -177,11 +184,11 @@ Trail_df <- Trail_df %>% mutate(
 # choose only the treatments I modelled ---------------------------------------
 
 Trail_df <- Trail_df %>% filter(
-    Treatment == "Control" #|
-    # Treatment == "District_Practice" |
-    # Treatment == "Nbank_Conservative" |
-    # Treatment == "Nbank_Optimum_Profit" |
-    # Treatment == "Nbank_Optimum_Yield"
+    Treatment == "Control" |
+    Treatment == "National_Av" |
+    Treatment == "Maint_100" |
+    Treatment == "Maint_125" |
+    Treatment == "Maint_150"
 )
 
 

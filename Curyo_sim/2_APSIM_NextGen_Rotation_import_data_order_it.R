@@ -22,7 +22,7 @@ str(APSIM_NextGen_daily)
 APSIM_NextGen_daily <- APSIM_NextGen_daily %>% 
   mutate(Year = year(Date), 
          Source = "NextGen",
-         Treatment = SimulationName,
+         Treatment = Zone,
          InCropFert = FertNApplied,#check this is the correct clm could be FertAmt 
          
          soil_water_start =SwStart ,
