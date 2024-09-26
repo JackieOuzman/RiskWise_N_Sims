@@ -428,6 +428,7 @@ NStress_Classic
 
 
 NStress_NextG <- merged_files_Daily %>%
+  filter(!is.na(Treatment)) %>% 
   filter(Source == "NextGen") %>%
   #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = NSTress , colour = Source
@@ -494,7 +495,7 @@ WaterStress_Classic <- merged_files_Daily %>%
   ) +
   theme(plot.caption = element_text(hjust = 0)) +
   facet_wrap(.~Treatment, nrow = 1)+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
   theme(legend.position = "none")+
   geom_vline(xintercept = sowing_dates[1:5, 1],
              color = "grey",
@@ -504,7 +505,7 @@ WaterStress_Classic <- merged_files_Daily %>%
              lwd = 0.4) +
   geom_vline(xintercept = Harvest_dates[1:5, 1],
              color = "grey",
-             lwd = 0.4) #+
+             lwd = 0.4) +
   # geom_vline(xintercept = Big_rain_dates[1:5, 1],
   #            color = "lightblue",
   #            lwd = 0.4) +
@@ -517,6 +518,7 @@ WaterStress_Classic <- merged_files_Daily %>%
 WaterStress_Classic
 
 WaterStress_NextG <- merged_files_Daily %>%
+  filter(!is.na(Treatment)) %>% 
   filter(Source == "NextGen") %>%
   #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = WaterStress , colour = Source)) +
@@ -533,21 +535,21 @@ WaterStress_NextG <- merged_files_Daily %>%
   facet_wrap(.~Treatment, nrow = 1)+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
   theme(legend.position = "none")+
-  geom_vline(xintercept = sowing_dates[1:2, 1],
+  geom_vline(xintercept = sowing_dates[1:5, 1],
              color = "grey",
              lwd = 0.4) +
-  geom_vline(xintercept = Fert_dates[1:2, 1],
+  geom_vline(xintercept = Fert_dates[1:5, 1],
              color = "lightgreen",
              lwd = 0.4) +
-  geom_vline(xintercept = Harvest_dates[1:2, 1],
+  geom_vline(xintercept = Harvest_dates[1:5, 1],
              color = "grey",
-             lwd = 0.4) #+
+             lwd = 0.4) +
   # geom_vline(xintercept = Big_rain_dates[1:2, 1],
   #            color = "lightblue",
   #            lwd = 0.4) +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+  theme(axis.title.x=element_blank())#,
+        #axis.text.x=element_blank(),
+        #axis.ticks.x=element_blank())
 
 
 
