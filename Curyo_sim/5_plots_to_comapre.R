@@ -134,6 +134,7 @@ plot3 <- merged_files_Daily %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
 plot3
+
 ggsave(plot = plot3,filename =  paste0(path,"soilWater.png"), width = 20, height = 12, units = "cm")
 
 
@@ -316,7 +317,8 @@ sowing_dates <- data.frame(date = as.Date(c(
 )))
 sowing_dates
 
-Fert_dates <- data.frame(date = as.Date(c("2018-08-28", "2019-06-28")))
+Fert_dates <- data.frame(date = as.Date(c(
+  "2018-08-28", "2019-06-28","2020-07-23", "2021-07-23", "2022-07-08" )))
 Fert_dates
 
 Harvest_dates <- data.frame(date = as.Date(
@@ -385,7 +387,7 @@ Biomass_format
 unique(merged_files_Daily$Source)
 
 NStress_Classic <- merged_files_Daily %>%
-  filter(Source == "APISM_Classic_Rotation") %>%
+  filter(Source == "APISM_Classic_Operation_Sch") %>%
   filter(!is.na(Treatment)) %>% 
   #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = NSTress , colour = Source
@@ -427,7 +429,7 @@ NStress_Classic
 
 NStress_NextG <- merged_files_Daily %>%
   filter(Source == "NextGen") %>%
-  filter(zadok_stage >= 0) %>%
+  #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = NSTress , colour = Source
   )) +
   geom_point(size = 1, colour = "purple") +
@@ -478,8 +480,8 @@ names(merged_files_Daily)
 
 
 WaterStress_Classic <- merged_files_Daily %>%
-  filter(Source == "APISM_Classic_Rotation") %>%
-  filter(zadok_stage >= 0) %>%
+  filter(Source == "APISM_Classic_Operation_Sch") %>%
+  #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = WaterStress , colour = Source)) +
   geom_point(colour = "blue") +
   scale_color_manual(values = c("blue", "purple")) +
@@ -516,7 +518,7 @@ WaterStress_Classic
 
 WaterStress_NextG <- merged_files_Daily %>%
   filter(Source == "NextGen") %>%
-  filter(zadok_stage >= 0) %>%
+  #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = WaterStress , colour = Source)) +
   geom_point(colour = "purple") +
   scale_color_manual(values = c("blue", "purple")) +
