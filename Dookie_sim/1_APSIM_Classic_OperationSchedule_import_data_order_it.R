@@ -33,9 +33,11 @@ list_sim_out_file
 
 
 list_sim_out_file <- c(
-  "Operation_schedule Nil outputfileDaily.out"
-  
-  
+  "Operation_schedule Nil outputfileDaily.out",
+  "Operation_schedule N_BankProfit outputfileDaily.out",      
+  "Operation_schedule N_BankYield outputfileDaily.out"  ,     
+  "Operation_schedule National_Av outputfileDaily.out" ,      
+  "Operation_schedule Nil outputfileDaily.out"  
 )
                          
 list_sim_out_file
