@@ -18,6 +18,7 @@ names(Trial_setup_outputs)
 
 df_selection  <- Trial_setup_outputs %>% 
   select(Year , 
+         Date = `Harvest Date`,
          #"Trial" = Source)#,
          Treatment = `Jax_ID`, #was System 
          InCropFert =  `Total N applied at sowing and inseason` ,
@@ -67,6 +68,7 @@ str(df_selection)
 #Just ordering it
 df_selection  <- df_selection %>% 
   select(Year , 
+         Date,
          Source,
          Treatment  ,
          InCropFert  ,
