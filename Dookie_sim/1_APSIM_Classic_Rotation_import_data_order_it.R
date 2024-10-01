@@ -14,9 +14,9 @@ library(readxl)
 
 # Daily output files -------------------------------------------------------
 
-site <-"/Curyo_Rotation"
+site <-"/Dookie_Rotation"
 #""X:\Riskwi$e\Curyo\2_Sims_post_Sep2024\1_Classic""
-file_directory <- paste0("X:/Riskwi$e/Curyo/2_Sims_post_Sep2024/1_Classic",site)
+file_directory <- paste0("X:/Riskwi$e/Dookie/2_Sims_post_Sep2024/1_Classic",site)
 
 file_directory
 
@@ -24,7 +24,7 @@ file_directory
 list_sim_out_file <-
   list.files(
     path = file_directory,
-    pattern = ".out",
+    pattern = "outputfileDaily.out",
     all.files = FALSE,
     full.names = FALSE
   )
@@ -34,14 +34,14 @@ list_sim_out_file
 
 list_sim_out_file <- c(
   
-  "Cuyro Rotation_N0 outputfileDaily.out"
+  "Dookie Rotation_N0 outputfileDaily.out"
 )
                          
 list_sim_out_file
 
 
 #Test approach
-list_sim_out_file <- c("Cuyro Rotation_N0 outputfileDaily.out")
+#list_sim_out_file <- c("Cuyro Rotation_N0 outputfileDaily.out")
 # create a empty data frame -----------------------------------------------
 
 df_for_all_data <- data.frame(
@@ -157,7 +157,7 @@ for (list_sim_out_file in list_sim_out_file){
   title_a
   title_b<-gsub("outputfileDaily","",as.character(title_a)) #daily output
   title_b
-  title_c<-gsub("Bute Rotation_Bute_","",as.character(title_b)) #this is the leading sim name - will need to change for different sites
+  title_c<-gsub("Dookie Rotation_","",as.character(title_b)) #this is the leading sim name - will need to change for different sites
   title_c
   title_d <- trimws(title_c) #trim the white space
   title_d
@@ -243,57 +243,33 @@ df_for_all_data_1 <- df_for_all_data_1 %>% mutate(
   Source = "APISM_Classic_Rotation",
   Treatment = title,
   Crop = case_when(
-    Year  == 2018 ~ "Wheat",
-    Year  == 2021 ~ "Canola",
-    Year  == 2020 ~ "Wheat",
-    Year  == 2021 ~ "Barley",
-    Year  == 2022 ~ "Wheat" ),
+    Year  == 2022 ~ "Canola",
+    Year  == 2023 ~ "Wheat" ),
   Cultivar = case_when(
-    Year  == 2018 ~ "mace",
-    Year  == 2021 ~ "early",
-    Year  == 2020 ~ "mace",
-    Year  == 2021 ~ "commander",
-    Year  == 2022 ~ "mace" ),
+    Year  == 2022 ~ "early",
+    Year  == 2023 ~ "yitpi" ),
   Biomass = case_when(
-    Year  == 2018 ~ Wheat_biomass,
-    Year  == 2021 ~ canola_biomass,
-    Year  == 2020 ~ Wheat_biomass,
-    Year  == 2021 ~ Barley_biomass,
-    Year  == 2022 ~ Wheat_biomass ),
+    Year  == 2022 ~ canola_biomass,
+    Year  == 2023 ~ Wheat_biomass),
   Yield = case_when(
-    Year  == 2018 ~ Wheat_yield/1000,
-    Year  == 2021 ~ Canola_yield/1000,
-    Year  == 2020 ~ Wheat_yield/1000,
-    Year  == 2021 ~ Barley_yield/1000,
-    Year  == 2022 ~ Wheat_yield/1000 ),
+    Year  == 2022 ~ Canola_yield/1000,
+    Year  == 2023 ~ Wheat_yield/1000 ),
     
   sw_stress_photo= case_when(
-    Year  == 2018 ~ Wheat_sw_stress_photo,
-    Year  == 2021 ~ canola_sw_stress_photo,
-    Year  == 2020 ~ Wheat_sw_stress_photo,
-    Year  == 2021 ~ barley_sw_stress_photo,
-    Year  == 2022 ~ Wheat_sw_stress_photo ),
+    Year  == 2022 ~ canola_sw_stress_photo,
+    Year  == 2023 ~ Wheat_sw_stress_photo ),
     
   n_stress_photo= case_when(
-    Year  == 2018 ~ Wheat_n_stress_photo,
-    Year  == 2021 ~ canola_n_stress_photo,
-    Year  == 2020 ~ Wheat_n_stress_photo,
-    Year  == 2021 ~ barley_n_stress_photo,
-    Year  == 2022 ~ Wheat_n_stress_photo ),
+    Year  == 2022 ~ canola_n_stress_photo,
+    Year  == 2023 ~ Wheat_n_stress_photo ),
     
   zadok_stage = case_when(
-    Year  == 2018 ~ Wheat.zadok_stage,
-    Year  == 2021 ~ canola.stage,  
-    Year  == 2020 ~ Wheat.zadok_stage,
-    Year  == 2021 ~ barley.zadok_stage,
-    Year  == 2022 ~ Wheat.zadok_stage ),
+    Year  == 2022 ~ canola.stage,
+    Year  == 2023 ~ Wheat.zadok_stage ),
   
   dlt_dm = case_when(
-    Year  == 2018 ~ Wheat_dlt_dm,
-    Year  == 2021 ~ canola_dlt_dm,
-    Year  == 2020 ~ Wheat_dlt_dm,
-    Year  == 2021 ~ barley_dlt_dm,
-    Year  == 2022 ~ Wheat_dlt_dm ),
+    Year  == 2022 ~ canola_dlt_dm,
+    Year  == 2023 ~ Wheat_dlt_dm),
     
   HarvestIndex = (Yield*1000)/Biomass
   
@@ -326,5 +302,5 @@ df_for_all_data_1 <- df_for_all_data_1 %>% select(
 )
 
 
-write.csv(df_for_all_data_1 , "X:/Riskwi$e/Curyo/2_Sims_post_Sep2024/To_compare_etc/APSIM_Classic_RotationsDaily.csv", row.names = FALSE )
+write.csv(df_for_all_data_1 , "X:/Riskwi$e/Dookie/2_Sims_post_Sep2024/To_compare_etc/APSIM_Classic_RotationsDaily.csv", row.names = FALSE )
 
