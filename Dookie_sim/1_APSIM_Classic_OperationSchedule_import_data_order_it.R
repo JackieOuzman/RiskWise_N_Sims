@@ -37,7 +37,7 @@ list_sim_out_file <- c(
   "Operation_schedule N_BankProfit outputfileDaily.out",      
   "Operation_schedule N_BankYield outputfileDaily.out"  ,     
   "Operation_schedule National_Av outputfileDaily.out" ,      
-  "Operation_schedule Nil outputfileDaily.out"  
+  "Operation_schedule N_BankConservative outputfileDaily.out"  
 )
                          
 list_sim_out_file
@@ -307,6 +307,7 @@ df_for_all_data_1 <- df_for_all_data_1 %>% select(
   
 )
 
+unique(df_for_all_data_1$Treatment)
 
 write.csv(df_for_all_data_1 , "X:/Riskwi$e/Dookie/2_Sims_post_Sep2024/To_compare_etc/APSIM_Classic_OperationScheduleDaily.csv", row.names = FALSE )
 

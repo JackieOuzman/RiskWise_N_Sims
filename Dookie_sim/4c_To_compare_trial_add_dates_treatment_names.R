@@ -156,9 +156,9 @@ Trail_df <- Trail_df %>% mutate(
     
       Treatment == "01_Nil" ~ "Control",
       Treatment == "02_National Average" ~ "National_Av",
-      Treatment == "08_N Bank Conservative" ~ "N_Bank_Conservative",
-      Treatment == "09_N Bank Optimal Profit" ~ "N_Bank_Optimal_Profit",
-      Treatment == "10_N Bank Optimal Yield" ~ "N_Bank_Optimal_Yield"
+      Treatment == "08_N Bank Conservative" ~ "Nbank_Conservative",
+      Treatment == "09_N Bank Optimal Profit" ~ "Nbank_Optimum_Profit",
+      Treatment == "10_N Bank Optimal Yield" ~ "Nbank_Optimum_Yield"
     
     #Treatment == "01_Nil" ~ "Control"#,
     # Treatment == "N_DP" ~ "District_Practice",
@@ -172,9 +172,9 @@ Trail_df <- Trail_df %>% mutate(
 Trail_df <- Trail_df %>% filter(
     Treatment == "Control" |
     Treatment == "National_Av" |
-    Treatment == "N_Bank_Conservative" |
-    Treatment == "N_Bank_Optimal_Profit" |
-    Treatment == "N_Bank_Optimal_Yield"
+    Treatment == "Nbank_Conservative" |
+    Treatment == "Nbank_Optimum_Profit" |
+    Treatment == "Nbank_Optimum_Yield"
 )
 
 

@@ -147,5 +147,7 @@ APSIM_NextGen_daily  <- APSIM_NextGen_daily %>%
   )
 
 
+unique(APSIM_NextGen_daily$Treatment)
+
 write.csv(APSIM_NextGen_daily ,
           "X:/Riskwi$e/Dookie/2_Sims_post_Sep2024/To_compare_etc/APSIM_NextGen_Daily.csv", row.names = FALSE )

@@ -122,11 +122,11 @@ unique(NextG_D$Treatment)
 
 Classic_D <- Classic_D %>% mutate(
   Treatment = case_when(
-    Treatment == "Nil" ~ "Control"#,
-    # Treatment == "National_Average" ~ "National_Av",
-    # Treatment == "Maint100" ~ "Maint_100",
-    # Treatment == "Maint125" ~ "Maint_125",
-    # Treatment == "Maint150" ~ "Maint_150"
+    Treatment == "Nil" ~ "Control",
+    Treatment == "National_Av" ~ "National_Av",
+    Treatment == "N_BankProfit" ~ "Nbank_Optimum_Profit",
+    Treatment == "N_BankYield" ~ "Nbank_Optimum_Yield",
+    Treatment == "N_BankConservative" ~ "Nbank_Conservative"
     
      # Treatment == "N_DP" ~ "District_Practice",
     # Treatment == "N_Bank_Conservative" ~ "Nbank_Conservative",
@@ -136,11 +136,11 @@ Classic_D <- Classic_D %>% mutate(
 )
 NextG_D <- NextG_D %>% mutate(
       Treatment = case_when(
-      Treatment == "Nil" ~ "Control"#,
-      # Treatment == "National_Av" ~ "National_Av",
-      # Treatment == "Maint_100" ~ "Maint_100",
-      # Treatment == "Maint_125" ~ "Maint_125",
-      # Treatment == "Maint_150" ~ "Maint_150"
+      Treatment == "Nil" ~ "Control",
+      Treatment == "National_Av" ~ "National_Av",
+      Treatment == "NBankConsevative" ~ "Nbank_Conservative",
+      Treatment == "NBankProfit" ~ "Nbank_Optimum_Profit",
+      Treatment == "NBankYield" ~ "Nbank_Optimum_Yield"
     # Treatment == "Curyo_Nil" ~ "Control" #,
     # Treatment == "Bute_DP" ~ "District_Practice",
     # Treatment == "Bute_NBank_Conservative" ~ "Nbank_Conservative",
