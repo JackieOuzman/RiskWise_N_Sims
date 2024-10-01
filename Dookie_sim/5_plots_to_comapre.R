@@ -80,7 +80,7 @@ plot2 <- merged_files_Daily %>%
   scale_color_manual(values = c("blue", "purple")) +
   theme_bw() +
   labs(
-    title = "Biomass. Curyo Sims ",
+    title = "Biomass. Dookie Sims ",
     subtitle = "No trial biomass data collected / found ",
     colour = "",
     x = "Year",
@@ -119,7 +119,7 @@ plot3 <- merged_files_Daily %>%
   scale_color_manual(values = c("blue", "purple")) +
   theme_bw() +
   labs(
-    title = "Soil Water. Curyo Sims ",
+    title = "Soil Water. Dookie Sims ",
    
     colour = "",
     x = "Year",
@@ -169,7 +169,7 @@ plot4 <- merged_files_Daily %>%
   scale_color_manual(values = c("blue", "purple")) +
   theme_bw() +
   labs(
-    title = "Soil NO3 Curyo Sims ",
+    title = "Soil NO3 Dookie Sims ",
     #subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -204,7 +204,7 @@ plot5 <- merged_files_Daily %>%
   scale_color_manual(values = c("blue", "purple")) +
   theme_bw() +
   labs(
-    title = "Yield Curyo Sims ",
+    title = "Yield Dookie Sims ",
    # subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -243,11 +243,9 @@ Zadock_Stage90 <- merged_files_Daily %>% #just getting the max yield for each ye
 
 
 trial_data_plot <- trial_data %>% 
-  filter(  Date == "2018-10-10"|
-           Date == "2019-11-15"|
-           Date == "2020-11-21"|
-           Date == "2021-11-25"|
-           Date == "2022-12-07") %>% #These are the harvest dates
+  filter(  Date == "2022-11-10"|
+           Date == "2023-11-23"
+           ) %>% #These are the harvest dates
   
   
   
@@ -258,12 +256,9 @@ trial_data_plot <- trial_data %>%
           "Yield",
           "Source")
 
-trial_data_join <- trial_data %>% 
-  filter(   Date == "2018-10-10"|
-            Date == "2019-11-15"|
-            Date == "2020-11-21"|
-            Date == "2021-11-25"|
-            Date == "2022-12-07") %>% #These are the harvest dates
+trial_data_join <- trial_data %>%
+  filter(Date == "2022-11-10" |
+         Date == "2023-11-23") %>% #These are the harvest dates
   select( "Year" ,
           "Treatment",
           "InCropFert" ,
@@ -287,7 +282,7 @@ N_Response <- Response_input %>%
   scale_color_manual(values = c("blue", "purple", "black")) +
   theme_bw() +
   labs(
-    title = "Response curve Curyo",
+    title = "Response curve Dookie",
     colour = "",
     x = "InCropFert",
     y = "",
@@ -310,23 +305,25 @@ ggsave(plot = N_Response,filename =  paste0(path,"N_Response.png"), width = 20, 
 
 
 # NStress Water Stress with Biomass formatted for comparison-----------------------------------------------------------------
+
+max(merged_files_Daily$Date)
+
 sowing_dates <- data.frame(date = as.Date(c(
-  "2018-05-14", "2019-04-29", "2020-05-16", "2021-05-14", "2022-05-19"
+  "2022-04-15",
+  "2023-05-04"
 )))
 sowing_dates
 
 Fert_dates <- data.frame(date = as.Date(c(
-  "2018-08-28", "2019-06-28","2020-07-23", "2021-07-23", "2022-07-08" )))
+  "2022-05-01", 
+  "2022-06-28",
+  "2023-08-02" )))
 Fert_dates
 
 Harvest_dates <- data.frame(date = as.Date(
   c(
-    "2018-10-10",
-    "2019-11-15",
-    "2020-11-21",
-    "2021-11-25",
-    "2022-12-07"  
-  )
+    "2022-11-10",
+    "2023-11-23"  )
 ))
 Harvest_dates
 
@@ -348,7 +345,7 @@ Biomass_format <- merged_files_Daily %>%
   scale_color_manual(values = c("blue", "purple")) +
   theme_classic() +
   labs(
-    #title = "Biomass. Curyo Sims ",
+    #title = "Biomass. Dookie Sims ",
     colour = "",
     #x = "Year",
     y = "Biomass",
@@ -356,9 +353,9 @@ Biomass_format <- merged_files_Daily %>%
   ) +
   theme(plot.caption = element_text(hjust = 0)) +
   facet_wrap(.~Treatment, nrow = 1)+
-  trial_data %>%
-  geom_point(mapping = aes(x = Date, y = Biomass),
-             colour = "black")+
+  # trial_data %>% # no biomass data
+  # geom_point(mapping = aes(x = Date, y = Biomass),
+  #            colour = "black")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
   theme(legend.position = "none")+
   theme(axis.title.x=element_blank(),
