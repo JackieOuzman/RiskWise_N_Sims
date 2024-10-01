@@ -48,11 +48,11 @@ df_selection  <- df_selection %>%
     #soil_water_sowing = "Not_provided", provided in some years
     soil_water_harvest = "Not_provided",
     
-    soil_NO3_start = "47",
+    soil_NO3_start = "69.7",
    # soil_N03_sowing = "Not_provided",provided in some years
     soil_NO3_harvest = "Not_provided",
     
-    soil_NH4_start= "0",
+    soil_NH4_start= "14.5",
     #soil_NH4_sowing= "Not_provided", provided in some years
     soil_NH4_harvest= "Not_provided",
     
