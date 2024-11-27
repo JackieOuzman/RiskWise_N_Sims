@@ -13,7 +13,7 @@ library(patchwork)
 
 # File path for formatted outputs -----------------------------------------
 
-path <- "X:/Riskwi$e//Bute/3_Sims_post_Nov2024/results/"
+path <- "X:/Riskwi$e/Bute/3_Sims_post_Nov2024/results/"
 
 
 list_sim_out_file <-
@@ -28,7 +28,7 @@ list_sim_out_file
 
 # SIM and Trial data --------------------------------------------------------------
 
-merged_files_Daily <- read_csv(paste0(path, "merge_sim_Daily.csv"))
+merged_files_Daily <- read_csv(paste0(path, "APSIM_NextGen_Daily.csv"))
 str(merged_files_Daily$Date)
 
 trial_data <- read_csv(paste0(path, "merge_trial_harvest_and_anthesis.csv"))
@@ -39,11 +39,8 @@ str(trial_data$Date)
 
 # Make sure treatments are matching ---------------------------------------
 
-
-
-
-
-"X:\Riskwi$e\Bute\3_Sims_post_Nov2024\Bute_5_Rotation_N_bank_v3.apsimx"
+unique(trial_data$Treatment)
+unique(merged_files_Daily$Treatment)
 
 # Plot --------------------------------------------------------------------
 Location_of_Sims<- "X:/Riskwi$eBute/3_Sims_post_Nov2024/"
@@ -70,9 +67,9 @@ str(trial_data)
 #2. Biomass #Plot_2
 plot2 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
-  ggplot(aes(x = (Date), y = Biomass , colour = Source)) +
-  geom_point(size = 2) +
-  scale_color_manual(values = c("blue", "purple")) +
+  ggplot(aes(x = (Date), y = Biomass )) +
+  geom_point(size = 2, colour ="blue" ) +
+  #scale_color_manual(values = c("blue")) +
   theme_bw() +
   labs(
     title = "Biomass. Bute Sims ",
@@ -108,9 +105,8 @@ names(merged_files_Daily)
 plot3 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
   #filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = soil_water , colour = Source)) +
-  geom_point(size = 1) +
-  scale_color_manual(values = c("blue", "purple")) +
+  ggplot(aes(x = (Date), y = soil_water )) +
+  geom_point(size = 1, colour ="blue" ) +
   theme_bw() +
   labs(
     title = "Soil Water. Curyo Sims ",
@@ -123,9 +119,8 @@ plot3 <- merged_files_Daily %>%
       '\n',
       Location_of_Sims,
       '\n',
-      NextG_location,
-      '\n',
-      Classic_Location
+      NextG_name
+     
     )
   ) +
   theme(plot.caption = element_text(hjust = 0)) +
@@ -140,19 +135,15 @@ ggsave(plot = plot3,filename =  paste0(path,"soilWater.png"), width = 20, height
 
 #4. Soil NO3+NH4 (Yes) - Soil_mineral_N_sowing
 trial_data$Date
+unique(trial_data$Date)
+
 
 sowing_dates <-  trial_data %>%
-  filter(  Date == "2018-10-10"|
-           Date == "2019-11-15"|
-           Date == "2020-11-21"|
-           Date == "2021-11-25"|
-           Date == "2022-12-07"  ) %>% 
+  filter(  Date == "2022-12-07"| #this is the harvest date in the trial data file
+           Date == "2023-10-27" ) %>% 
   mutate(Date = case_when(
-    Date == "2018-10-10" ~ "2018-05-14",
-    Date == "2019-11-15" ~ "2019-04-29",
-    Date == "2020-11-21" ~ "2020-05-16",
-    Date == "2021-11-25" ~ "2021-05-14",
-    Date == "2022-12-07" ~ "2022-05-19"
+    Date == "2022-12-07" ~ "2022-06-03", #this is the sowing date in the trial data file
+    Date == "2023-10-27" ~ "2023-05-16"
     
   ))
 
@@ -162,12 +153,14 @@ str(merged_files_Daily$Date)
 
 
 names(trial_data)
+names(merged_files_Daily)
+#unique(merged_files_Daily$Soil_mineral_N_sowing)
+
 plot4 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
-  #filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = soil_NO3 , colour = Source)) +
-  geom_point(size = 1) +
-  scale_color_manual(values = c("blue", "purple")) +
+  filter(zadok_stage >= 0) %>%
+  ggplot(aes(x = (Date), y = soil_NO3 )) + #soil_N03_sowing
+  geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
     title = "Soil NO3 Curyo Sims ",
@@ -180,9 +173,7 @@ plot4 <- merged_files_Daily %>%
       '\n',
       Location_of_Sims,
       '\n',
-      NextG_location,
-      '\n',
-      Classic_Location
+      NextG_name
     )
   ) +
   theme(plot.caption = element_text(hjust = 0)) +
@@ -200,9 +191,8 @@ names(trial_data)
 plot5 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
  # filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = Yield , colour = Source)) +
-  geom_point(size = 1) +
-  scale_color_manual(values = c("blue", "purple")) +
+  ggplot(aes(x = (Date), y = Yield )) +
+  geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
     title = "Yield Curyo Sims ",
@@ -215,9 +205,7 @@ plot5 <- merged_files_Daily %>%
       '\n',
       Location_of_Sims,
       '\n',
-      NextG_location,
-      '\n',
-      Classic_Location
+      NextG_name
     )
   ) +
   theme(plot.caption = element_text(hjust = 0)) +
@@ -297,7 +285,7 @@ N_Response <- Response_input %>%
       '\n',
       Location_of_Sims,
       '\n',
-      NextG_location,
+      NextG_name,
       '\n',
       Classic_Location
     )

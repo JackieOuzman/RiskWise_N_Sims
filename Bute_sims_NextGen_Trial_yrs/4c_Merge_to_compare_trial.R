@@ -23,7 +23,7 @@ list_sim_out_file <-
 
 list_sim_out_file
 
-# Trial data from excel sheet--------------------------------------------------------------
+# Trial data from excel sheet to get some dates---------------------------------
 Bute_trial_setup_outputs <- read_excel("X:/Riskwi$e/Bute/3_Sims_post_Nov2024/Bute_trial_setup_outputs.xlsx", 
                                        sheet = "Treatments_Jackie", skip = 2)
 str(Bute_trial_setup_outputs)
@@ -57,9 +57,99 @@ Anthesis_Dates2023 <- Anthesis_Dates2023$date
 
 
 
-# Trial data with formatting in R --------------------------------------------------------------
-Trial <- read_csv(paste0(path, "APSIM_Trial_.csv"))
+# Trial data with 'correct' formatting in R ------------------------------------
 
+Bute_selection  <- Bute_trial_setup_outputs %>% 
+  select(Year , 
+         #"Trial" = Source)#,
+         Treatment = System ,
+         InCropFert =  `Total N applied at sowing and inseason` ,
+         Crop = `Crop type` ,
+         Cultivar = Variety ,
+         
+         #soil_water_start = "0.396",
+         #soil_water_sowing = "Not_provided",
+         #soil_water_harvest = "Not_provided",
+         
+         #soil_NO3_start = "116",
+         #soil_N03_sowing = "Not_provided"
+         #soil_NO3_harvest = "Not_provided",
+         
+         # soil_NH4_start= "30",
+         # soil_NH4_sowing= "Not_provided",
+         # soil_NH4_harvest= "Not_provided",
+         
+         Soil_mineral_N_sowing =`Soil mineral N (kg/ha) - prior to sowing`, #umm is this NO3 + NH4?
+         # 
+         # Biomass = "Not_provided",
+         Yield = `Yield (t/ha)` ,
+         #InCropRain= "Not_provided"
+         
+         DM_Anthesis = 'Dry matter at anthesis (t/ha)',
+         Biomass ='Dry matter at harvest (t/ha)', # is this the same?
+         Harvest_Index ='Harvest index' 
+         
+  )
+
+Bute_selection  <- Bute_selection %>% 
+  mutate(
+    Source = "Trial" ,
+    
+    
+    soil_water_start = "0.396",
+    soil_water_sowing = "Not_provided",
+    soil_water_harvest = "Not_provided",
+    
+    soil_NO3_start = "116",
+    soil_N03_sowing = "Not_provided",
+    
+    soil_NO3_harvest = "Not_provided",
+    
+    soil_NH4_start= "30",
+    soil_NH4_sowing= "Not_provided",
+    soil_NH4_harvest= "Not_provided",
+    
+    
+    
+    InCropRain= "Not_provided"
+  )
+
+
+str(Bute_selection)
+
+#Just ordering it
+Bute_selection  <- Bute_selection %>% 
+  select(Year , 
+         Source,
+         Treatment  ,
+         InCropFert  ,
+         Crop ,
+         Cultivar  ,
+         
+         soil_water_start ,
+         soil_water_sowing,
+         soil_water_harvest ,
+         
+         soil_NO3_start ,
+         soil_N03_sowing, #umm is this NO3 + NH4?
+         soil_NO3_harvest ,
+         
+         soil_NH4_start,
+         soil_NH4_sowing,
+         soil_NH4_harvest,
+         Soil_mineral_N_sowing,
+         
+         Biomass ,
+         Yield  ,
+         InCropRain,
+         DM_Anthesis ,
+         Harvest_Index 
+  )
+
+
+Trial <- Bute_selection
+Trial <- Trial %>%  mutate(index = row_number())
+rm(Bute_selection)
 
 # Stuff around getting DM Anthesis into its own dataset and rename biomass to match trial data-------------------
 
@@ -74,7 +164,7 @@ Anthesis <- Anthesis %>% mutate(
 
 Anthesis <- Anthesis %>% rename(Biomass = DM_Anthesis)
 
-
+Anthesis <- Anthesis %>%  filter( !is.na(Date))
 
 
 
@@ -88,7 +178,7 @@ Trial <- Trial %>% mutate(
   ))
 
 names(Trial)
-
+names(Anthesis)
 
 Trail_df <- bind_rows(Trial, Anthesis)
 
@@ -116,13 +206,14 @@ Trail_df <- Trail_df %>% filter(
     Treatment == "YP_Decile1" |
     Treatment == "YP_Decile2-3" |
     Treatment == "YP_Decile5" |
-    Treatment == "YP_Decile7-8" 
+    Treatment == "YP_Decile7-8" |
+    Treatment == "YP_BOM"
 )
 
 
 
-
-
+unique(Trail_df$Treatment)
+names(Trail_df)
 
 
 
