@@ -159,7 +159,7 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>% mutate(soil_NO3 = NO3,
 
 
 names(APSIM_NextGen_daily)
-
+unique(APSIM_NextGen_daily$Treatment)
 
 write.csv(APSIM_NextGen_daily ,
           "X:/Riskwi$e/Bute/3_Sims_post_Nov2024/results/APSIM_NextGen_Daily.csv", row.names = FALSE )
