@@ -35,7 +35,7 @@ Biomass_Trial          <- read_csv(paste0(path, "Biomass_Trial.csv"))
 SoilWater_Trial        <- read_csv(paste0(path, "SoilWater_Trial.csv")) 
 SoilNitrogen_Trial     <- read_csv(paste0(path, "SoilNitrogen_Trial.csv"))   
 Yield_Trial            <- read_csv(paste0(path, "Yield_Trial.csv")) 
-
+N_response             <- read_csv(paste0(path, "Yield_Response_N_Trial.csv")) 
 
 
 
@@ -209,54 +209,20 @@ ggsave(plot = plot5,filename =  paste0(path,"Yield.png"), width = 20, height = 1
 
 
 # Response curve ----------------------------------------------------------
+names(merged_files_Daily)
 
+Next_Gen_N_response <- merged_files_Daily %>% #just getting the max yield and incrop fert for each year and treatment
+  group_by(Treatment, Year) %>% 
+  summarise(yld = max(Yield),
+           Incrop_fert = max(InCropFert))
 
-Zadock_Stage90 <- merged_files_Daily %>% #just getting the max yield for each year and treatment
-  group_by(Treatment, Year, Source) %>% 
-  summarise(max_yld = max(Yield))
-
-
-# Make two data sets one for plotting one for joining to get N app --------
-
-
-trial_data_plot <- trial_data %>% 
-  filter(  Date == "2022-11-10"|
-           Date == "2023-11-23"
-           ) %>% #These are the harvest dates
-  
-  
-  
-  select( "Year" ,
-          "Treatment",
-          "InCropFert" ,
-          "Date"  ,
-          "Yield",
-          "Source")
-
-trial_data_join <- trial_data %>%
-  filter(Date == "2022-11-10" |
-         Date == "2023-11-23") %>% #These are the harvest dates
-  select( "Year" ,
-          "Treatment",
-          "InCropFert" ,
-          "Date"  )
-
-
-Response_input <- left_join(Zadock_Stage90, trial_data_join, , by = join_by(Year,Treatment )) %>% 
-  rename(Yield = max_yld)
-
-
-Response_input <- bind_rows(Response_input,trial_data_plot )
+str(N_response)
 
 
 
-
-
-N_Response <- Response_input %>% 
-  ggplot(mapping = aes(x=InCropFert, y = Yield, colour = Source))+
-  geom_point(size = 2)+
-  #geom_line()+
-  scale_color_manual(values = c("blue", "purple", "black")) +
+N_Response_plot <- Next_Gen_N_response %>% 
+  ggplot(mapping = aes(x=Incrop_fert, y = yld))+
+  geom_point(size = 2, colour = "blue")+
   theme_bw() +
   labs(
     title = "Response curve Dookie",
@@ -268,13 +234,16 @@ N_Response <- Response_input %>%
       '\n',
       Location_of_Sims,
       '\n',
-      NextG_location,
-      '\n',
-      Classic_Location
+      NextG_location
     )
   )+
-  facet_wrap(.~Year)
-N_Response
+  facet_wrap(.~Year)+
+  N_response %>%
+  geom_point(mapping = aes(x = N_applied, y = Yield    ),
+             colour = "black")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+N_Response_plot
 
 ggsave(plot = N_Response,filename =  paste0(path,"N_Response.png"), width = 20, height = 12, units = "cm")
 

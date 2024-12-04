@@ -49,7 +49,7 @@ unique(APSIM_NextGen_daily$CurrentState)
 ## details about the crop sequence
 
 #add in crop and cultivar
-APSIM_NextGen_daily1 <- APSIM_NextGen_daily %>% 
+APSIM_NextGen_daily <- APSIM_NextGen_daily %>% 
   mutate(
 Crop = case_when(
   Year  == 2022 & CurrentState  == "canola"~ "canola",
@@ -63,28 +63,28 @@ Cultivar = case_when(
   
 Biomass = case_when(
   Year  == 2022 ~ AboveGroundC_WtKgha,
-  Year  == 2023 ~ AboveGroundW_WtKgha 
+  Year  == 2023 ~ AboveGroundW_WtKgha, 
   Year  == 2024 ~ AboveGroundB_WtKgha ),
   
 Zadok = case_when(
   Year  == 2022 ~ CanolaStage,
   Year  == 2023 ~ WheatZadok,
-  Year  == 2024 ~ barleyZadok),
+  Year  == 2024 ~ BarleyZadok),
   
 WaterStress = case_when(
   Year  == 2022 ~ C_WaterStress,
   Year  == 2023 ~ W_WaterStress,
-  Year  == 2024 ~ b_WaterStress ),
+  Year  == 2024 ~ B_WaterStress ),
   
 NSTress = case_when(
   Year  == 2022 ~ C_NSTress,
   Year  == 2023 ~ W_NSTress,
-  Year  == 2024 ~ b_NSTress),
+  Year  == 2024 ~ B_NSTress),
   
 Yield = case_when(
   Year  == 2022 ~ Yield_C/1000,
   Year  == 2023 ~ Yield_W/1000,
-  Year  == 2024 ~ Yield_b/1000),
+  Year  == 2024 ~ Yield_B/1000),
   
   
 HarvestIndex = (Yield*1000)/Biomass
@@ -179,7 +179,8 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>% select(
   zadok_stage ,
   HarvestIndex,
   WaterStress,       
-  NSTress)
+  NSTress,
+  InCropFert)  # check this is the correct clm could be FertAmt 
 
 
 APSIM_NextGen_daily <- APSIM_NextGen_daily %>% mutate(Biomass = Biomass/1000)
