@@ -31,10 +31,12 @@ list_sim_out_file
 merged_files_Daily <- read_csv(paste0(path, "APSIM_NextGen_Daily.csv"))
 str(merged_files_Daily$Date)
 
-trial_data <- read_csv(paste0(path, "APSIM_Trial.csv"))
-str(trial_data$Date)
-# merged_files_harvest <- read_csv(paste0(path, "merge_sim_trial_harvest.csv"))
-# str(merged_files_harvest$Year)
+Biomass_Trial          <- read_csv(paste0(path, "Biomass_Trial.csv")) 
+SoilWater_Trial        <- read_csv(paste0(path, "SoilWater_Trial.csv")) 
+SoilNitrogen_Trial     <- read_csv(paste0(path, "SoilNitrogen_Trial.csv"))   
+Yield_Trial            <- read_csv(paste0(path, "Yield_Trial.csv")) 
+
+
 
 
 # Make sure treatments are matching ---------------------------------------
@@ -62,9 +64,8 @@ NextG_location <- "Dookie_5_Rotation_N_bank.apsimx"
 
 
 str(merged_files_Daily)
-str(trial_data)
-unique(trial_data$Biomass_harvest_date)
-max(merged_files_Daily$Date)
+str(Biomass_Trial)
+
 
 # test <- merged_files_Daily %>% filter(Date == "2022-11-27") %>% 
 #   filter(Treatment=="Control") %>% 
@@ -92,8 +93,8 @@ plot2 <- merged_files_Daily %>%
   ) +
   theme(plot.caption = element_text(hjust = 0)) +
   facet_wrap(.~Treatment)+
-   trial_data %>% 
-   geom_point(mapping = aes(x = Biomass_harvest_date, y = Biomass_harvest),
+  Biomass_Trial %>% 
+   geom_point(mapping = aes(x = Date, y = Value),
               colour = "black")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 plot2
@@ -109,9 +110,8 @@ names(merged_files_Daily)
 plot3 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
   #filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = soil_water , colour = Source)) +
-  geom_point(size = 1) +
-  scale_color_manual(values = c("blue", "purple")) +
+  ggplot(aes(x = (Date), y = soil_water )) +
+  geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
     title = "Soil Water. Dookie Sims ",
@@ -125,8 +125,7 @@ plot3 <- merged_files_Daily %>%
       Location_of_Sims,
       '\n',
       NextG_location,
-      '\n',
-      Classic_Location
+      '\n'
     )
   ) +
   theme(plot.caption = element_text(hjust = 0)) +
@@ -140,28 +139,16 @@ ggsave(plot = plot3,filename =  paste0(path,"soilWater.png"), width = 20, height
 
 
 #4. Soil NO3+NH4 (Yes) - Soil_mineral_N_sowing
-unique(trial_data$Date)
+ unique(SoilNitrogen_Trial$variable)
 
-sowing_dates <-  trial_data %>%
-  filter(  Date == "2022-11-10"|
-           Date == "2023-11-23" ) %>% 
-  mutate(Date = case_when(
-    Date == "2022-11-10" ~ "2022-04-15",
-    Date == "2023-11-23" ~ "2023-05-04"
-  ))
-
-sowing_dates$Date <- as.Date(sowing_dates$Date)
-str(sowing_dates$Date)
-str(merged_files_Daily$Date)
 
 
 names(trial_data)
 plot4 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
   #filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = soil_NO3 , colour = Source)) +
-  geom_point(size = 1) +
-  scale_color_manual(values = c("blue", "purple")) +
+  ggplot(aes(x = (Date), y = soil_NO3 )) +
+  geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
     title = "Soil NO3 Dookie Sims ",
@@ -174,15 +161,14 @@ plot4 <- merged_files_Daily %>%
       '\n',
       Location_of_Sims,
       '\n',
-      NextG_location,
-      '\n',
-      Classic_Location
+      NextG_location
     )
   ) +
   theme(plot.caption = element_text(hjust = 0)) +
  facet_wrap(.~Treatment)+
-  sowing_dates %>%
-  geom_point(mapping = aes(x = Date, y = Soil_mineral_N_sowing),
+  SoilNitrogen_Trial %>%
+ filter(variable == "Soil_TotalN_at_sowing") %>% 
+  geom_point(mapping = aes(x = Date, y = Value),
             colour = "black")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 plot4
@@ -194,9 +180,8 @@ names(trial_data)
 plot5 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
  # filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = Yield , colour = Source)) +
-  geom_point(size = 1) +
-  scale_color_manual(values = c("blue", "purple")) +
+  ggplot(aes(x = (Date), y = Yield )) +
+  geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
     title = "Yield Dookie Sims ",
@@ -209,16 +194,13 @@ plot5 <- merged_files_Daily %>%
       '\n',
       Location_of_Sims,
       '\n',
-      NextG_location,
-      '\n',
-      Classic_Location
+      NextG_location
     )
   ) +
   theme(plot.caption = element_text(hjust = 0)) +
   facet_wrap(.~Treatment)+
-  trial_data %>%
-  #filter(Date == "2022-12-07"|Date == "2023-10-27") %>%
-  geom_point(mapping = aes(x = Date, y = Yield),
+  Yield_Trial %>%
+  geom_point(mapping = aes(x = Date, y = Value),
              colour = "black")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 plot5
