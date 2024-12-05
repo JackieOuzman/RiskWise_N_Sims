@@ -17,6 +17,7 @@ library(readxl)
 APSIM_NextGen_daily <- read_excel("X:/Riskwi$e/Dookie/3_Sims_post_Nov2024/Dookie_5_Rotation_N_bank.xlsx", 
                             sheet = "DailyReport")
 str(APSIM_NextGen_daily)
+unique(APSIM_NextGen_daily$CurrentState)
 
 ## Create a new clm called year
 APSIM_NextGen_daily <- APSIM_NextGen_daily %>% 
@@ -54,7 +55,7 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>%
 Crop = case_when(
   Year  == 2022 & CurrentState  == "canola"~ "canola",
   Year  == 2023 & CurrentState  == "wheat_1"~ "Wheat",
-  Year  == 2024 & CurrentState  == "barley_1"~ "barley"),
+  Year  == 2024 & CurrentState  == "barley"~ "barley"),
   
 Cultivar = case_when(
   Year  == 2022 ~ "GenericEarly",

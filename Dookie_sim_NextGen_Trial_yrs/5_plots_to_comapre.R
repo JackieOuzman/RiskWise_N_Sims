@@ -213,12 +213,12 @@ names(merged_files_Daily)
 
 Next_Gen_N_response <- merged_files_Daily %>% #just getting the max yield and incrop fert for each year and treatment
   group_by(Treatment, Year) %>% 
-  summarise(yld = max(Yield),
-           Incrop_fert = max(InCropFert))
+  summarise(yld_next_gen = max(Yield, na.rm = TRUE),
+           Incrop_fert_next_gen = sum(InCropFert,na.rm = FALSE))
 
 str(N_response)
 
-
+N_response_sim_Trail <- left_join(Next_Gen_N_response, N_response)
 
 N_Response_plot <- Next_Gen_N_response %>% 
   ggplot(mapping = aes(x=Incrop_fert, y = yld))+
