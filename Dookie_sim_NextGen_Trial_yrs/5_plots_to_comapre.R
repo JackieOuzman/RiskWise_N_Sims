@@ -79,7 +79,7 @@ plot2 <- merged_files_Daily %>%
   theme_bw() +
   labs(
     title = "Biomass. Dookie Sims ",
-    subtitle = "No trial biomass data collected / found ",
+    #subtitle =  ",
     colour = "",
     x = "Year",
     y = "",
@@ -141,12 +141,17 @@ ggsave(plot = plot3,filename =  paste0(path,"soilWater.png"), width = 20, height
 #4. Soil NO3+NH4 (Yes) - Soil_mineral_N_sowing
  unique(SoilNitrogen_Trial$variable)
 
+### check why soil Nitrogen in not plotting
+ ggplot(SoilNitrogen_Trial,  mapping = aes(x = Date, y = Value))+
+   geom_point()
+ 
 
 
-names(trial_data)
+names(SoilNitrogen_Trial)
+str(SoilNitrogen_Trial)
+
 plot4 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
-  #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = soil_NO3 )) +
   geom_point(size = 1, colour = "blue") +
   theme_bw() +
@@ -167,7 +172,7 @@ plot4 <- merged_files_Daily %>%
   theme(plot.caption = element_text(hjust = 0)) +
  facet_wrap(.~Treatment)+
   SoilNitrogen_Trial %>%
- filter(variable == "Soil_TotalN_at_sowing") %>% 
+  filter(variable == "Soil_TotalN_at_sowing") %>% 
   geom_point(mapping = aes(x = Date, y = Value),
             colour = "black")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -217,11 +222,16 @@ Next_Gen_N_response <- merged_files_Daily %>% #just getting the max yield and in
            Incrop_fert_next_gen = sum(InCropFert,na.rm = FALSE))
 
 str(N_response)
+str(Next_Gen_N_response)
 
 N_response_sim_Trail <- left_join(Next_Gen_N_response, N_response)
+N_response_sim_Trail
+#### Need to make this long###
 
-N_Response_plot <- Next_Gen_N_response %>% 
-  ggplot(mapping = aes(x=Incrop_fert, y = yld))+
+
+
+N_Response_plot <- N_response_sim_Trail %>% 
+  ggplot(mapping = aes(x=Incrop_fert_next_gen, y = Yield))+
   geom_point(size = 2, colour = "blue")+
   theme_bw() +
   labs(
