@@ -28,9 +28,9 @@ df_selection  <- Trial_setup_outputs %>%
          
          Soil_mineral_N_sowing =`Amount of total mineral N at sowing (kg/ha) -Soil`, #umm is this NO3 + NH4?
           
-         Biomass_flowering = `Biomass flowering (t/ha)` ,
+         Dry_matter_Anthesis = `Dry matter at Anthesis` ,
          Yield = `Yield (t/ha)`, #,
-         soil_water_sowing = `Sowing total water (mm) - soil`, 
+         #soil_water_sowing = `Sowing total water (mm) - soil`, #This no longer exists in the 2025 dataset Melb Uni
          `Harvest Date`
          
          #InCropRain= "Not_provided"
@@ -75,7 +75,7 @@ df_selection  <- df_selection %>%
          Cultivar  ,
          
          soil_water_start ,
-         soil_water_sowing,
+         #soil_water_sowing,
          soil_water_harvest ,
          
          soil_NO3_start ,
@@ -87,7 +87,7 @@ df_selection  <- df_selection %>%
           soil_NH4_harvest,
          Soil_mineral_N_sowing,
           
-         Biomass_flowering ,
+         Dry_matter_Anthesis ,
          Yield  ,
          InCropRain,
          #DM_Anthesis ,
@@ -145,11 +145,11 @@ Harvest_Dates2022 <- Harvest_Dates2022$Harvest_date
 
 
 
-Flowering_date_2018 <- as.POSIXct(as.Date("2018-10-10"))
-Flowering_date_2019 <- NA #as.POSIXct(as.Date(""))
-Flowering_date_2020 <- NA #as.POSIXct(as.Date(""))
-Flowering_date_2021 <- NA #as.POSIXct(as.Date(""))
-Flowering_date_2022 <- NA #as.POSIXct(as.Date(""))
+Dry_matter_Anthesis_date_2018 <- as.POSIXct(as.Date("2018-10-10")) #can now get it from the Melb uni data
+Dry_matter_Anthesis_date_2019 <- NA #as.POSIXct(as.Date(""))
+Dry_matter_Anthesis_date_2020 <- NA #as.POSIXct(as.Date(""))
+Dry_matter_Anthesis_date_2021 <- NA #as.POSIXct(as.Date(""))
+Dry_matter_Anthesis_date_2022 <- NA #as.POSIXct(as.Date(""))
 
 
 # Trial data with formatting in R --------------------------------------------------------------
@@ -160,33 +160,21 @@ Trial <- df_selection
 #1. df with flowering dates and clm called biomass
 names(Trial)
 
-Flowering <- Trial #%>% select(-Biomass) #if I had biomass data at harvest then I would use this
+Anthesis <- Trial #%>% select(-Biomass) #if I had biomass data at harvest then I would use this
 
-Flowering <- Flowering %>% mutate(
+Anthesis <- Anthesis %>% mutate(
   Date=case_when(
-    Year == 2018 ~ Flowering_date_2018,
-    Year == 2019 ~ Flowering_date_2019,
-    Year == 2020 ~ Flowering_date_2020,
-    Year == 2021 ~ Flowering_date_2021,
-    Year == 2022 ~ Flowering_date_2022,
+    Year == 2018 ~ Dry_matter_Anthesis_date_2018,
+    Year == 2019 ~ Dry_matter_Anthesis_date_2019,
+    Year == 2020 ~ Dry_matter_Anthesis_date_2020,
+    Year == 2021 ~ Dry_matter_Anthesis_date_2021,
+    Year == 2022 ~ Dry_matter_Anthesis_date_2022,
   ))
 
-Flowering <- Flowering %>% rename(Biomass = Biomass_flowering)
+Anthesis <- Anthesis %>% rename(Biomass = Dry_matter_Anthesis)
 
 
-#Anthesis <- Anthesis %>% rename(Biomass = DM_Anthesis)
 
-# Anthesis <- Trial %>% select(-Biomass)
-# 
-# Anthesis <- Anthesis %>% mutate(
-#   Date=case_when(
-#     Year == 2022 ~ Anthesis_Dates2022,
-#     Year == 2023 ~ Anthesis_Dates2023
-#   ))
-# 
-# Anthesis <- Anthesis %>% rename(Biomass = DM_Anthesis)
-# 
-# 
 
 
 
@@ -202,12 +190,12 @@ Trial <- Trial %>% mutate(
     
   ))
 ## all of the biomass data is flowering 
-Trial <- Trial %>% mutate(Biomass = NA) %>% select(- Biomass_flowering)
+Trial <- Trial %>% mutate(Biomass = NA) %>% select(- Dry_matter_Anthesis)
 
 names(Trial)
 
 
-Trail_df <- bind_rows(Trial, Flowering)
+Trail_df <- bind_rows(Trial, Anthesis)
 
 # rename the treatments so it matches the modelled values ---------------------------------------
 unique(Trail_df$Treatment)
