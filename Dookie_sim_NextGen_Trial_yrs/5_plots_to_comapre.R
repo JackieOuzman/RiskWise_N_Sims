@@ -190,7 +190,7 @@ ggsave(plot = plot4,filename =  paste0(path,"soilNO3.png"), width = 20, height =
 
 ### 5 Yield  ----------------------------------------------------------------
 names(merged_files_Daily)
-names(trial_data)
+names(Yield_Trial)
 
 plot5 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
