@@ -15,11 +15,12 @@ library(readxl)
 Bute_trial_setup_outputs <- read_excel("X:/Riskwi$e/Bute/3_Sims_post_Nov2024/Bute_trial_setup_outputs.xlsx", 
                                        sheet = "Treatments_Jackie", skip = 2)
 str(Bute_trial_setup_outputs)
+names(Bute_trial_setup_outputs)
 
 Bute_selection  <- Bute_trial_setup_outputs %>% 
   select(Year , 
          #"Trial" = Source)#,
-         Treatment = System ,
+         Treatment = `Treatment description` ,
          InCropFert =  `Total N applied at sowing and inseason` ,
          Crop = `Crop type` ,
          Cultivar = Variety ,
@@ -36,16 +37,14 @@ Bute_selection  <- Bute_trial_setup_outputs %>%
          # soil_NH4_sowing= "Not_provided",
          # soil_NH4_harvest= "Not_provided",
          
-         Soil_mineral_N_sowing =`Soil mineral N (kg/ha) - prior to sowing`, #umm is this NO3 + NH4?
+         Soil_mineral_N_sowing =`Soil mineral N (kg/ha) - prior to sowing`, #umm is this NO3 + NH4? -Yes it is
          # 
          # Biomass = "Not_provided",
-         Yield = `Yield (t/ha)` ,
+         Yield = `Grain yield (machine) (area and moisture  corrected) (t/ha)` ,
          #InCropRain= "Not_provided"
          
          DM_Anthesis = 'Dry matter at anthesis (t/ha)',
-         Biomass ='Dry matter at harvest (t/ha)', # is this the same?
-         Harvest_Index ='Harvest index' 
-         
+         Biomass ='Dry matter at harvest (quadrat) (t/ha)' # is this the same?
   )
 
 Bute_selection  <- Bute_selection %>% 
@@ -99,8 +98,7 @@ Bute_selection  <- Bute_selection %>%
          Biomass ,
          Yield  ,
          InCropRain,
-         DM_Anthesis ,
-         Harvest_Index 
+         DM_Anthesis 
   )
 
 
