@@ -83,7 +83,7 @@ plot2 <- merged_files_Daily %>%
   geom_point(size = 2, colour = 'blue') +
   theme_bw() +
   labs(
-    title = "Biomass. Dookie Sims ",
+    title = "Biomass. Kybunga Sims ",
     #subtitle =  ",
     colour = "",
     x = "Year",
@@ -120,7 +120,7 @@ plot3 <- merged_files_Daily %>%
   geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Soil Water. Dookie Sims ",
+    title = "Soil Water. Kybunga Sims ",
    
     colour = "",
     x = "Year",
@@ -162,7 +162,7 @@ plot4 <- merged_files_Daily %>%
   geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Soil NO3 Dookie Sims ",
+    title = "Soil NO3 Kybunga Sims ",
     #subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -199,7 +199,7 @@ plot5 <- merged_files_Daily %>%
   geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Yield Dookie Sims ",
+    title = "Yield Kybunga Sims ",
    # subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -263,7 +263,7 @@ N_Response_plot <- N_response_sim_Trail_long %>%
   scale_color_manual(values = c("blue", "black")) +
   theme_bw() +
   labs(
-    title = "Response curve Dookie",
+    title = "Response curve Kybunga",
     colour = "",
     x = "InCropFert",
     y = "",
