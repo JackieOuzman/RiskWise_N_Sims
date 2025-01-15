@@ -13,7 +13,7 @@ library(patchwork)
 
 ##### File path for formatted outputs -----------------------------------------
 
-path <- "X:/Riskwi$e/Kybunga/3_Sims_post_Nov2024/Results/"
+path <- "X:/Riskwi$e/Griffith/3_Sims_post_Nov2024/Results/"
 
 
 list_sim_out_file <-
@@ -48,8 +48,8 @@ N_response             <- read_csv(paste0(path, "Yield_Response_N_Trial.csv"))
 
 
 # Plot --------------------------------------------------------------------
-Location_of_Sims<- "X:/Riskwi$e/Kybunga/3_Sims_post_Nov2024/"
-NextG_location <- "Kybunga_5_Rotation_N_bank.apsimx"
+Location_of_Sims<- "X:/Riskwi$e/Griffith/3_Sims_post_Nov2024/"
+NextG_location <- "Griffith_5_Rotation_N_bank.apsimx"
 
 
 
@@ -83,7 +83,7 @@ plot2 <- merged_files_Daily %>%
   geom_point(size = 2, colour = 'blue') +
   theme_bw() +
   labs(
-    title = "Biomass. Kybunga Sims ",
+    title = "Biomass. Griffith Sims ",
     #subtitle =  ",
     colour = "",
     x = "Year",
@@ -111,6 +111,7 @@ ggsave(plot = plot2,filename =  paste0(path,"Biomass.png"), width = 20, height =
 
 names(merged_files_Daily)
 
+
 ### 3 Soilwater ----------------------------------------------------------------
   
 plot3 <- merged_files_Daily %>%
@@ -120,7 +121,7 @@ plot3 <- merged_files_Daily %>%
   geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Soil Water. Kybunga Sims ",
+    title = "Soil Water. Griffith Sims ",
    
     colour = "",
     x = "Year",
@@ -162,7 +163,7 @@ plot4 <- merged_files_Daily %>%
   geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Soil NO3 Kybunga Sims ",
+    title = "Soil NO3 Griffith Sims ",
     #subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -199,7 +200,7 @@ plot5 <- merged_files_Daily %>%
   geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Yield Kybunga Sims ",
+    title = "Yield Griffith Sims ",
    # subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -263,7 +264,7 @@ N_Response_plot <- N_response_sim_Trail_long %>%
   scale_color_manual(values = c("blue", "black")) +
   theme_bw() +
   labs(
-    title = "Response curve Kybunga",
+    title = "Response curve Griffith",
     colour = "",
     x = "InCropFert",
     y = "",
@@ -293,29 +294,27 @@ ggsave(plot = N_Response_plot,filename =  paste0(path,"N_Response.png"), width =
 max(merged_files_Daily$Date)
 
 sowing_dates <- data.frame(date = as.Date(c(
-  "2022-04-15",
-  "2023-05-04",
-  "2024-05-16"
+  "2023-04-14",
+  "2024-04-26"
 )))
 sowing_dates
 
 Fert_dates <- data.frame(date = as.Date(c(
-  "2022-05-01", 
-  "2022-06-28",
-  "2023-08-02",
-  "2024-07-31")))
+  "2023-04-14", #sowing
+  "2023-05-25", #inseason 1
+  "2023-07-03", #inseason 2
+  "2024-04-26", #sowing
+  "2024-07-04"  #inseason 1
+  )))
 Fert_dates
 
 Biomass_Harvest_dates <- data.frame(date = as.Date(
   c(
-    "2022-11-10",
-    "2023-11-23",
+    "2023-10-24",
     "2024-11-14")
 ))
 Biomass_Harvest_dates
 
-# Big_rain_dates<- data.frame(date = as.Date(c("2022-08-09","2022-11-01","2023-04-15","2023-12-10")))
-# Big_rain_dates
 
 
 

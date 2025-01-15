@@ -218,15 +218,17 @@ unique(APSIM_NextGen_daily$Treatment)
 APSIM_NextGen_daily <- APSIM_NextGen_daily %>% mutate(
   Treatment = case_when(
     Treatment == "01_Nil N" ~ "Control",
-    Treatment == "02_District Practice" ~     "District_Practice",
-    Treatment == "03_YP Lite Decile 1" ~      "YP_Decile1",
-    Treatment == "04_YP Lite Decile 2-3" ~    "YP_Decile2-3",
-    Treatment == "05_YP Lite Decile 5" ~      "YP_Decile5",
-    Treatment == "06_YP Lite Decile 7-8" ~    "YP_Decile7-8",
-    Treatment == "07_YP Lite BOM" ~           "YP_DecileBOM",
-    Treatment == "08_N Bank Conservative" ~   "N_Bank_Conservative",
-    Treatment == "09_N Bank Optimal Profit" ~ "N_Bank_Optimal_Profit",
-    Treatment == "10_N Bank Optimal Yield" ~  "N_Bank_Optimal_Yield"
+    Treatment == "02_Grower_Practice" ~     "Grower_Practice",
+    Treatment == "03_Low_Risk" ~            "Low_Risk",
+    Treatment == "04_Med_Risk" ~            "Med_Risk",
+    Treatment == "05_High_Risk" ~           "High_Risk",
+    Treatment == "06_Climate_Forecast" ~    "Climate_Forecast",
+    Treatment == "07_8Percent_Gross_Income" ~"8Percent_Gross_Income",
+    Treatment == "08_Replacement" ~         "Replacement",
+    Treatment == "09_Replacement_Plus_30Percent" ~   "Replacement_Plus_30Percent",
+    Treatment == "10_Replacement_Minus_30Percent" ~  "Replacement_Minus_30Percent",
+    Treatment == "11_Manure" ~                        "Manure" ,
+    Treatment == "12_Enhanced_Fertiliser" ~           "Enhanced_Fertiliser" 
   )
 )
 
