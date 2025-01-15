@@ -156,6 +156,8 @@ ggsave(plot = plot3,filename =  paste0(path,"soilWater.png"), width = 20, height
 
 names(SoilNitrogen_Trial)
 str(SoilNitrogen_Trial)
+unique(SoilNitrogen_Trial$variable)
+
 
 plot4 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
