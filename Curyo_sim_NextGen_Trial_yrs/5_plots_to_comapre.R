@@ -80,11 +80,11 @@ str(trial_data)
 #2. Biomass #Plot_2
 plot2 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
-  ggplot(aes(x = (Date), y = Biomass )) +
+  ggplot(aes(x = (Date), y = Biomass*12 )) +
   geom_point(size = 2, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Biomass. Curyo Sims ",
+    title = "Biomass. Curyo Sims *12 ",
     #subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -102,7 +102,7 @@ plot2 <- merged_files_Daily %>%
   facet_wrap(.~Treatment)+
   trial_data %>% 
   filter(!is.na(Treatment)) %>% 
-  geom_point(mapping = aes(x = Date, y = Biomass),
+  geom_point(mapping = aes(x = Date, y = Biomass ),
              colour = "black")+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 plot2
@@ -206,12 +206,12 @@ names(trial_data)
 plot5 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
  # filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = Yield )) +
+  ggplot(aes(x = (Date), y = Yield*12 )) +
   geom_point(size = 1, colour = "blue") +
   
   theme_bw() +
   labs(
-    title = "Yield Curyo Sims ",
+    title = "Yield Curyo Sims *12 ",
    # subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -242,7 +242,7 @@ ggsave(plot = plot5,filename =  paste0(path,"Yield.png"), width = 20, height = 1
 
 Zadock_Stage90 <- merged_files_Daily %>% #just getting the max yield for each year and treatment
   group_by(Treatment, Year, Source) %>% 
-  summarise(max_yld = max(Yield))
+  summarise(max_yld = max(Yield*12))
 
 
 # Make two data sets one for plotting one for joining to get N app --------
@@ -293,7 +293,7 @@ N_Response <- Response_input %>%
   scale_color_manual(values = c("blue",  "black")) +
   theme_bw() +
   labs(
-    title = "Response curve Curyo",
+    title = "Response curve Curyo (yld*12)",
     colour = "",
     x = "InCropFert",
     y = "",
@@ -348,7 +348,7 @@ Harvest_dates
 Biomass_format <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
   #filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = Biomass , colour = Source)) +
+  ggplot(aes(x = (Date), y = Biomass*12 , colour = Source)) +
   geom_point(size = 2) +
   scale_color_manual(values = c("blue", "purple")) +
   theme_classic() +
