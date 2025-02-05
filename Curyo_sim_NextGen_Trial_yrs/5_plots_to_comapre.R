@@ -52,7 +52,24 @@ merged_files_Daily %>% filter(Treatment == "Maint_150") %>%
 unique(merged_files_Daily$Treatment)
 unique(trial_data$Treatment)
 
+# Adjustment for moisture correct to match what is in field trial info ---------
 
+str(merged_files_Daily)
+
+merged_files_Daily <- merged_files_Daily %>% 
+  mutate(Yield_Moisture_corrected = case_when(
+  Year == 2018 ~ Yield*12,
+  Year == 2019 ~ Yield*12,
+  Year == 2020 ~ Yield*12,
+  Year == 2021 ~ Yield*12,
+  Year == 2022 ~ Yield*12.5)) %>% 
+    
+  mutate(Biomass_Moisture_corrected = case_when(
+    Year == 2018 ~ Biomass*12,
+    Year == 2019 ~ Biomass*12,
+    Year == 2020 ~ Biomass*12,
+    Year == 2021 ~ Biomass*12,
+    Year == 2022 ~ Biomass*12.5))
 
 # Plot --------------------------------------------------------------------
 Location_of_Sims<- "X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/"
@@ -80,11 +97,11 @@ str(trial_data)
 #2. Biomass #Plot_2
 plot2 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
-  ggplot(aes(x = (Date), y = Biomass*12 )) +
+  ggplot(aes(x = (Date), y = Biomass_Moisture_corrected )) +
   geom_point(size = 2, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Biomass. Curyo Sims *12 ",
+    title = "Biomass. Curyo Sims *12 and 12.5 (2022) ",
     #subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -206,12 +223,12 @@ names(trial_data)
 plot5 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
  # filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = Yield*12 )) +
+  ggplot(aes(x = (Date), y = Yield_Moisture_corrected )) +
   geom_point(size = 1, colour = "blue") +
   
   theme_bw() +
   labs(
-    title = "Yield Curyo Sims *12 ",
+    title = "Yield Curyo Sims *12 and 12.5 (2022) ",
    # subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -242,7 +259,7 @@ ggsave(plot = plot5,filename =  paste0(path,"Yield.png"), width = 20, height = 1
 
 Zadock_Stage90 <- merged_files_Daily %>% #just getting the max yield for each year and treatment
   group_by(Treatment, Year, Source) %>% 
-  summarise(max_yld = max(Yield*12))
+  summarise(max_yld = max(Yield_Moisture_corrected))
 
 
 # Make two data sets one for plotting one for joining to get N app --------
@@ -293,7 +310,7 @@ N_Response <- Response_input %>%
   scale_color_manual(values = c("blue",  "black")) +
   theme_bw() +
   labs(
-    title = "Response curve Curyo (yld*12)",
+    title = "Response curve Curyo (yld*12)and 12.5 (2022)",
     colour = "",
     x = "InCropFert",
     y = "",
@@ -348,7 +365,7 @@ Harvest_dates
 Biomass_format <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
   #filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = Biomass*12 , colour = Source)) +
+  ggplot(aes(x = (Date), y = Biomass_Moisture_corrected, colour = Source)) +
   geom_point(size = 2) +
   scale_color_manual(values = c("blue", "purple")) +
   theme_classic() +
