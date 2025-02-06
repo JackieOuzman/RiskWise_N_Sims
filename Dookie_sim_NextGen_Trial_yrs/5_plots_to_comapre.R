@@ -40,8 +40,20 @@ N_response             <- read_csv(paste0(path, "Yield_Response_N_Trial.csv"))
 
 
 # Make sure treatments are matching ---------------------------------------
+names(merged_files_Daily)
+unique(merged_files_Daily$Year)
+# Adjustment for moisture correct to match what is in field trial info ---------
 
-
+merged_files_Daily <- merged_files_Daily %>% 
+  mutate(Yield_Moisture_corrected = case_when(
+    Year == 2022 ~ Yield*12.5,
+    Year == 2023 ~ Yield*12.5,
+    Year == 2024 ~ Yield*12.5)) %>% 
+  
+  mutate(Biomass_Moisture_corrected = case_when(
+    Year == 2022 ~ Biomass*12.5,
+    Year == 2023 ~ Biomass*12.5,
+    Year == 2024 ~ Biomass*12.5))
 
 
 
@@ -79,11 +91,11 @@ str(Biomass_Trial)
 
 plot2 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
-  ggplot(aes(x = (Date), y = Biomass )) +
+  ggplot(aes(x = (Date), y = Biomass_Moisture_corrected )) +
   geom_point(size = 2, colour = 'blue') +
   theme_bw() +
   labs(
-    title = "Biomass. Dookie Sims ",
+    title = "Biomass. Dookie Sims *12.5 ",
     #subtitle =  ",
     colour = "",
     x = "Year",
@@ -195,11 +207,11 @@ names(Yield_Trial)
 plot5 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
  # filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = Yield )) +
+  ggplot(aes(x = (Date), y = Yield_Moisture_corrected )) +
   geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Yield Dookie Sims ",
+    title = "Yield Dookie Sims *12.5",
    # subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -228,7 +240,7 @@ names(merged_files_Daily)
 
 Next_Gen_N_response <- merged_files_Daily %>% #just getting the max yield and incrop fert for each year and treatment
   group_by(Treatment, Year) %>% 
-  summarise(yld_next_gen = max(Yield, na.rm = TRUE),
+  summarise(yld_next_gen = max(Yield_Moisture_corrected, na.rm = TRUE),
            Incrop_fert_next_gen = sum(InCropFert,na.rm = FALSE))
 
 str(N_response)
@@ -263,7 +275,7 @@ N_Response_plot <- N_response_sim_Trail_long %>%
   scale_color_manual(values = c("blue", "black")) +
   theme_bw() +
   labs(
-    title = "Response curve Dookie",
+    title = "Response curve Dookie APSIM*12.5",
     colour = "",
     x = "InCropFert",
     y = "",
@@ -327,7 +339,7 @@ Biomass_Harvest_dates
 Biomass_format <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
   #filter(zadok_stage >= 0) %>%
-  ggplot(aes(x = (Date), y = Biomass , colour = Source)) +
+  ggplot(aes(x = (Date), y = Biomass_Moisture_corrected , colour = Source)) +
   geom_point(size = 2) +
   scale_color_manual(values = c("blue", "purple")) +
   theme_classic() +
