@@ -103,7 +103,7 @@ SoilWater_DF <- Trial_setup_outputs %>%
 SoilWater_DF <- SoilWater_DF %>% rename(
  #Soil_water_at_sowing = #"Sowing total water (mm) - soil",
   Date = 'Sowing date') %>% 
-  mutate(Soil_water_at_sowing = 78.3
+  mutate(Soil_water_at_sowing = 0.446 # this is mm/mm
 )
   
 

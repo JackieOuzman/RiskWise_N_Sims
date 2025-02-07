@@ -13,7 +13,7 @@ library(patchwork)
 
 ##### File path for formatted outputs -----------------------------------------
 
-path <- "X:/Riskwi$e/Dookie/3_Sims_post_Nov2024/Results/"
+path <- "X:/Riskwi$e/Bute/3_Sims_post_Nov2024/Results/"
 
 
 list_sim_out_file <-
@@ -48,20 +48,20 @@ merged_files_Daily <- merged_files_Daily %>%
   mutate(Yield_Moisture_corrected = case_when(
     Year == 2022 ~ Yield*12.5,
     Year == 2023 ~ Yield*12.5,
-    Year == 2024 ~ Yield*12.5)) %>% 
+    Year == 2024 ~ Yield*14)) %>% 
   
   mutate(Biomass_Moisture_corrected = case_when(
     Year == 2022 ~ Biomass*12.5,
     Year == 2023 ~ Biomass*12.5,
-    Year == 2024 ~ Biomass*12.5))
+    Year == 2024 ~ Biomass*14))
 
 
 
 
 
 # Plot --------------------------------------------------------------------
-Location_of_Sims<- "X:/Riskwi$e/Dookie/3_Sims_post_Nov2024/"
-NextG_location <- "Dookie_5_Rotation_N_bank.apsimx"
+Location_of_Sims<- "X:/Riskwi$e/Bute/3_Sims_post_Nov2024/"
+NextG_location <- "Bute_5_Rotation_N_bank.apsimx"
 
 
 
@@ -82,9 +82,7 @@ str(merged_files_Daily)
 str(Biomass_Trial)
 
 
-# test <- merged_files_Daily %>% filter(Date == "2022-11-27") %>% 
-#   filter(Treatment=="Control") %>% 
-#   filter(Source == "NextGen")
+
 
 
 ### 2 Biomass ----------------------------------------------------------------
@@ -95,7 +93,7 @@ plot2 <- merged_files_Daily %>%
   geom_point(size = 2, colour = 'blue') +
   theme_bw() +
   labs(
-    title = "Biomass. Dookie Sims *12.5 ",
+    title = "Biomass. Bute Sims (biomass *12.5 in 2022, 2023 & *14 in 2024)",
     #subtitle =  ",
     colour = "",
     x = "Year",
@@ -124,15 +122,16 @@ ggsave(plot = plot2,filename =  paste0(path,"Biomass.png"), width = 20, height =
 names(merged_files_Daily)
 
 ### 3 Soilwater ----------------------------------------------------------------
-  
+SoilWater_Trial
+min(SoilWater_Trial$Date)
+
 plot3 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
-  #filter(zadok_stage >= 0) %>%
   ggplot(aes(x = (Date), y = soil_water )) +
   geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Soil Water. Dookie Sims ",
+    title = "Soil Water. Bute Sims ",
    
     colour = "",
     x = "Year",
@@ -148,6 +147,11 @@ plot3 <- merged_files_Daily %>%
   ) +
   theme(plot.caption = element_text(hjust = 0)) +
   facet_wrap(.~Treatment)+
+  SoilWater_Trial %>% 
+  filter(Date == "2022-06-03") %>% #value is only for start of the trail mm/mm
+  geom_point(mapping = aes(x = Date, y = Value),
+             colour = "black")+
+ 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
 plot3
@@ -157,7 +161,7 @@ ggsave(plot = plot3,filename =  paste0(path,"soilWater.png"), width = 20, height
 
 ### 4 Soil NO3+NH4 (Yes) - Soil_mineral_N_sowing -------------------------------
 
- unique(SoilNitrogen_Trial$variable)
+unique(SoilNitrogen_Trial$variable)
 
 ### check why soil Nitrogen in not plotting
  ggplot(SoilNitrogen_Trial,  mapping = aes(x = Date, y = Value))+
@@ -174,7 +178,7 @@ plot4 <- merged_files_Daily %>%
   geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Soil NO3 Dookie Sims ",
+    title = "Soil NO3 Bute Sims ",
     #subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -211,7 +215,7 @@ plot5 <- merged_files_Daily %>%
   geom_point(size = 1, colour = "blue") +
   theme_bw() +
   labs(
-    title = "Yield Dookie Sims *12.5",
+    title = "Yield Bute Sims (yield *12.5 in 2022, 2023 & 2024 *14)",
    # subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
@@ -275,7 +279,7 @@ N_Response_plot <- N_response_sim_Trail_long %>%
   scale_color_manual(values = c("blue", "black")) +
   theme_bw() +
   labs(
-    title = "Response curve Dookie APSIM*12.5",
+    title = "Response curve Bute (APSIM*12.5 in 2022, 2023 & *14 in 2024)",
     colour = "",
     x = "InCropFert",
     y = "",
@@ -305,33 +309,23 @@ ggsave(plot = N_Response_plot,filename =  paste0(path,"N_Response.png"), width =
 max(merged_files_Daily$Date)
 
 sowing_dates <- data.frame(date = as.Date(c(
-  "2022-04-15",
-  "2023-05-04",
-  "2024-05-16"
+  "2022-06-03",
+  "2023-05-14",
+  "2024-06-06"
 )))
 sowing_dates
 
 Fert_dates <- data.frame(date = as.Date(c(
-  "2022-05-01", 
-  "2022-06-28",
-  "2023-08-02",
-  "2024-07-31")))
+  "2022-07-24",
+  "2023-07-07")))
 Fert_dates
 
 Biomass_Harvest_dates <- data.frame(date = as.Date(
   c(
-    "2022-11-10",
-    "2023-11-23",
-    "2024-11-14")
+    "2022-12-07",
+    "2023-10-26")
 ))
 Biomass_Harvest_dates
-
-# Big_rain_dates<- data.frame(date = as.Date(c("2022-08-09","2022-11-01","2023-04-15","2023-12-10")))
-# Big_rain_dates
-
-
-
-
 
 
 # Biomass formatted for comparison ----------------------------------------
@@ -344,7 +338,6 @@ Biomass_format <- merged_files_Daily %>%
   scale_color_manual(values = c("blue", "purple")) +
   theme_classic() +
   labs(
-    #title = "Biomass. Dookie Sims ",
     colour = "",
     #x = "Year",
     y = "Biomass",
