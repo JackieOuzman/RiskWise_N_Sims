@@ -44,29 +44,40 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>%
 str(APSIM_NextGen_daily)
 
 #add in crop and cultivar
+unique(APSIM_NextGen_daily$CurrentState)
+
+names(APSIM_NextGen_daily)
+
 APSIM_NextGen_daily <- APSIM_NextGen_daily %>% 
   mutate(
 Crop = case_when(
   Year  == 2022 & CurrentState  == "wheat_1" ~ "Wheat",
-  Year  == 2023 & CurrentState  == "barley_1"~ "Barley"),
+  Year  == 2023 & CurrentState  == "barley_1"~ "Barley",
+  Year  == 2024 & CurrentState  == "Chickpea"~ "Chickpea"),
 Cultivar = case_when(
   Year  == 2022 ~ "specter",
-  Year  == 2023 ~ "commander"),
+  Year  == 2023 ~ "commander",
+  Year  == 2024 ~ "amethyst"),
 Biomass = case_when(
   Year  == 2022 ~ AboveGroundW_WtKgha,
-  Year  == 2023 ~ AboveGroundB_WtKgha),
+  Year  == 2023 ~ AboveGroundB_WtKgha,
+  Year  == 2024 ~ AboveGroundChick_WtKgha),
 Zadok = case_when(
   Year  == 2022 ~ WheatZadok,
-  Year  == 2023 ~ BarleyZadok),
+  Year  == 2023 ~ BarleyZadok,
+  Year  == 2024 ~ ChickpeaStage),
 WaterStress = case_when(
   Year  == 2022 ~ W_WaterStress,
-  Year  == 2023 ~ B_WaterStress),
+  Year  == 2023 ~ B_WaterStress,
+  Year  == 2024 ~ Chick_WaterStress),
 NSTress = case_when(
   Year  == 2022 ~ W_NSTress,
-  Year  == 2023 ~ B_NSTress),
+  Year  == 2023 ~ B_NSTress,
+  Year  == 2024 ~ Chick_NSTress),
 Yield = case_when(
   Year  == 2022 ~ Yield_W/1000,
-  Year  == 2023 ~ Yield_B/1000),
+  Year  == 2023 ~ Yield_B/1000,
+  Year  == 2024 ~ Yield_Chick/1000),
 
 HarvestIndex = (Yield*1000)/Biomass
 

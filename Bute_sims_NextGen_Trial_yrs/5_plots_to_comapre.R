@@ -42,6 +42,25 @@ str(trial_data$Date)
 unique(trial_data$Treatment)
 unique(merged_files_Daily$Treatment)
 
+
+
+# Make sure treatments are matching ---------------------------------------
+names(merged_files_Daily)
+unique(merged_files_Daily$Year)
+# Adjustment for moisture correct to match what is in field trial info ---------
+
+merged_files_Daily <- merged_files_Daily %>% 
+  mutate(Yield_Moisture_corrected = case_when(
+    Year == 2022 ~ Yield*12.5,
+    Year == 2023 ~ Yield*12.5,
+    Year == 2024 ~ Yield*14)) %>% 
+  
+  mutate(Biomass_Moisture_corrected = case_when(
+    Year == 2022 ~ Biomass*12.5,
+    Year == 2023 ~ Biomass*12.5,
+    Year == 2024 ~ Biomass*14))
+
+
 # Plot --------------------------------------------------------------------
 Location_of_Sims<- "X:/Riskwi$eBute/3_Sims_post_Nov2024/"
 NextG_name <- "Bute_5_Rotation_N_bank_v3.apsimx"
@@ -67,12 +86,12 @@ str(trial_data)
 #2. Biomass #Plot_2
 plot2 <- merged_files_Daily %>%
   filter(!is.na(Treatment)) %>% 
-  ggplot(aes(x = (Date), y = Biomass )) +
+  ggplot(aes(x = (Date), y = Biomass_Moisture_corrected )) +
   geom_point(size = 2, colour ="blue" ) +
   #scale_color_manual(values = c("blue")) +
   theme_bw() +
   labs(
-    title = "Biomass. Bute Sims ",
+    title = "Biomass. Bute Sims (Biomass*12.5 in 2022,2023 &*14 in 2024) ",
     #subtitle = "No modifcation to organic matter",
     colour = "",
     x = "Year",
