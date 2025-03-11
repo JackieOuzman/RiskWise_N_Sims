@@ -30,9 +30,18 @@ list_sim_out_file
 
 merged_files_Daily <- read_csv(paste0(path, "APSIM_NextGen_Daily.csv"))
 str(merged_files_Daily$Date)
+distinct(merged_files_Daily, Date)
+min(merged_files_Daily$Date)
 
 trial_data <- read_csv(paste0(path, "merge_trial_harvest.csv"))
+str(trial_data)
 str(trial_data$Date)
+min(trial_data$Date)
+#remove row with no treatments
+trial_data <- trial_data %>% filter(!is.na(Treatment))
+
+
+
 # merged_files_harvest <- read_csv(paste0(path, "merge_sim_trial_harvest.csv"))
 # str(merged_files_harvest$Year)
 
@@ -41,13 +50,13 @@ str(trial_data$Date)
 
 
 unique(merged_files_Daily$Treatment)
-merged_files_Daily %>% filter(Treatment == "YP_100") %>% 
-  summarise(max_biomass = max(Biomass),
-            max_yld = max( Yield))
-
-merged_files_Daily %>% filter(Treatment == "Maint_150") %>% 
-  summarise(max_biomass = max(Biomass),
-            max_yld = max( Yield))
+# merged_files_Daily %>% filter(Treatment == "YP_100") %>% 
+#   summarise(max_biomass = max(Biomass),
+#             max_yld = max( Yield))
+# 
+# merged_files_Daily %>% filter(Treatment == "Maint_150") %>% 
+#   summarise(max_biomass = max(Biomass),
+#             max_yld = max( Yield))
 
 unique(merged_files_Daily$Treatment)
 unique(trial_data$Treatment)
@@ -58,22 +67,30 @@ str(merged_files_Daily)
 
 merged_files_Daily <- merged_files_Daily %>% 
   mutate(Yield_Moisture_corrected = case_when(
-  Year == 2018 ~ Yield*12,
-  Year == 2019 ~ Yield*12,
-  Year == 2020 ~ Yield*12,
-  Year == 2021 ~ Yield*12,
-  Year == 2022 ~ Yield*12.5)) %>% 
+  Year == 2018 ~ Yield*12, #W
+  Year == 2019 ~ Yield*12, #C
+  Year == 2020 ~ Yield*12, #W
+  Year == 2021 ~ Yield*12, #B
+  Year == 2022 ~ Yield*12.5, #W
+  Year == 2022 ~ Yield*14, #Chick
+  Year == 2022 ~ Yield*12, #B
+  )
+  
+  ) %>% 
     
   mutate(Biomass_Moisture_corrected = case_when(
     Year == 2018 ~ Biomass*12,
     Year == 2019 ~ Biomass*12,
     Year == 2020 ~ Biomass*12,
     Year == 2021 ~ Biomass*12,
-    Year == 2022 ~ Biomass*12.5))
+    Year == 2022 ~ Biomass*12.5,
+    Year == 2022 ~ Biomass*14,
+    Year == 2022 ~ Biomass*12,
+    ))
 
 # Plot --------------------------------------------------------------------
 Location_of_Sims<- "X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/"
-NextG_location <- "Curyo_5_Rotation_N_bank.apsimx"
+NextG_location <- "Curyo_7_Rotation_N_bank.apsimx"
 
 
 

@@ -130,18 +130,31 @@ Harvest_Dates2022 <- Curyo_trial_setup_outputs %>%
   filter(Year == 2022) %>% 
   select(`Harvest Date`) %>% 
   summarise(Harvest_date = max(`Harvest Date`,na.rm = TRUE ))
+Harvest_Dates2023 <- Curyo_trial_setup_outputs %>% 
+  filter(Year == 2023) %>% 
+  select(`Harvest Date`) %>% 
+  summarise(Harvest_date = max(`Harvest Date`,na.rm = TRUE ))
+Harvest_Dates2024 <- Curyo_trial_setup_outputs %>% 
+  filter(Year == 2024) %>% 
+  select(`Harvest Date`) %>% 
+  summarise(Harvest_date = max(`Harvest Date`,na.rm = TRUE ))
+
 
 Harvest_Dates2018
 Harvest_Dates2019
 Harvest_Dates2020
 Harvest_Dates2021
 Harvest_Dates2022
+Harvest_Dates2023
+Harvest_Dates2024
 
 Harvest_Dates2018 <- Harvest_Dates2018$Harvest_date
 Harvest_Dates2019 <- Harvest_Dates2019$Harvest_date
 Harvest_Dates2020 <- Harvest_Dates2020$Harvest_date
 Harvest_Dates2021 <- Harvest_Dates2021$Harvest_date
 Harvest_Dates2022 <- Harvest_Dates2022$Harvest_date
+Harvest_Dates2023 <- Harvest_Dates2023$Harvest_date
+Harvest_Dates2024 <- Harvest_Dates2024$Harvest_date
 
 
 
@@ -150,6 +163,8 @@ Dry_matter_Anthesis_date_2019 <- NA #as.POSIXct(as.Date(""))
 Dry_matter_Anthesis_date_2020 <- NA #as.POSIXct(as.Date(""))
 Dry_matter_Anthesis_date_2021 <- NA #as.POSIXct(as.Date(""))
 Dry_matter_Anthesis_date_2022 <- NA #as.POSIXct(as.Date(""))
+Dry_matter_Anthesis_date_2023 <- NA #as.POSIXct(as.Date(""))
+Dry_matter_Anthesis_date_2024 <- as.POSIXct(as.Date("2024-09-02"))
 
 
 # Trial data with formatting in R --------------------------------------------------------------
@@ -169,6 +184,9 @@ Anthesis <- Anthesis %>% mutate(
     Year == 2020 ~ Dry_matter_Anthesis_date_2020,
     Year == 2021 ~ Dry_matter_Anthesis_date_2021,
     Year == 2022 ~ Dry_matter_Anthesis_date_2022,
+    Year == 2023 ~ Dry_matter_Anthesis_date_2023,
+    Year == 2024 ~ Dry_matter_Anthesis_date_2024,
+    
   ))
 
 Anthesis <- Anthesis %>% rename(Biomass = Dry_matter_Anthesis)
@@ -186,7 +204,9 @@ Trial <- Trial %>% mutate(
     Year == 2019 ~ Harvest_Dates2019,
     Year == 2020 ~ Harvest_Dates2020,
     Year == 2021 ~ Harvest_Dates2021,
-    Year == 2022 ~ Harvest_Dates2022
+    Year == 2022 ~ Harvest_Dates2022,
+    Year == 2023 ~ Harvest_Dates2023,
+    Year == 2024 ~ Harvest_Dates2024
     
   ))
 ## all of the biomass data is flowering 
@@ -216,11 +236,6 @@ Trail_df <- Trail_df %>% mutate(
     
     Treatment == "02_Replacement" ~ "Replacment"#,
     
-    #Treatment == "01_Nil" ~ "Control"#,
-    # Treatment == "N_DP" ~ "District_Practice",
-    # Treatment == "N_Bank_Conservative" ~ "Nbank_Conservative",
-    # Treatment == "N_Bank_Profit" ~ "Nbank_Optimum_Profit",
-    # Treatment == "N_Bank_OptimumYld" ~ "Nbank_Optimum_Yield"
   )
 )
 

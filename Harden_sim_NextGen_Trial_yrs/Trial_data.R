@@ -11,12 +11,15 @@ library(readxl)
 
 
 
-Trial_setup_outputs <- read_excel("X:/Riskwi$e/Harden/3_Sims_post_Nov2024/Harden_trial_setup_outputs.xlsx", 
-                                  sheet = "Summary of Annual plot for sim", skip = 1)
+Trial_setup_outputs <- read_excel("X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/Curyo_trial_setup_outputs.xlsx", 
+                                  sheet = "Summary of Annual plot for sim", skip = 6)
 names(Trial_setup_outputs)
+Trial_setup_outputs <- Trial_setup_outputs %>% rename("Treatment description" = "!Treatment" )
+
 str(Trial_setup_outputs)
 unique(Trial_setup_outputs$`Jax_ID`)
 unique(Trial_setup_outputs$`Treatment description`)
+
 
 ### Match the treatment names to the simulation ----
 
@@ -24,24 +27,18 @@ unique(Trial_setup_outputs$`Treatment description`)
 Trial_setup_outputs <- Trial_setup_outputs %>% mutate(
      Treatment = case_when(
        
-       `Treatment description` == "1_Nil N Control" ~                          "Control",
-       `Treatment description` == "2_National Average - 45kgN/ha" ~     "National_Average",
-       `Treatment description` == "3_YP Lite - Decile 1" ~              "YP_Decile_1",
-       `Treatment description` == "4_YP Lite - Decile 2-3" ~            "YP_Decile_2_3",
-       `Treatment description` == "5_YP Lite - Decile 5" ~              "YP_Decile_5",
-       `Treatment description` == "6_YP Lite - Decile 7-8" ~            "YP_Decile_7_8",
-       `Treatment description` == "7_YP Lite - BOM 3-month forecast" ~                   "YP_BOM",
-       `Treatment description` == "8_N-Bank - 25kg < Optimum" ~           "N_Bank_Less_Optimum",
-       `Treatment description` == "9_N-Bank - Profit Optimal" ~                 "N_Bank_Profit",
-       `Treatment description` == "10_N-Bank - Yield Optimal" ~         "N_Bank_Yield_Optimal"
-       
-      
+       `Treatment description` == "01_Nil" ~                       "Control",
+       `Treatment description` == "03_National_Average" ~          "National_Av",
+       `Treatment description` == "04_100kgMaint" ~                "Maint_100",
+       `Treatment description` == "05_125kgMaint" ~                "Maint_125",
+       `Treatment description` == "06_150kgMaint" ~                "Maint_150",
+       `Treatment description` == "07_100%YP" ~                    "YP_100",
+       `Treatment description` == "08_75%YP" ~                     "YP_75",
+       `Treatment description` == "09_50%YP" ~                     "YP_50",
+       `Treatment description` == "10_25%YP" ~                     "YP_25",
+       `Treatment description` == "02_Replacement" ~         "Replacment"
     )
-    
-    
 )
-
-
 
 
 unique(Trial_setup_outputs$Treatment)
@@ -59,17 +56,17 @@ Biomass_DF <- Trial_setup_outputs %>%
   select(
     Year,
     Treatment ,
-    `Dry matter at anthesis (t/ha)` ,
-    `Dry matter at harvest (quadrat) (t/ha)` ,
-    `Anthesis cut date`,
-    `Harvest cut date (quadrat)`)
+    `Dry matter at Anthesis` ,
+    `Dry matter at Harvest` ,
+    `Plant cut date Anthesis`,
+    `Plant cut date harvest`)
 
 ##### 2. rename the columns
 Biomass_DF <- Biomass_DF %>% rename(
-  Biomass_at_harvest =  `Dry matter at harvest (quadrat) (t/ha)`,
-  Biomass_at_anthesis = `Dry matter at anthesis (t/ha)`,
-  Date_anthesis = `Anthesis cut date`,
-  Date_harvest = `Harvest cut date (quadrat)`
+  Biomass_at_harvest =  `Dry matter at Harvest`,
+  Biomass_at_anthesis = `Dry matter at Anthesis`,
+  Date_anthesis = `Plant cut date Anthesis`,
+  Date_harvest = `Plant cut date harvest`
 )
 
 
@@ -116,7 +113,7 @@ Biomass <- Biomass_DF_long3 %>%  select(Treatment, Date, Value)
 rm (Biomass_DF_long, Biomass_DF, Biomass_DF_long2, Biomass_DF_long3)
 
 ##### 6.write varibale df -------------------------------------------------------------
-write.csv(Biomass , "X:/Riskwi$e/Harden/3_Sims_post_Nov2024/Results/Biomass_Trial.csv", row.names = FALSE )
+write.csv(Biomass , "X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/Results/Biomass_Trial.csv", row.names = FALSE )
 
 
 
@@ -132,7 +129,7 @@ SoilWater_DF <- Trial_setup_outputs %>%
 
 ##### 2. rename the columns No water in DF 
 SoilWater_DF <- SoilWater_DF %>% mutate(
-  Soil_water_at_sowing = 2.1 , #sum of inital water SW
+  Soil_water_at_sowing = 0.885 , #sum of inital water SW
   Date = 'Sowing date')
   
 
@@ -157,7 +154,7 @@ Soil_water <- SoilWater_DF_long %>%  select(Treatment, Date, Value)
 rm (SoilWater_DF_long, SoilWater_DF)
 
 ##### 6.write varibale df -------------------------------------------------------------
-write.csv(Soil_water , "X:/Riskwi$e/Harden/3_Sims_post_Nov2024/Results/SoilWater_Trial.csv", row.names = FALSE )
+write.csv(Soil_water , "X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/Results/SoilWater_Trial.csv", row.names = FALSE )
 
 
 
@@ -169,16 +166,16 @@ names(Trial_setup_outputs)
 
 SoilNitrogen_DF <- Trial_setup_outputs %>% 
   select(Year, Treatment ,"Sowing date" , 
-         "Sowing ammonium (kg/ha)" ,
-         "Sowing nitrate (kg/ha)"   ,
-         "Sowing total mineral N (kg/ha)"
+         "Amount of NO3 at sowing (kg/ha) - Soil" ,
+         "Amount of NH4 at sowing (kg/ha) - Soil"   ,
+         "Amount of total mineral N at sowing (kg/ha) -Soil"
          )  
 
 ##### 2. rename the columns
 SoilNitrogen_DF <- SoilNitrogen_DF %>% rename(
-  Soil_NO3_at_sowing = "Sowing nitrate (kg/ha)",
-  Soil_NH4_at_sowing = "Sowing ammonium (kg/ha)",
-  Soil_TotalN_at_sowing = "Sowing total mineral N (kg/ha)",
+  Soil_NO3_at_sowing = "Amount of NO3 at sowing (kg/ha) - Soil",
+  Soil_NH4_at_sowing = "Amount of NH4 at sowing (kg/ha) - Soil",
+  Soil_TotalN_at_sowing = "Amount of total mineral N at sowing (kg/ha) -Soil",
   Date = "Sowing date")
 
 
@@ -203,7 +200,7 @@ SoilNitrogen <- SoilNitrogen_DF_long %>%  select(Treatment, Date, Value, variabl
 rm (SoilNitrogen_DF_long, SoilNitrogen_DF)
 
 ##### 6.write variable df -------------------------------------------------------------
-write.csv(SoilNitrogen , "X:/Riskwi$e/Harden/3_Sims_post_Nov2024/Results/SoilNitrogen_Trial.csv", row.names = FALSE )
+write.csv(SoilNitrogen , "X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/Results/SoilNitrogen_Trial.csv", row.names = FALSE )
 
 
 
@@ -211,17 +208,16 @@ write.csv(SoilNitrogen , "X:/Riskwi$e/Harden/3_Sims_post_Nov2024/Results/SoilNit
 ##### 1.select the variable clms ------------------------------------------------
 names(Trial_setup_outputs)
 
-# "Grain yield (machine) (area corrected) (t/ha)"                                                 
+                                                
 
 Yield_DF <- Trial_setup_outputs %>% 
   select(Year, Treatment ,"Harvest Date" ,
          `Yield (t/ha)`
-         #`Grain yield (machine) (area corrected) (t/ha)`  #this clm is empty in Harden DB
+         #`Grain yield (machine) (area corrected) (t/ha)`  #this clm is empty in Curyo DB
          )  
 
 ##### 2. rename the columns
 Yield_DF <- Yield_DF %>% rename(
-  #Yield = `Grain yield (machine) (area corrected) (t/ha)`,#this clm is empty in Harden DB
   Yield =   `Yield (t/ha)`,
   Date = "Harvest Date")
 
@@ -250,7 +246,7 @@ Yield <- Yield_DF_long %>%  select(Treatment, Date, Value)
 rm (Yield_DF_long, Yield_DF)
 
 ##### 6.write varibale df -------------------------------------------------------------
-write.csv(Yield , "X:/Riskwi$e/Harden/3_Sims_post_Nov2024/Results/Yield_Trial.csv", row.names = FALSE )
+write.csv(Yield , "X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/Results/Yield_Trial.csv", row.names = FALSE )
 
 
 
@@ -265,10 +261,10 @@ names(Trial_setup_outputs)
 #"Total N applied at sowing and inseason" 
 
 Yield_Response_N_DF <- Trial_setup_outputs %>% 
-  mutate(
-    `Total N applied at sowing and inseason` =
-      `Sowing fertiliser N rate (kg/ha)`+`Topdress fertiliser 1 date`+ `Topdress fertiliser 2 N rate (kg/ha)`) %>% 
-  select(Year, Treatment ,"Harvest Date" , 
+  #mutate(
+    #`Total N applied at sowing and inseason` = 'Total N applied at sowing and inseason' %>% 
+      #`Sowing fertiliser N rate (kg/ha)`+`Topdress fertiliser 1 date`+ `Topdress fertiliser 2 N rate (kg/ha)`) %>% 
+  select( Year, Treatment ,"Harvest Date" , 
          `Yield (t/ha)`,
          #`Grain yield (machine) (area corrected) (t/ha)` ,
          `Total N applied at sowing and inseason`)  
@@ -300,7 +296,7 @@ Yield_Response_N_DF <- Yield_Response_N_DF %>%  filter(!is.na(N_applied))
 
 
 ##### 6.write variable df -------------------------------------------------------------
-write.csv(Yield_Response_N_DF , "X:/Riskwi$e/Harden/3_Sims_post_Nov2024/Results/Yield_Response_N_Trial.csv", row.names = FALSE )
+write.csv(Yield_Response_N_DF , "X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/Results/Yield_Response_N_Trial.csv", row.names = FALSE )
 
 
 

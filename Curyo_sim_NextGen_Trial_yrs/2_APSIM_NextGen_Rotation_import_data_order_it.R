@@ -14,7 +14,7 @@ library(readxl)
 
 # Daily output files -------------------------------------------------------
                                   
-APSIM_NextGen_daily <- read_excel("X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/Curyo_5_Rotation_N_bank.xlsx", 
+APSIM_NextGen_daily <- read_excel("X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/Curyo_7_Rotation_N_bank.xlsx", 
                             sheet = "DailyReport")
 str(APSIM_NextGen_daily)
 
@@ -43,7 +43,7 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>%
 
 str(APSIM_NextGen_daily)
 unique(APSIM_NextGen_daily$CurrentState)
-unique(APSIM_NextGen_daily$CurrentState)
+unique(APSIM_NextGen_daily$Treatment)
 
 ################################################################################
 ## details about the crop sequence
@@ -52,53 +52,70 @@ unique(APSIM_NextGen_daily$CurrentState)
 APSIM_NextGen_daily <- APSIM_NextGen_daily %>% 
   mutate(
 Crop = case_when(
-  Year  == 2018 & CurrentState  == "wheat_1"~ "Wheat",
-  Year  == 2019 & CurrentState  == "canola_1"~ "Canola",
-  Year  == 2020 & CurrentState  == "wheat_2"~ "Wheat",
-  Year  == 2021 & CurrentState  == "barley_1"~ "Barley",
-  Year  == 2022 & CurrentState  == "wheat_3"~ "Wheat" ),
+  Year  == 2018 & CurrentState  == "Wheat1"~ "Wheat",
+  Year  == 2019 & CurrentState  == "Canola1"~ "Canola",
+  Year  == 2020 & CurrentState  == "Wheat2"~ "Wheat",
+  Year  == 2021 & CurrentState  == "Barley_1"~ "Barley",
+  Year  == 2022 & CurrentState  == "Wheat3"~ "Wheat",
+  Year  == 2023 & CurrentState  == "Chickpea"~ "Chickpea",
+  Year  == 2024 & CurrentState  == "Barley_2"~ "Barley"  ),
   
 Cultivar = case_when(
   Year  == 2018 ~ "scepter",
   Year  == 2019 ~ "GenericEarly",
   Year  == 2020 ~ "scepter",
   Year  == 2021 ~ "Spartacus CL",
-  Year  == 2022 ~ "mace" ),
+  Year  == 2022 ~ "mace" ,
+  Year  == 2023 ~ "amethyst" ,
+  Year  == 2024 ~ "Spartacus CL" ,
+  ),
   
 Biomass = case_when(
   Year  == 2018 ~ AboveGroundW_WtKgha,
   Year  == 2019 ~ AboveGroundC_WtKgha,
   Year  == 2020 ~ AboveGroundW_WtKgha,
   Year  == 2021 ~ AboveGroundB_WtKgha,
-  Year  == 2022 ~ AboveGroundW_WtKgha ),
+  Year  == 2022 ~ AboveGroundW_WtKgha,
+  Year  == 2023 ~ AboveGroundChick_WtKgha,
+  Year  == 2022 ~ AboveGroundB_WtKgha  ),
   
 Zadok = case_when(
   Year  == 2018 ~ WheatZadok,
   Year  == 2019 ~ CanolaStage,
   Year  == 2020 ~ WheatZadok,
   Year  == 2021 ~ BarleyZadok,
-  Year  == 2022 ~ WheatZadok ),
+  Year  == 2022 ~ WheatZadok ,
+  Year  == 2023 ~ ChickpeaStage ,
+  Year  == 2024 ~ BarleyZadok ),
   
 WaterStress = case_when(
   Year  == 2018 ~ W_WaterStress,
   Year  == 2019 ~ C_WaterStress,
   Year  == 2020 ~ W_WaterStress,
   Year  == 2021 ~ B_WaterStress,
-  Year  == 2022 ~ W_WaterStress ),
+  Year  == 2022 ~ W_WaterStress,
+  Year  == 2023 ~ Chick_WaterStress,
+  Year  == 2024 ~ B_WaterStress  ),
   
 NSTress = case_when(
   Year  == 2018 ~ W_NSTress,
   Year  == 2019 ~ C_NSTress,
   Year  == 2020 ~ W_NSTress,
   Year  == 2021 ~ B_NSTress,
-  Year  == 2022 ~ W_NSTress ),
+  Year  == 2022 ~ W_NSTress ,
+  Year  == 2023 ~ Chick_NSTress ,
+  Year  == 2024 ~ B_NSTress ,
+  ),
   
 Yield = case_when(
   Year  == 2018 ~ Yield_W/1000,
   Year  == 2019 ~ Yield_C/1000,
   Year  == 2020 ~ Yield_W/1000,
   Year  == 2021 ~ Yield_B/1000,
-  Year  == 2022 ~ Yield_W/1000 ),
+  Year  == 2022 ~ Yield_W/1000,
+  Year  == 2023 ~ Yield_Chick/1000,
+  Year  == 2024 ~ Yield_B/1000,
+  ),
   
   
 HarvestIndex = (Yield*1000)/Biomass
@@ -108,7 +125,7 @@ HarvestIndex = (Yield*1000)/Biomass
 #just checking it has worked
 names(APSIM_NextGen_daily) ## check for how many depth
 str(APSIM_NextGen_daily)
-unique(APSIM_NextGen_daily$Crop)
+unique(APSIM_NextGen_daily$Crop) #the NA are fallow
 unique(APSIM_NextGen_daily$Cultivar)
 
 
@@ -209,13 +226,13 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>% mutate(Biomass = Biomass/1000)
 # Names of treatments need to match ---------------------------------------
 
 unique(APSIM_NextGen_daily$Treatment)
-APSIM_NextGen_daily %>% filter(Treatment == "YP_100") %>% 
-  summarise(max_biomass = max(Biomass),
-            max_yld = max( Yield))
-
-APSIM_NextGen_daily %>% filter(Treatment == "Maint_150") %>% 
-  summarise(max_biomass = max(Biomass),
-            max_yld = max( Yield))
+# APSIM_NextGen_daily %>% filter(Treatment == "YP_100") %>% 
+#   summarise(max_biomass = max(Biomass),
+#             max_yld = max( Yield))
+# 
+# APSIM_NextGen_daily %>% filter(Treatment == "Maint_150") %>% 
+#   summarise(max_biomass = max(Biomass),
+#             max_yld = max( Yield))
 
 APSIM_NextGen_daily <- APSIM_NextGen_daily %>% mutate(
   Treatment = case_when(
@@ -232,20 +249,17 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>% mutate(
     
     Treatment == "Replacment" ~ "Replacment"#,
     
-    # Treatment == "Bute_DP" ~ "District_Practice",
-    # Treatment == "Bute_NBank_Conservative" ~ "Nbank_Conservative",
-    # Treatment == "Bute_NBank_Profit" ~ "Nbank_Optimum_Profit",
-    # Treatment == "Bute_NBank_Optimum_Yld" ~ "Nbank_Optimum_Yield"
+   
   )
 )
 unique(APSIM_NextGen_daily$Treatment)
-APSIM_NextGen_daily %>% filter(Treatment == "YP_100") %>% 
-  summarise(max_biomass = max(Biomass),
-            max_yld = max( Yield))
-
-APSIM_NextGen_daily %>% filter(Treatment == "Maint_150") %>% 
-  summarise(max_biomass = max(Biomass),
-            max_yld = max( Yield))
+# APSIM_NextGen_daily %>% filter(Treatment == "YP_100") %>% 
+#   summarise(max_biomass = max(Biomass),
+#             max_yld = max( Yield))
+# 
+# APSIM_NextGen_daily %>% filter(Treatment == "Maint_150") %>% 
+#   summarise(max_biomass = max(Biomass),
+#             max_yld = max( Yield))
 
 write.csv(APSIM_NextGen_daily ,
           "X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/Results/APSIM_NextGen_Daily.csv", row.names = FALSE )
