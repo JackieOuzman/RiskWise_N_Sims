@@ -77,7 +77,7 @@ Biomass = case_when(
   Year  == 2021 ~ AboveGroundB_WtKgha,
   Year  == 2022 ~ AboveGroundW_WtKgha,
   Year  == 2023 ~ AboveGroundChick_WtKgha,
-  Year  == 2022 ~ AboveGroundB_WtKgha  ),
+  Year  == 2024 ~ AboveGroundB_WtKgha  ),
   
 Zadok = case_when(
   Year  == 2018 ~ WheatZadok,
@@ -218,7 +218,8 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>% select(
   zadok_stage ,
   HarvestIndex,
   WaterStress,       
-  NSTress)
+  NSTress,
+  InCropFert)
 
 APSIM_NextGen_daily <- APSIM_NextGen_daily %>% mutate(Biomass = Biomass/1000)
 
