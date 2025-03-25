@@ -14,26 +14,26 @@ library(readxl)
 
 # Daily output files -------------------------------------------------------
                                   
-APSIM_NextGen_daily <-  read_excel("X:/Riskwi$e/Curyo/4_Long term sims/Curyo_7_Rotation_N_bank_version4.xlsx", 
-                                   col_types = c("text", "numeric", "text", 
-                                                 "numeric", "text", "date", "text", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "numeric", 
-                                                 "numeric", "numeric", "text", "text", 
-                                                 "text", "text"))
+APSIM_NextGen_daily <-  read_excel("X:/Riskwi$e/Curyo/4_Long term sims/Curyo_7_Rotation_N_bank_version5.xlsx", 
+                                   col_types =  c("text", "numeric", "text", 
+                                                                "numeric", "text", "date", "text", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "text", "text", "text", 
+                                                                "text", "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric"))
 str(APSIM_NextGen_daily)
 
 ## Create a new clm called year
@@ -41,12 +41,13 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>%
   mutate(Year = year(Date), 
          Source = "NextGen",
          Treatment = Zone,
-         
+         Site = "Curyo"
          ) 
 
 str(APSIM_NextGen_daily)
 unique(APSIM_NextGen_daily$CurrentState)
 unique(APSIM_NextGen_daily$Treatment)
+
 
 ################################################################################
 ## details about the crop sequence
@@ -107,12 +108,6 @@ unique(APSIM_NextGen_daily$Crop) #the NA are fallow
 unique(APSIM_NextGen_daily$Cultivar)
 
 
-max(APSIM_NextGen_daily$Zadok)
-min(APSIM_NextGen_daily$Zadok)
-
-max(APSIM_NextGen_daily$Yield)
-min(APSIM_NextGen_daily$Yield)
-
 
 ## sum the soil water for all the depths and No 3 for all the depths
 
@@ -147,7 +142,8 @@ max(APSIM_NextGen_daily$Yield)
 
 #Just ordering it
 APSIM_NextGen_daily  <- APSIM_NextGen_daily %>% 
-  select( Date, 
+  select( Site,
+          Date, 
           Year, 
           Source,           
           Treatment,            

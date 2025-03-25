@@ -14,7 +14,7 @@ library(readxl)
 
 # Daily output files -------------------------------------------------------
                                   
-APSIM_NextGen_daily <-  read_excel("X:/Riskwi$e/Curyo/4_Long term sims/Curyo_7_Rotation_N_bank_version4.xlsx", 
+APSIM_NextGen_daily <-  read_excel("X:/Riskwi$e/Curyo/4_Long term sims/Curyo_7_Rotation_N_bank_version5.xlsx", 
                                    col_types = c("text", "numeric", "text", 
                                                  "numeric", "text", "date", "text", 
                                                  "numeric", "numeric", "numeric", 
@@ -41,6 +41,7 @@ APSIM_NextGen_daily <- APSIM_NextGen_daily %>%
   mutate(Year = year(Date), 
          Source = "NextGen",
          Treatment = Zone,
+         Site = "Curyo"
          
          ) 
 

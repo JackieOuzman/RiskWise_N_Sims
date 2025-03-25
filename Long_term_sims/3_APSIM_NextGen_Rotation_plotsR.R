@@ -11,8 +11,27 @@ APSIM_NextGen_daily <-  read_csv("X:/Riskwi$e/Curyo/4_Long term sims/Results/APS
 
 
 APSIM_NextGen_daily %>%  distinct(Crop)
-APSIM_NextGen_daily %>%  distinct(Crop)
-distinct(APSIM_NextGen_daily,Phenology)
+APSIM_NextGen_daily %>%  distinct(Treatment)
+#umm <- distinct(APSIM_NextGen_daily,Phenology)
+#APSIM_NextGen_daily$Phenology <- trimws(APSIM_NextGen_daily$Phenology)
+
+str(APSIM_NextGen_daily)
+## N at sowing and total N applied
+
+N_applied_in_season <- 
+  APSIM_NextGen_daily %>% 
+  filter(Crop == "Wheat"|
+           Crop == "Barley"| 
+           Crop == "Chickpea"|
+           Crop == "Canola") %>% 
+  filter(FertNApplied > 0)  %>% 
+  filter(is.na(Phenology)|Phenology!="Sowing") %>% 
+   
+  group_by(Treatment, Year) %>% 
+  summarise(
+  N_applied_in_season = sum(FertNApplied))
+N_applied_in_season
+
 
 # Remove the fallow and create details for sowing and harvest ----
 
@@ -24,7 +43,7 @@ APSIM_NextGen_daily_no_fallow_sowing <- APSIM_NextGen_daily %>%
            Crop == "Canola") %>% 
   
   filter(Phenology == "Sowing") %>% 
-  select(Date , Year ,Crop, Phenology  , FertNApplied, Soil_NO3, Soil_NH4) %>% 
+  select(Date , Year ,Crop, Phenology  , FertNApplied, Soil_NO3, Soil_NH4, Treatment) %>% 
   mutate(month = lubridate::month(Date, label = TRUE))
 str(APSIM_NextGen_daily_no_fallow_sowing)
 
@@ -44,10 +63,11 @@ APSIM_NextGen_daily_no_fallow_sowing <- APSIM_NextGen_daily_no_fallow_sowing %>%
          Sowing_month,
          Sowing_NApplied,
          Sowing_Soil_NO3,
-         Sowing_Soil_NH4
+         Sowing_Soil_NH4,
+         Treatment
          )
 
-sowing_conditions_info <- "25 April – 14 April, 
+sowing_conditions_info <- "25 April – 14 July, 
 Min ext soil water for sowing = 10, 
 Accumulated rainfall required for sowing = 10
 Duration of rainfall accumulation = 5
@@ -91,19 +111,60 @@ APSIM_NextGen_daily_no_fallow_harvest <- APSIM_NextGen_daily_no_fallow_harvest %
 # Combined summary dataset for year ----
 Year_summary <- left_join(APSIM_NextGen_daily_no_fallow_sowing, 
                           APSIM_NextGen_daily_no_fallow_harvest,
-                          by = join_by(Year))
+                          by = join_by(Year, Treatment))
+
+Year_summary <- left_join(Year_summary, N_applied_in_season,
+                          by = join_by(Year, Treatment))
+
+str(Year_summary)
+
+Year_summary <- Year_summary %>% 
+  mutate( N_applied_in_season = ifelse(is.na( N_applied_in_season), 0,  
+                                       N_applied_in_season))
+
+
+
+names(Year_summary)
+Year_summary <- Year_summary %>% 
+  select(  "Year"  ,
+           "Crop",
+           "Treatment"  ,
+           "Sowing_NApplied", 
+           "N_applied_in_season" ,
+           "Sowing_Date",
+           "Sowing_month" ,
+           "Sowing_Soil_NO3" ,
+           "Sowing_Soil_NH4"  ,
+           "Harvest_Date" ,
+           "Harvest_Soil_NO3",
+            "Harvest_Soil_NH4",
+           "Harvest_month"   ,
+           "Harvest_Biomass"   ,
+           "Harvest_Yield" ,
+           "Harvest_Protien"  ,
+           "Harvest_HarvestIndex"
+           )
 
 rm(APSIM_NextGen_daily_no_fallow_sowing, APSIM_NextGen_daily_no_fallow_harvest)
 str(Year_summary)
-percentage_sim_with_yld<- count(Year_summary %>% filter(Harvest_Yield >0 ))/ Year_summary %>% tally() *100
-number_of_sims <- Year_summary %>% tally()
-percentage_sim_with_yld
-number_of_sims
+distinct(Year_summary, Treatment)
 
-# Plots -----
+Year_summary_Nil <- Year_summary %>% filter(Treatment == "Nil")
+Year_summary_National <- Year_summary %>% filter(Treatment == "National Av")
+
+
+# TREATMENT - Nil -----
+NIL_percentage_sim_with_yld<- 
+  count(Year_summary_Nil %>% filter(Harvest_Yield >0 ))/ 
+  Year_summary_Nil %>% tally() *100
+NIL_number_of_sims <- Year_summary_Nil %>% tally()
+NIL_percentage_sim_with_yld
+NIL_number_of_sims
+
+## Plots -----
 
 ##### Sowing details ----
-plot1 <-Year_summary %>% 
+Nil_Sowing_details <-Year_summary_Nil %>% 
   ggplot(aes(x = Year  , y = Sowing_month , group=Crop        ) )+
   geom_point(aes(color=Crop        ))+
   facet_wrap(.~Crop)+
@@ -113,26 +174,27 @@ plot1 <-Year_summary %>%
   labs(title = paste0("Curyo: Nil treatment.",
        " Rotaion sequence W-> C->W->B->W->Lentil(Chickpea)-> B."),
        subtitle = sowing_conditions_info,
-       caption = paste0(number_of_sims, " Sims, Years =1960-2024.", " Sims with yld =",percentage_sim_with_yld,"%" ),
+       caption = paste0(NIL_number_of_sims, " Sims, Years =1960-2024.",
+                        " Sims with yld =",NIL_percentage_sim_with_yld,"%" ),
        y = "Month of sowing",
        x = "")
        
-plot1
+Nil_Sowing_details
 
-ggsave(plot = plot1,
+ggsave(plot = Nil_Sowing_details,
        filename =  paste0("X:/Riskwi$e/Curyo/4_Long term sims/Results/",
-                          "Curyo Sowing.png"), width = 20, height = 12, units = "cm")
+                          "Curyo Nil Sowing.png"), width = 20, height = 12, units = "cm")
 
 
 ##### yield details ----
-str(Year_summary)
-quantile_yld <- Year_summary %>% group_by(Crop ) %>%
+str(Year_summary_Nil)
+NIL_quantile_yld <- Year_summary_Nil %>% group_by(Crop ) %>%
   summarize(quantile25=quantile(Harvest_Yield,probs=0.25),
             quantile50=quantile(Harvest_Yield,probs=0.5),
             quantile75=quantile(Harvest_Yield,probs=0.75))
 
-quantile_yld
-Yield <-Year_summary %>% 
+NIL_quantile_yld
+Nil_Yield <-Year_summary_Nil %>% 
   ggplot(aes(x = Year  , y = Harvest_Yield       , group=Crop        ) )+
   geom_point(aes(color=Crop        ))+
   facet_wrap(.~Crop)+
@@ -144,35 +206,37 @@ Yield <-Year_summary %>%
   labs(title = paste0("Curyo: Nil treatment.",
                       " Rotaion sequence W-> C->W->B->W->Lentil(Chickpea)-> B."),
        subtitle = "Quantiles 0.25, 0.5, 0.75",
-       caption = paste0(number_of_sims, " Sims, Years =1960-2024.", " Sims with yld =",percentage_sim_with_yld,"%" ),
+       caption = paste0(NIL_number_of_sims, " Sims, Years =1960-2024.", 
+                        " Sims with yld =",
+                        NIL_percentage_sim_with_yld,"%" ),
        y = "Yield t/ha",
        x = "")+ 
-   geom_hline(data= quantile_yld, 
+   geom_hline(data= NIL_quantile_yld, 
               aes(
                 yintercept = quantile25), alpha = 0.4, linetype = 2)+
-  geom_hline(data= quantile_yld, 
+  geom_hline(data= NIL_quantile_yld, 
              aes(yintercept = quantile50), alpha = 0.4)+
-  geom_hline(data= quantile_yld, 
+  geom_hline(data= NIL_quantile_yld, 
              aes(yintercept = quantile75), alpha = 0.4, linetype = 2)
   
-Yield
-ggsave(plot = Yield,
+Nil_Yield
+ggsave(plot = Nil_Yield,
        filename =  paste0("X:/Riskwi$e/Curyo/4_Long term sims/Results/",
-                          "Curyo Yield.png"), width = 20, height = 12, units = "cm")
+                          "Curyo Nil Yield.png"), width = 20, height = 12, units = "cm")
 
 
 
 
 ##### Protein details ----
-str(Year_summary)
-quantile_Protein <- Year_summary %>% group_by(Crop ) %>%
+str(Year_summary_Nil)
+NIL_quantile_Protein <- Year_summary_Nil %>% group_by(Crop ) %>%
   summarize(quantile25=quantile(Harvest_Protien,probs=0.25, na.rm = TRUE),
             quantile50=quantile(Harvest_Protien,probs=0.5, na.rm = TRUE),
             quantile75=quantile(Harvest_Protien,probs=0.75, na.rm = TRUE))
 
-quantile_Protein
+NIL_quantile_Protein
 
-Protein <-Year_summary %>% 
+Nil_Protein <-Year_summary_Nil %>% 
   ggplot(aes(x = Year  , y = Harvest_Protien       , group=Crop        ) )+
   geom_point(aes(color=Crop        ))+
   facet_wrap(.~Crop)+
@@ -184,30 +248,31 @@ Protein <-Year_summary %>%
   labs(title = paste0("Curyo: Nil treatment.",
                       " Rotaion sequence W-> C->W->B->W->Lentil(Chickpea)-> B."),
        subtitle = "Quantiles 0.25, 0.5, 0.75",
-       caption = paste0(number_of_sims, " Sims, Years =1960-2024.", " Sims with yld =",percentage_sim_with_yld,"%" ),
+       caption = paste0(NIL_number_of_sims, " Sims, Years =1960-2024.",
+                        " Sims with yld =",NIL_percentage_sim_with_yld,"%" ),
        y = "Protien",
        x = "")+ 
-  geom_hline(data= quantile_Protein, 
+  geom_hline(data= NIL_quantile_Protein, 
              aes(
                yintercept = quantile25), alpha = 0.4, linetype = 2)+
-  geom_hline(data= quantile_Protein, 
+  geom_hline(data= NIL_quantile_Protein, 
              aes(yintercept = quantile50), alpha = 0.4)+
-  geom_hline(data= quantile_Protein, 
+  geom_hline(data= NIL_quantile_Protein, 
              aes(yintercept = quantile75), alpha = 0.4, linetype = 2)
 
-Protein
+Nil_Protein
 
 
-ggsave(plot = Protein,
+ggsave(plot = Nil_Protein,
        filename =  paste0("X:/Riskwi$e/Curyo/4_Long term sims/Results/",
-                          "Curyo Protein.png"), width = 20, height = 12, units = "cm")
+                          "Curyo NIL Protein.png"), width = 20, height = 12, units = "cm")
 
 
 
 ##### Napplied details ----
-str(Year_summary)
-N_applied    <-Year_summary %>% 
-  ggplot(aes(x = Year  , y = Sowing_NApplied, group=Crop        ) )+
+str(Year_summary_Nil)
+Nil_N_applied    <-Year_summary_Nil %>% 
+  ggplot(aes(x = Year  , y = Sowing_NApplied , group=Crop        ) )+
   geom_point(aes(color=Crop        ))+
   facet_wrap(.~Crop)+
   labs(title = "N applied at sowing-  treatment Nil",
@@ -215,14 +280,14 @@ N_applied    <-Year_summary %>%
        caption = "Years 1960-2024",
        y = "FertNApplied",
        x = "Year of simulation")
-N_applied
+Nil_N_applied
 
-ggsave(plot = N_applied,
+ggsave(plot = Nil_N_applied,
        filename =  paste0("X:/Riskwi$e/Curyo/4_Long term sims/Results/",
-                          "Curyo N_applied.png"), width = 20, height = 12, units = "cm")
+                          "Curyo Nil N_applied.png"), width = 20, height = 12, units = "cm")
 
 ##### NO3NO4 in soils ----
-NO3NO4_insoil_sowing    <-Year_summary %>% 
+Nil_NO3NO4_insoil_sowing    <-Year_summary_Nil %>% 
   ggplot(aes(x = Year  , y =  (Sowing_Soil_NO3 +  Sowing_Soil_NH4),
              group=Crop) )+
   geom_point(aes(color=Crop        ))+
@@ -232,13 +297,188 @@ NO3NO4_insoil_sowing    <-Year_summary %>%
        caption = "Years 1960-2024",
        y = "Soil NO3 + NO4 at sowing",
        x = "Year of simulation")
-NO3NO4_insoil_sowing
+Nil_NO3NO4_insoil_sowing
 
-ggsave(plot = NO3NO4_insoil_sowing,
+ggsave(plot = Nil_NO3NO4_insoil_sowing,
        filename =  paste0("X:/Riskwi$e/Curyo/4_Long term sims/Results/",
-                          "Curyo NO3NO4_insoil_sowing.png"), width = 20, height = 12, units = "cm")
+                          "Curyo Nil NO3NO4_insoil_sowing.png"), width = 20, height = 12, units = "cm")
+
+
+
+
+
+
+# TREATMENT - National Av -----
+National_percentage_sim_with_yld<- 
+  count(Year_summary_National %>% filter(Harvest_Yield >0 ))/ 
+  Year_summary_National %>% tally() *100
+National_number_of_sims <- Year_summary_National %>% tally()
+National_percentage_sim_with_yld
+National_number_of_sims
+
+## Plots -----
+
+##### Sowing details ----
+National_Sowing_details <-Year_summary_National %>% 
+  ggplot(aes(x = Year  , y = Sowing_month , group=Crop        ) )+
+  geom_point(aes(color=Crop        ))+
+  facet_wrap(.~Crop)+
+  theme_bw()+
+  theme(plot.subtitle = element_text(size = 8),
+        legend.position = "none")+
+  labs(title = paste0("Curyo: National treatment.",
+                      " Rotaion sequence W-> C->W->B->W->Lentil(Chickpea)-> B."),
+       subtitle = sowing_conditions_info,
+       caption = paste0(National_number_of_sims, " Sims, Years =1960-2024.",
+                        " Sims with yld =",National_percentage_sim_with_yld,"%" ),
+       y = "Month of sowing",
+       x = "")
+
+National_Sowing_details
+
+ggsave(plot = National_Sowing_details,
+       filename =  paste0("X:/Riskwi$e/Curyo/4_Long term sims/Results/",
+                          "Curyo National Sowing.png"), width = 20, height = 12, units = "cm")
+
+
+##### yield details ----
+str(Year_summary_National)
+National_quantile_yld <- Year_summary_National %>% group_by(Crop ) %>%
+  summarize(quantile25=quantile(Harvest_Yield,probs=0.25),
+            quantile50=quantile(Harvest_Yield,probs=0.5),
+            quantile75=quantile(Harvest_Yield,probs=0.75))
+
+National_quantile_yld
+National_Yield <-Year_summary_National %>% 
+  ggplot(aes(x = Year  , y = Harvest_Yield       , group=Crop        ) )+
+  geom_point(aes(color=Crop        ))+
+  facet_wrap(.~Crop)+
+  theme_bw()+
+  theme(
+    #plot.subtitle = element_text(size = 8),
+    legend.position = "none")+
+  
+  labs(title = paste0("Curyo: National treatment.",
+                      " Rotaion sequence W-> C->W->B->W->Lentil(Chickpea)-> B."),
+       subtitle = "Quantiles 0.25, 0.5, 0.75",
+       caption = paste0(National_number_of_sims, " Sims, Years =1960-2024.", 
+                        " Sims with yld =",
+                        National_percentage_sim_with_yld,"%" ),
+       y = "Yield t/ha",
+       x = "")+ 
+  geom_hline(data= National_quantile_yld, 
+             aes(
+               yintercept = quantile25), alpha = 0.4, linetype = 2)+
+  geom_hline(data= National_quantile_yld, 
+             aes(yintercept = quantile50), alpha = 0.4)+
+  geom_hline(data= National_quantile_yld, 
+             aes(yintercept = quantile75), alpha = 0.4, linetype = 2)
+
+National_Yield
+ggsave(plot = National_Yield,
+       filename =  paste0("X:/Riskwi$e/Curyo/4_Long term sims/Results/",
+                          "Curyo National Yield.png"), width = 20, height = 12, units = "cm")
+
+
+
+
+##### Protein details ----
+str(Year_summary_National)
+National_quantile_Protein <- Year_summary_National %>% group_by(Crop ) %>%
+  summarize(quantile25=quantile(Harvest_Protien,probs=0.25, na.rm = TRUE),
+            quantile50=quantile(Harvest_Protien,probs=0.5, na.rm = TRUE),
+            quantile75=quantile(Harvest_Protien,probs=0.75, na.rm = TRUE))
+
+National_quantile_Protein
+
+National_Protein <-Year_summary_National %>% 
+  ggplot(aes(x = Year  , y = Harvest_Protien       , group=Crop        ) )+
+  geom_point(aes(color=Crop        ))+
+  facet_wrap(.~Crop)+
+  theme_bw()+
+  theme(
+    #plot.subtitle = element_text(size = 8),
+    legend.position = "none")+
+  
+  labs(title = paste0("Curyo: National treatment.",
+                      " Rotaion sequence W-> C->W->B->W->Lentil(Chickpea)-> B."),
+       subtitle = "Quantiles 0.25, 0.5, 0.75",
+       caption = paste0(National_number_of_sims, " Sims, Years =1960-2024.",
+                        " Sims with yld =",National_percentage_sim_with_yld,"%" ),
+       y = "Protien",
+       x = "")+ 
+  geom_hline(data= National_quantile_Protein, 
+             aes(
+               yintercept = quantile25), alpha = 0.4, linetype = 2)+
+  geom_hline(data= National_quantile_Protein, 
+             aes(yintercept = quantile50), alpha = 0.4)+
+  geom_hline(data= National_quantile_Protein, 
+             aes(yintercept = quantile75), alpha = 0.4, linetype = 2)
+
+National_Protein
+
+
+ggsave(plot = National_Protein,
+       filename =  paste0("X:/Riskwi$e/Curyo/4_Long term sims/Results/",
+                          "Curyo National Protein.png"), width = 20, height = 12, units = "cm")
+
+
+
+##### Napplied details ----
+str(Year_summary_National)
+Year_summary_National <- Year_summary_National %>% 
+  mutate(Total_NApplied = (Sowing_NApplied + N_applied_in_season))
+
+National_N_applied_total    <-Year_summary_National %>% 
+  ggplot(aes(x = Year  , y = Total_NApplied, group=Crop        ) )+
+  geom_point(aes(color=Crop        ))+
+  facet_wrap(.~Crop)+
+  labs(title = "N applied total -  treatment National",
+       subtitle = "Rotaion sequence W-> C->W->B->W->Lentil(Chickpea)-> B.",
+       caption = "Years 1960-2024",
+       y = "FertNApplied",
+       x = "Year of simulation")
+National_N_applied_total
+
+ggsave(plot = National_N_applied_total,
+       filename =  paste0("X:/Riskwi$e/Curyo/4_Long term sims/Results/",
+                          "Curyo National N_applied Total.png"), width = 20, height = 12, units = "cm")
+
+
+
+
+
+
+##### NO3NO4 in soils ----
+National_NO3NO4_insoil_sowing    <-Year_summary_National %>% 
+  ggplot(aes(x = Year  , y =  (Sowing_Soil_NO3 +  Sowing_Soil_NH4),
+             group=Crop) )+
+  geom_point(aes(color=Crop        ))+
+  facet_wrap(.~Crop)+
+  labs(title = "Soil NO3 + NO4 at sowing-  treatment National",
+       subtitle = "Rotaion sequence W-> C->W->B->W->Lentil(Chickpea)-> B.",
+       caption = "Years 1960-2024",
+       y = "Soil NO3 + NO4 at sowing",
+       x = "Year of simulation")
+National_NO3NO4_insoil_sowing
+
+ggsave(plot = National_NO3NO4_insoil_sowing,
+       filename =  paste0("X:/Riskwi$e/Curyo/4_Long term sims/Results/",
+                          "Curyo National NO3NO4_insoil_sowing.png"), width = 20, height = 12, units = "cm")
+
+
+
+
+
+
 
 
 
 write.csv(Year_summary ,
-          "X:/Riskwi$e/Curyo/4_Long term sims/Results/Year_summary_nil.csv", row.names = FALSE )
+          "X:/Riskwi$e/Curyo/4_Long term sims/Results/Year_summary_all.csv", 
+          row.names = FALSE )
+write.csv(Year_summary_Nil ,
+          "X:/Riskwi$e/Curyo/4_Long term sims/Results/Year_summary_Nil.csv", 
+          row.names = FALSE )
+write.csv(Year_summary_National ,
+          "X:/Riskwi$e/Curyo/4_Long term sims/Results/Year_summary_National.csv", row.names = FALSE )
