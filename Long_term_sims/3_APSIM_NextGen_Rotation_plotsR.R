@@ -67,10 +67,10 @@ APSIM_NextGen_daily_no_fallow_sowing <- APSIM_NextGen_daily_no_fallow_sowing %>%
          Treatment
          )
 
-sowing_conditions_info <- "25 April – 14 July, 
+sowing_conditions_info <- "25th April – 7th June (Wheat and barley), 25th april - 21st May (canola and chickpea), 
 Min ext soil water for sowing = 10, 
 Accumulated rainfall required for sowing = 10
-Duration of rainfall accumulation = 5
+Duration of rainfall accumulation = 3
 Must sow = yes"
 
 APSIM_NextGen_daily_no_fallow_harvest <- APSIM_NextGen_daily %>% 

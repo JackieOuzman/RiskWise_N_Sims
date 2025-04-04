@@ -14,7 +14,7 @@ library(readxl)
 
 # Daily output files -------------------------------------------------------
                                   
-APSIM_NextGen_daily <-  read_excel("X:/Riskwi$e/Curyo/4_Long term sims/Curyo_7_Rotation_N_bank_version5.xlsx", 
+APSIM_NextGen_daily <-  read_excel("X:/Riskwi$e/Curyo/4_Long term sims/Curyo_7_Rotation_N_bank_version6.xlsx", 
                                    col_types =  c("text", "numeric", "text", 
                                                                 "numeric", "text", "date", "text", 
                                                                 "numeric", "numeric", "numeric", 
@@ -33,7 +33,8 @@ APSIM_NextGen_daily <-  read_excel("X:/Riskwi$e/Curyo/4_Long term sims/Curyo_7_R
                                                                 "numeric", "numeric", "numeric", 
                                                                 "numeric", "numeric", "numeric", 
                                                                 "numeric", "numeric", "numeric", 
-                                                                "numeric"))
+                                                                "numeric", "numeric", "numeric", 
+                                                                "numeric", "numeric"))
 str(APSIM_NextGen_daily)
 
 ## Create a new clm called year
@@ -90,11 +91,17 @@ Zadok = case_when(
   CurrentState  == "Barley" ~ BarleyZadok,
   CurrentState  == "Chickpea" ~ ChickpeaStage ),
  
+# Yield = case_when(
+#   CurrentState  == "Wheat" ~ Yield_W/1000,
+#   CurrentState  == "Canola" ~ Yield_C/1000,
+#   CurrentState  == "Barley" ~ Yield_B/1000,
+#   CurrentState  == "Chickpea" ~ Yield_Chick/1000 ),
+
 Yield = case_when(
-  CurrentState  == "Wheat" ~ Yield_W/1000,
-  CurrentState  == "Canola" ~ Yield_C/1000,
-  CurrentState  == "Barley" ~ Yield_B/1000,
-  CurrentState  == "Chickpea" ~ Yield_Chick/1000 ),
+  CurrentState  == "Wheat" ~    Yield_W_Adjy_t_ha ,
+  CurrentState  == "Canola" ~   Yield_C_Adjy_t_ha,
+  CurrentState  == "Barley" ~   Yield_B_Adjy_t_ha,
+  CurrentState  == "Chickpea" ~ Yield_Chick_Adjy_t_ha ),
   
   
 HarvestIndex = (Yield*1000)/Biomass
