@@ -73,9 +73,7 @@ str(Dry_sowing_Lock_factor)
 str(met_frost)
 Dry_sowing_Lock_factor_with_met <- left_join(Dry_sowing_Lock_factor,met_frost, by = join_by("Clock.Today" == "date"))
 
-# Save file
-write.csv(Dry_sowing_Lock_factor_with_met ,
-          "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/Results/Dry_sowing_Lock_factor_with_met_18046.csv", row.names = FALSE )
+
 
 
 
@@ -86,11 +84,11 @@ write.csv(Dry_sowing_Lock_factor_with_met ,
 unique(Dry_sowing_Lock_factor_with_met$Sowing_date)
 
 #testing process with subset of data
-test_1_apri_2000 <- Dry_sowing_Lock_factor_with_met %>% 
-  filter(Sowing_date == "1-apr") %>% 
-  filter(year == 2000)
-str(test_1_apri_2000)
-unique(Dry_sowing_Lock_factor_with_met$Wheat.Phenology.CurrentStageName)
+# test_1_apri_2000 <- Dry_sowing_Lock_factor_with_met %>% 
+#   filter(Sowing_date == "1-apr") %>% 
+#   filter(year == 2000)
+# str(test_1_apri_2000)
+# unique(Dry_sowing_Lock_factor_with_met$Wheat.Phenology.CurrentStageName)
 
 
  
@@ -106,7 +104,13 @@ Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% fill(star
       season = case_when(
         start_end_GS == "start_gs" ~ "gs",
         TRUE ~ "other"))
-  
+## not quite right here I still need to keep   "HarvestRipe"
+Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% mutate(
+  season = case_when(
+    Wheat.Phenology.CurrentStageName == "HarvestRipe"  ~ "gs",
+    TRUE ~ season))
+
+
 Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% select(-start_end_GS)  
 str(Dry_sowing_Lock_factor_with_met)
 
@@ -133,6 +137,10 @@ Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>%
         frost_most_Sensitive_period == "frost_most_Sensitive_period"~ "frost_in_most_Sensitive_period",
       TRUE ~ "no_frost_most_Sensitive_period"))
 
+
+# Save file
+write.csv(Dry_sowing_Lock_factor_with_met ,
+          "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/Results/Dry_sowing_Lock_factor_with_met_18046.csv", row.names = FALSE )
 
 
 ## Summaries data how many frost days in GS by year----
@@ -194,7 +202,26 @@ summary_frost_details
 unique(summary_frost_details$grouping)
 unique(summary_frost_details$Sowing_date)
 
-         plot1 <- summary_frost_details %>% filter(grouping == "frost" ) %>% 
+summary_frost_details$Sowing_date <- factor(summary_frost_details$Sowing_date , ordered = TRUE, 
+                             levels = c(
+                               "1-apr" ,
+                               "5-apr" ,
+                               "10-apr" ,
+                               "15-apr" ,
+                               "20-apr",
+                               "25-may",
+                               "1-may" ,
+                               "5-may" ,
+                               "10-may" ,
+                               "15-may" ,
+                               "20-may",
+                               "25-apr" 
+                             ))
+
+
+
+
+plot1 <- summary_frost_details %>% filter(grouping == "frost" ) %>% 
   ggplot(aes(x = year, frost_event_percent, fill =grouping))+
   geom_bar(stat="identity")+
   facet_wrap(. ~ Sowing_date)+ 
@@ -237,3 +264,4 @@ ggsave(plot = plot2,
 
 write_csv(summary_frost_details,
           file = paste0(path_saved_files,"/summary_frost_details_Lock", ".csv"))
+
