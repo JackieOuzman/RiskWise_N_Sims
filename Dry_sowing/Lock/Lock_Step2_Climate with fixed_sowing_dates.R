@@ -19,21 +19,18 @@ str(met_frost)
 
 
 # Download Daily next gen files  -----------------------------------------------
+
+
 Dry_sowing_Lock_factor <- read_excel("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/Dry_sowing_Lock_factor.xlsx", 
-                                     col_types = c("text", "numeric", "text", 
-                                                   "numeric", "text", "text", "text", 
-                                                   "date", "numeric", "text", "numeric", 
-                                                   "numeric", "numeric", "numeric", 
-                                                   "numeric", "numeric", "numeric", 
-                                                   "numeric", "numeric", "numeric", 
-                                                   "numeric", "numeric", "numeric", 
-                                                   "numeric", "numeric", "numeric", 
-                                                   "numeric", "numeric", "numeric", 
-                                                   "numeric", "numeric", "numeric", 
-                                                   "numeric", "numeric", "numeric", 
-                                                   "text", "numeric", "numeric", "numeric", 
-                                                   "numeric", "numeric", "numeric", 
-                                                   "numeric"))
+                                     col_types = c("text",    "numeric", "text",  "numeric", "text", 
+                                                   "text",    "text",    "date",   "numeric", "text",
+                                                   "numeric", "numeric", "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", "numeric", "numeric", 
+                                                   "text",    "numeric", "numeric", "numeric",  "numeric", 
+                                                   "numeric", "numeric",  "numeric", "numeric"))
 
 str(Dry_sowing_Lock_factor)
 Dry_sowing_Lock_factor <- Dry_sowing_Lock_factor %>% select(
@@ -44,7 +41,8 @@ Dry_sowing_Lock_factor <- Dry_sowing_Lock_factor %>% select(
   Wheat.Phenology.Zadok.Stage,
   Wheat.Phenology.CurrentStageName,
   Yield ,
-  Yield_Adj_t_ha 
+  Yield_Adj_t_ha ,
+  Wheat.Phenology.Stage 
 )
 
 ### Make a new clm with Sensitive period of frost = 6.49 - 9.5  ------------------
@@ -54,14 +52,14 @@ str(Dry_sowing_Lock_factor)
 Dry_sowing_Lock_factor <- Dry_sowing_Lock_factor %>% 
   mutate(frost_Sensitive_period = 
            case_when(
-             between(Wheat.Phenology.Zadok.Stage, 6.49, 9.5) ~ "frost_sensitive_period",
+             between(Wheat.Phenology.Stage, 6.49, 9.5) ~ "frost_sensitive_period",
              .default = "outside_Sensitive_period"
            ))
 ### Make a new Most sensitive period 8-9.5  -----------------------------------------------
 Dry_sowing_Lock_factor <- Dry_sowing_Lock_factor %>% 
   mutate(frost_most_Sensitive_period = 
            case_when(
-             between(Wheat.Phenology.Zadok.Stage, 8.0, 9.5) ~ "frost_most_sensitive_period",
+             between(Wheat.Phenology.Stage, 8.0, 9.5) ~ "frost_most_sensitive_period",
              .default = "outside_period"
            ))
 
@@ -122,20 +120,28 @@ unique(Dry_sowing_Lock_factor_with_met$frost_event)
 unique(Dry_sowing_Lock_factor_with_met$frost_Sensitive_period)
 unique(Dry_sowing_Lock_factor_with_met$frost_most_Sensitive_period)    
 
+
+
+
+
 ## new clm when a frost event occur is sensitive period
 Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% 
   mutate(
     frost_in_Sensitive_period = case_when(
-      frost_event == "frost" & frost_Sensitive_period == "frost_most_sensitive_period"~ "frost_in_Sensitive_period",
+      frost_event == "frost" | frost_Sensitive_period == "frost_most_sensitive_period"~ "frost_in_Sensitive_period",
       TRUE ~ "no_frost_Sensitive_period"))
 
 
 Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% 
   mutate(
     frost_in_most_Sensitive_period = case_when(
-      frost_event == "frost" & 
+      frost_event == "frost" | 
         frost_most_Sensitive_period == "frost_most_Sensitive_period"~ "frost_in_most_Sensitive_period",
       TRUE ~ "no_frost_most_Sensitive_period"))
+
+#test
+str(Dry_sowing_Lock_factor_with_met)
+test <- Dry_sowing_Lock_factor_with_met %>% filter(year == 2024) %>%  filter(Sowing_date== "10-may")
 
 
 # Save file
@@ -145,6 +151,7 @@ write.csv(Dry_sowing_Lock_factor_with_met ,
 
 ## Summaries data how many frost days in GS by year----
 names(Dry_sowing_Lock_factor_with_met)
+str(Dry_sowing_Lock_factor_with_met)
 
 days_GS <- Dry_sowing_Lock_factor_with_met %>% 
   group_by(year,Sowing_date ) %>% 
@@ -231,7 +238,7 @@ plot1 <- summary_frost_details %>% filter(grouping == "frost" ) %>%
        subtitle = "Days from sowing to harvest only. Fixed sowing dates as facet",
        x = "years",
        y = "Percentage of days classified as frost (-4 to 1)",
-       caption = "Note; no frost events occured in sensitive period (or most sensitive period)")
+       caption = "Note; 1-19 frost events occured in sensitive period")
 plot1
 
 plot2 <- summary_frost_details %>% 
@@ -245,7 +252,7 @@ plot2 <- summary_frost_details %>%
        subtitle = "Days from sowing to harvest only. Fixed sowing dates 10-May",
        x = "years",
        y = "Percentage of days classified as frost (-4 to 1)",
-       caption = "Note; no frost events occured in sensitive period (or most sensitive period)")
+       caption = "Note; 1-19 frost events occured in sensitive period")
 plot2
 
 

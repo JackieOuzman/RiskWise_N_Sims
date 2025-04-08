@@ -5,7 +5,7 @@ library(stringr)
 library(lubridate)
 library(readxl)
 
-
+unique(Dry_sowing_Lock_factor_with_met$Wheat.Phenology.CurrentStageName)
 
 
 
@@ -23,6 +23,7 @@ Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>%
          Sowing_date,
          Clock.Today,
          Wheat.Phenology.CurrentStageName,
+         Wheat.Phenology.Stage,
          Yield_Adj_t_ha)
 
 phenology_sowing <- Dry_sowing_Lock_factor_with_met %>% 
@@ -111,24 +112,63 @@ plot1 <- phenology_wide %>%
   labs(title = "Days from sowing to emergence",
        #subtitle = "Days from sowing to harvest only. Fixed sowing dates 10-May",
        x = "years",
-       y = "Number of days",
-       caption = "Note; each sim has 68 years"
+       y = "Number of days from sowing to emeregnace",
+       caption = "Note; each sim has 68 years, all years produced a yield"
        )
 plot1
 
+# Bonnie suggested plotting Sowing date vs. establishment date and look at delay from dry sow
+# I dont get anything meaningful when I do this.
+phenology_wide
+
 plot2 <- phenology_wide %>% 
-  ggplot(aes(x = Date_sowing, Date_emergence))+
+  filter(Sim == "10-may") %>% 
+  ggplot(aes(x = yday(Date_sowing), yday(Date_emergence)))+
   geom_point()+
   facet_wrap(. ~ Sim)+ 
   theme_bw()+
   theme(legend.position = "none")+
-  labs(title = "Days from sowing to emergence",
+  labs(title = "Julian Days, sowing and emergence",
        #subtitle = "Days from sowing to harvest only. Fixed sowing dates 10-May",
        x = "Sowing date",
        y = "emergence date",
        caption = "Note; each sim has 68 years"
   )
 plot2
+
+
+
+## could try a box plot x = sims, y = number of days sowing
+phenology_wide
+
+plot3 <- phenology_wide %>% 
+  ggplot(aes(as.factor(from_sowing_to_emergence)))+
+  geom_histogram(stat="count")+
+  theme_bw()+
+  facet_wrap(.~ Sim)+
+  theme(legend.position = "none")+
+  labs(title = "Number of days from sowing to emergence",
+       x = "Number of days from sowing to emeregnace",
+       y = "count in class",
+       caption = "Note; each sim has 68 years, all years produced a yield"
+  )
+plot3
+
+
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing", "Results")
+
+ggsave(plot = plot1,
+       filename = paste0(path_saved_files,"/Number of days from sowing to emeregnace_Lock2023", ".png" ),
+       width = 20, height = 12, units = "cm")
+
+
+ggsave(plot = plot3,
+       filename = paste0(path_saved_files,"/Count of Number of days from sowing to emergence_Lock2023", ".png" ),
+       width = 20, height = 12, units = "cm")
+
+
+
+
 
 
 
