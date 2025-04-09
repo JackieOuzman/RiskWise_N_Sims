@@ -108,12 +108,13 @@ plot1 <- phenology_wide %>%
   geom_point()+
   facet_wrap(. ~ Sim)+ 
   theme_bw()+
-  theme(legend.position = "none")+
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust = 1))+
   labs(title = "Days from sowing to emergence",
        #subtitle = "Days from sowing to harvest only. Fixed sowing dates 10-May",
        x = "years",
        y = "Number of days from sowing to emeregnace",
-       caption = "Note; each sim has 68 years, all years produced a yield"
+      # caption = "Note; each sim has 68 years, all years produced a yield"
        )
 plot1
 
@@ -132,7 +133,7 @@ plot2 <- phenology_wide %>%
        #subtitle = "Days from sowing to harvest only. Fixed sowing dates 10-May",
        x = "Sowing date",
        y = "emergence date",
-       caption = "Note; each sim has 68 years"
+       #caption = "Note; each sim has 68 years"
   )
 plot2
 
@@ -146,11 +147,12 @@ plot3 <- phenology_wide %>%
   geom_histogram(stat="count")+
   theme_bw()+
   facet_wrap(.~ Sim)+
-  theme(legend.position = "none")+
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust = 1))+
   labs(title = "Number of days from sowing to emergence",
        x = "Number of days from sowing to emeregnace",
        y = "count in class",
-       caption = "Note; each sim has 68 years, all years produced a yield"
+       #caption = "Note; each sim has 68 years, all years produced a yield"
   )
 plot3
 
@@ -158,12 +160,12 @@ plot3
 path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing", "Results")
 
 ggsave(plot = plot1,
-       filename = paste0(path_saved_files,"/Number of days from sowing to emeregnace_Lock2023", ".png" ),
+       filename = paste0(path_saved_files,"/Number of days from sowing to emeregnace_Lock", ".png" ),
        width = 20, height = 12, units = "cm")
 
 
 ggsave(plot = plot3,
-       filename = paste0(path_saved_files,"/Count of Number of days from sowing to emergence_Lock2023", ".png" ),
+       filename = paste0(path_saved_files,"/Count of Number of days from sowing to emergence_Lock", ".png" ),
        width = 20, height = 12, units = "cm")
 
 
