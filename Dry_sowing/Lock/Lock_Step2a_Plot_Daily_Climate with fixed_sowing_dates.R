@@ -126,19 +126,20 @@ plot2 <- Yld_flowering %>%
   theme_classic()+
   theme(legend.position = "none")+
   labs(title = "Yield vs sowing dates Lock 18046",
-       x = "Sowing date Julian days",
+       subtitle = "Fixed sowing dates as facet",
+       x = "Flowering dates Julian days",
        y = "Yield t/ha",
-       caption = "")
+       caption = "Green line indicated optimal flowering dates.")
 plot2
 
 ggsave(plot = plot2,
-       filename = paste0(path_saved_files,"/SowingJulianDays_vs_yiled_Lock2023", ".png" ),
+       filename = paste0(path_saved_files,"/FloweringJulianDays_vs_yiled_Lock", ".png" ),
        width = 20, height = 12, units = "cm")
 
 str(Yld_flowering)
 
 plot3 <- Yld_flowering %>% 
-  filter
+  filter(year == 2024) %>% 
   ggplot(aes(x =Julian_days, max_yld_t_ha))+
   geom_vline(data = Yld_flowering, aes(xintercept = Julian_optimal_flowering_start), 
              color = "darkgreen", size = 1)+
@@ -150,11 +151,12 @@ plot3 <- Yld_flowering %>%
   theme_classic()+
   theme(legend.position = "none")+
   labs(title = "Yield vs sowing dates Lock 18046",
-       x = "Sowing date Julian days",
+       subtitle = "Year 2024. Sowing dates are faceted",
+       x = "Flowering dates Julian days",
        y = "Yield t/ha",
-       caption = "")
-plot2
+       caption = "Green line indicated optimal flowering dates.")
+plot3
 
-ggsave(plot = plot2,
-       filename = paste0(path_saved_files,"/SowingJulianDays_vs_yiled_Lock2023", ".png" ),
+ggsave(plot = plot3,
+       filename = paste0(path_saved_files,"/FloweringJulianDays_vs_yiled_Lock2024", ".png" ),
        width = 20, height = 12, units = "cm")
