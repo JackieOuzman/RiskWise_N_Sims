@@ -66,7 +66,7 @@ plot1 <- Sim_met_apr102024 %>%
   geom_vline(data = phenology_stages, aes(xintercept = Clock.Today), linetype="dashed", color = "grey")+
   
   labs(title = "Climate station Lock 18046",
-       subtitle = "Days from sowing to harvest only. Fixed sowing dates 01 Apr 2024",
+       subtitle = "Days from sowing to harvest only. Sowing rule 01 Apr 2024, Reset Nov, drier soil",
        x = "",
        y = "Min temp",
        caption = "Dashed grey lines indicate phenology stages. Solid grey is frost senstive period (Phenology.Stage between 6.49 - 9.5)")
