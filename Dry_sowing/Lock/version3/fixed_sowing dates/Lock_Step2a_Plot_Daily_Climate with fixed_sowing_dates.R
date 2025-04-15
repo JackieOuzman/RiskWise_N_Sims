@@ -114,6 +114,16 @@ Yld_flowering <- Yld_flowering %>%
          Julian_optimal_flowering_end = lubridate::yday(as.Date(optimal_flowering_end)) )                                                       
 names(Yld_flowering)
 
+### the leap years makes this a bit messy!
+unique(Yld_flowering$Julian_optimal_flowering_start)
+unique(Yld_flowering$Julian_optimal_flowering_end)
+
+Yld_flowering <- Yld_flowering %>% 
+  mutate(Julian_optimal_flowering_start = min(Julian_optimal_flowering_start),
+         Julian_optimal_flowering_end = min(Julian_optimal_flowering_end))
+
+
+
 plot2 <- Yld_flowering %>% 
   ggplot(aes(x =Julian_days, max_yld_t_ha))+
   geom_vline(data = Yld_flowering, aes(xintercept = Julian_optimal_flowering_start), 
@@ -182,3 +192,8 @@ plot2_box
 ggsave(plot = plot2_box,
        filename = paste0(path_saved_files,"/Box_yield_Lock", ".png" ),
        width = 20, height = 12, units = "cm")
+
+
+
+str(Sim_met_may102024)
+

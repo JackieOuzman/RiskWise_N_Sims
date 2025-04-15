@@ -38,6 +38,29 @@ Dry_sowing_Lock_factor <- Fixed_dates_factor_phen_dates_v3 <- read_excel("X:/Ris
                                                                                                         "numeric", "numeric", "numeric"))
   
   
+# Dry_sowing_Lock_factor <-Dry_sowing_Lock_factor %>% 
+#   mutate(year = year(Clock.Today))
+##something is wrong with PAW sum
+# test2024 <- Dry_sowing_Lock_factor %>% filter(year == 2024) %>% 
+#   filter(StartDate == '10-may')
+# 
+# test2024 <- test2024 %>% 
+# mutate(PAW_Sum = (`Soil.Water.PAW(1)`+                         
+#                      `Soil.Water.PAW(2)`+
+#                      `Soil.Water.PAW(3)`+                         
+#                      `Soil.Water.PAW(4)`+
+#                      `Soil.Water.PAW(5)`+                        
+#                      `Soil.Water.PAW(6)`+
+#                      `Soil.Water.PAW(7)`)) %>% 
+#   rename(Sowing_date = StartDate)
+# names(test2024)
+# 
+# test2024<- test2024 %>% select(year, Sowing_date, "Clock.Today",Wheat.Phenology.CurrentStageName,
+#                                PAW_Sum  )
+# 
+# 
+# test2024
+
 str(Dry_sowing_Lock_factor)
 names(Dry_sowing_Lock_factor)
 Dry_sowing_Lock_factor <- Dry_sowing_Lock_factor %>% select(
@@ -60,15 +83,25 @@ Dry_sowing_Lock_factor <- Dry_sowing_Lock_factor %>% select(
 
 ## sum the PAW and change the name of sowing date
 Dry_sowing_Lock_factor <-Dry_sowing_Lock_factor %>% 
-  mutate(PAW_Sum = sum(`Soil.Water.PAW(1)`,                         
-         `Soil.Water.PAW(2)`,
-         `Soil.Water.PAW(3)`,                         
-         `Soil.Water.PAW(4)`,
-         `Soil.Water.PAW(5)`,                         
-         `Soil.Water.PAW(6)`,
-         `Soil.Water.PAW(7)`,  na.rm = TRUE)) %>% 
+  mutate(PAW_Sum = (`Soil.Water.PAW(1)`+                         
+                                            `Soil.Water.PAW(2)`+
+                                            `Soil.Water.PAW(3)`+                         
+                                            `Soil.Water.PAW(4)`+
+                                            `Soil.Water.PAW(5)`+                        
+                                            `Soil.Water.PAW(6)`+
+                                            `Soil.Water.PAW(7)`)) %>% 
            rename(Sowing_date = StartDate)
 
+ test <-Dry_sowing_Lock_factor %>% 
+   mutate(year = year(Clock.Today))
+
+names(Dry_sowing_Lock_factor)
+test <- test %>% 
+  group_by(Sowing_date, year, Wheat.Phenology.CurrentStageName) %>% 
+  summarise(PAW_Sum_mean = mean( PAW_Sum, na.rm = TRUE)
+            )
+
+test
 ### Make a new clm with Sensitive period of frost = 6.49 - 9.5  ------------------
 summary(Dry_sowing_Lock_factor)
 str(Dry_sowing_Lock_factor)
