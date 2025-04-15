@@ -66,7 +66,7 @@ plot1
 path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing", "Results")
 
 ggsave(plot = plot1,
-       filename = paste0(path_saved_files,"/MinTemp_vs_days_Lock2023", ".png" ),
+       filename = paste0(path_saved_files,"/MinTemp_vs_days_Lock2024", ".png" ),
        width = 20, height = 12, units = "cm")
 
 
