@@ -31,7 +31,7 @@ Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>%
 ## Filter just to plot one year and one sowing date - frost year with typical sowing date
 
 Sim_met_may102024 <- Dry_sowing_Lock_factor_with_met %>% 
-  filter(year == 2024) %>% 
+  filter(year == 2023) %>% 
   filter(Sowing_date == "10-may")
 Sim_met_may102024
 
@@ -74,7 +74,7 @@ plot1 <- Sim_met_may102024 %>%
   geom_vline(data = phenology_stages, aes(xintercept = Clock.Today), linetype="dashed", color = "grey")+
   
   labs(title = "Climate station Lock 18046",
-       subtitle = "Fixed sowing dates 10-May 2024",
+       subtitle = "Fixed sowing dates 10-May 2023",
        x = "",
        y = "Sum of PAW",
        caption = "Dashed grey lines indicate phenology stages.")
@@ -92,5 +92,6 @@ plot1_labels
 path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing", "Results")
 
 ggsave(plot = plot1_labels,
-       filename = paste0(path_saved_files,"/PAW with phen stages_Lock2024", ".png" ),
+       filename = paste0(path_saved_files,"/PAW with phen stages_Lock2023", ".png" ),
        width = 20, height = 12, units = "cm")
+

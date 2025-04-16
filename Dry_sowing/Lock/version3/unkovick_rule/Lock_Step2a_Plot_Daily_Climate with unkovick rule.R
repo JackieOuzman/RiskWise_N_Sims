@@ -15,7 +15,7 @@ unique(Dry_sowing_Lock_factor_with_met$Wheat.Phenology.CurrentStageName)
 ## Filter just to plot one year and one sowing date - frost year with typical sowing date
 
 Sim_met_may102024 <- Dry_sowing_Lock_factor_with_met %>% 
-  filter(year == 2024) %>% 
+  filter(year == 2023) %>% 
   filter(Sowing_date == "10-may")
 Sim_met_may102024
 
@@ -46,17 +46,17 @@ plot1 <- Sim_met_may102024 %>%
  
   geom_vline(data = Frost_senstive_period, aes(xintercept = Clock.Today), color = "lightgrey", size = 2)+
   geom_vline(data = Anthesis_Flowering, aes(xintercept = Clock.Today), color = "darkgreen", size = 2)+
-  annotate("text", x= as.Date("2024-08-22"), y=1.5, label="Flowering", color = "darkgreen")+ 
+  annotate("text", x= as.Date("2023-08-22"), y=1.5, label="Flowering", color = "darkgreen")+ 
   geom_point()+
   
   theme_classic()+
   theme(legend.position = "none")+
   geom_hline(yintercept=1,  linetype="dashed", color = "red")+
-  annotate("text", x= as.Date("2024-10-30"), y=1.5, label="Frost definition", color = "red")+ 
+  annotate("text", x= as.Date("2023-10-30"), y=1.5, label="Frost definition", color = "red")+ 
   geom_vline(data = phenology_stages, aes(xintercept = Clock.Today), linetype="dashed", color = "grey")+
   
   labs(title = "Climate station Lock 18046",
-       subtitle = "Days from sowing to harvest only. Unkovich sowing rule, window 10-May to 30-May 2024",
+       subtitle = "Days from sowing to harvest only. Unkovich sowing rule, window 10-May to 30-May 2023",
        x = "",
        y = "Min temp",
        caption = "Dashed grey lines indicate phenology stages. Solid grey is frost senstive period (Phenology.Stage between 6.49 - 9.5)")
@@ -66,7 +66,7 @@ plot1
 path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing", "Results")
 
 ggsave(plot = plot1,
-       filename = paste0(path_saved_files,"/MinTemp_vs_days_Lock2024", ".png" ),
+       filename = paste0(path_saved_files,"/MinTemp_vs_days_Lock2023", ".png" ),
        width = 20, height = 12, units = "cm")
 
 
@@ -151,7 +151,7 @@ ggsave(plot = plot2,
 str(Yld_flowering)
 
 plot3 <- Yld_flowering %>% 
-  filter(year == 2024) %>% 
+  filter(year == 2023) %>% 
   ggplot(aes(x =Julian_days, max_yld_t_ha))+
   geom_vline(data = Yld_flowering, aes(xintercept = Julian_optimal_flowering_start), 
              color = "darkgreen", size = 1)+
@@ -163,14 +163,14 @@ plot3 <- Yld_flowering %>%
   theme_classic()+
   theme(legend.position = "none")+
   labs(title = "Yield vs flowering dates Lock 18046",
-       subtitle = "Year 2024. Sowing dates are faceted",
+       subtitle = "Year 2023. Sowing dates are faceted",
        x = "Flowering dates Julian days",
        y = "Yield t/ha",
        caption = "Green line indicated optimal flowering dates.")
 plot3
 
 ggsave(plot = plot3,
-       filename = paste0(path_saved_files,"/FloweringJulianDays_vs_yiled_Lock2024", ".png" ),
+       filename = paste0(path_saved_files,"/FloweringJulianDays_vs_yiled_Lock2023", ".png" ),
        width = 20, height = 12, units = "cm")
 
 Yld_flowering

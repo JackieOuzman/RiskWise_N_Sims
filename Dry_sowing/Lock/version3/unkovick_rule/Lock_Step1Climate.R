@@ -67,3 +67,4 @@ Fost_details <- climate %>% select(site, date, year,maxt, mint) %>%
           
 write.csv(Fost_details ,
           "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/Results/Fost_details_18046.csv", row.names = FALSE )
+

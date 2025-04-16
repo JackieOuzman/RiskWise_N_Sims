@@ -43,7 +43,7 @@ names(Dry_sowing_Lock_factor)
 
 
 Dry_sowing_Lock_factor <- Dry_sowing_Lock_factor %>% select(
-  StartDate,  #(Sowing_date)
+  Sowing_date,  #(Sowing_date)
   EndDate,
   Clock.Today ,
   Wheat.Phenology.Zadok.Stage,
@@ -73,7 +73,7 @@ Dry_sowing_Lock_factor <-Dry_sowing_Lock_factor %>%
          `Soil.Water.PAW(5)`,                         
          `Soil.Water.PAW(6)`,
          `Soil.Water.PAW(7)`,  na.rm = TRUE)) %>% 
-           rename(Sowing_date = StartDate)
+           rename(Sowing_date = Sowing_date)
 
 ### Make a new clm with Sensitive period of frost = 6.49 - 9.5  ------------------
 summary(Dry_sowing_Lock_factor)
