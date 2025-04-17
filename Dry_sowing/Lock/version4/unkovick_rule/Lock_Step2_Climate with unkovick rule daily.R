@@ -21,29 +21,29 @@ str(met_frost)
 # Download Daily next gen files  -----------------------------------------------
 
 
-Dry_sowing_Lock_factor <- read_excel("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version3_unkovich_rule/unkovich_factor_phen_dates_v3.xlsx", 
-                                                                                                          sheet = "Daily", col_types = c("text", 
-                                                                                                                                         "numeric", "text", "numeric", "text", 
-                                                                                                                                         "text", "text", "text", "date", "numeric", 
-                                                                                                                                         "text", "numeric", "numeric", "numeric", 
-                                                                                                                                         "numeric", "numeric", "numeric", 
-                                                                                                                                         "numeric", "numeric", "numeric", 
-                                                                                                                                         "numeric", "numeric", "numeric", 
-                                                                                                                                         "numeric", "numeric", "numeric", 
-                                                                                                                                         "numeric", "numeric", "numeric", 
-                                                                                                                                         "numeric", "numeric", "numeric", 
-                                                                                                                                         "numeric", "numeric", "numeric", 
-                                                                                                                                         "numeric", "numeric", "numeric", 
-                                                                                                                                         "numeric", "numeric", "numeric", 
-                                                                                                                                         "numeric", "numeric", "numeric"))
-  
-  
+Dry_sowing_Lock_factor <- read_excel("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version4_unkovich_rule/unkovich_factor_phen_dates_v4.xlsx", 
+                                     col_types = c("text", "numeric", "text", 
+                                                   "numeric", "text", "text", "text", 
+                                                   "text", "date", "numeric", "text", 
+                                                   "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric", "numeric", 
+                                                   "numeric", "numeric"))
 str(Dry_sowing_Lock_factor)
 names(Dry_sowing_Lock_factor)
 
 
 Dry_sowing_Lock_factor <- Dry_sowing_Lock_factor %>% select(
-  Sowing_date,  #(Sowing_date)
+  StartDate,
+  #Sowing_date,  #(Sowing_date)
   EndDate,
   Clock.Today ,
   Wheat.Phenology.Zadok.Stage,
@@ -73,7 +73,7 @@ Dry_sowing_Lock_factor <-Dry_sowing_Lock_factor %>%
          `Soil.Water.PAW(5)`,                         
          `Soil.Water.PAW(6)`,
          `Soil.Water.PAW(7)`,  na.rm = TRUE)) %>% 
-           rename(Sowing_date = Sowing_date)
+           rename(Sowing_date = StartDate) #new name = old name
 
 ### Make a new clm with Sensitive period of frost = 6.49 - 9.5  ------------------
 summary(Dry_sowing_Lock_factor)
@@ -184,7 +184,7 @@ Dry_sowing_Lock_factor_with_met <-Dry_sowing_Lock_factor_with_met %>%
 #test
 str(Dry_sowing_Lock_factor_with_met)
 test <- Dry_sowing_Lock_factor_with_met %>% 
-  filter(year == 2024) %>%  
+  filter(year == 2023) %>%  
   filter(Sowing_date == "10-may") %>% 
   filter(frost_event == "frost") %>% 
   select(frost_event,
@@ -276,10 +276,11 @@ summary_frost_details$Sowing_date <- factor(summary_frost_details$Sowing_date , 
                              ))
 
 
-
+summary_frost_details
 
 plot1 <- summary_frost_details %>% filter(grouping == "frost" ) %>% 
-  ggplot(aes(x = year, frost_event_percent, fill =grouping))+
+  #ggplot(aes(x = as.factor(year), frost_event_percent, fill =grouping))+
+  ggplot(aes(x = as.factor(year), frost_event_count , fill =grouping))+
   geom_bar(stat="identity")+
   facet_wrap(. ~ Sowing_date)+ 
   theme_bw()+
@@ -287,14 +288,15 @@ plot1 <- summary_frost_details %>% filter(grouping == "frost" ) %>%
   labs(title = "Climate station Lock 18046",
        subtitle = "Days from sowing to harvest only. Fixed sowing dates as facet",
        x = "years",
-       y = "Percentage of days classified as frost (-4 to 1)",
-       caption = "Note; 1-19 frost events occured in sensitive period")
+       y = "Count of days classified as frost (-4 to 1)",
+       #caption = "Note; 1-19 frost events occured in sensitive period"
+       )
 plot1
 
 plot2 <- summary_frost_details %>% 
   filter(grouping == "frost" ) %>% 
   filter(Sowing_date == "10-may") %>% 
-  ggplot(aes(x = year, frost_event_percent, fill =grouping))+
+  ggplot(aes(x = as.factor(year), frost_event_percent, fill =grouping))+
   geom_bar(stat="identity")+
   theme_bw()+
   theme(legend.position = "none")+
