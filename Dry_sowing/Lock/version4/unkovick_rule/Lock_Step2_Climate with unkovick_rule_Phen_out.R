@@ -21,7 +21,7 @@ str(met_frost)
 # Download Phenlogy next gen files  -----------------------------------------------
 
 
-Dry_sowing_Lock_factor <- read_excel("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version3_unkovich_rule/unkovich_factor_phen_dates_v3.xlsx", 
+Dry_sowing_Lock_factor <- read_excel("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version4_unkovich_rule/unkovich_factor_phen_dates_v4.xlsx", 
                                      sheet = "SowingPhenology", col_types = c("text", 
                                                                               "numeric", "text", "numeric", "text", 
                                                                               "text", "text", "text", "date", "numeric", 
@@ -35,7 +35,8 @@ Dry_sowing_Lock_factor <- read_excel("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/ver
                                                                               "numeric", "numeric", "numeric", 
                                                                               "numeric", "numeric", "numeric", 
                                                                               "numeric", "numeric", "numeric", 
-                                                                              "numeric", "numeric", "numeric"))
+                                                                              "numeric", "numeric", "numeric", 
+                                                                              "numeric", "numeric"))
   
   
 # Dry_sowing_Lock_factor <-Dry_sowing_Lock_factor %>% 
