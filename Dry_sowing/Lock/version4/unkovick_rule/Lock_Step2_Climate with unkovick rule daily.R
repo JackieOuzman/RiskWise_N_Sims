@@ -284,7 +284,9 @@ plot1 <- summary_frost_details %>% filter(grouping == "frost" ) %>%
   geom_bar(stat="identity")+
   facet_wrap(. ~ Sowing_date)+ 
   theme_bw()+
-  theme(legend.position = "none")+
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust = 1))+
+  #scale_x_discrete(breaks=c(1960, 1970, 1980, 1990, 2000, 2010, 2020))+
   labs(title = "Climate station Lock 18046",
        subtitle = "Days from sowing to harvest only. Fixed sowing dates as facet",
        x = "years",
@@ -299,12 +301,13 @@ plot2 <- summary_frost_details %>%
   ggplot(aes(x = as.factor(year), frost_event_percent, fill =grouping))+
   geom_bar(stat="identity")+
   theme_bw()+
-  theme(legend.position = "none")+
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust = 1))+
   labs(title = "Climate station Lock 18046",
        subtitle = "Days from sowing to harvest only. Fixed sowing dates 10-May",
        x = "years",
        y = "Percentage of days classified as frost (-4 to 1)",
-       caption = "Note; 1-19 frost events occured in sensitive period")
+       caption = "")
 plot2
 
 

@@ -131,7 +131,7 @@ plot2 <- Yld_flowering %>%
   geom_vline(data = Yld_flowering, aes(xintercept = Julian_optimal_flowering_end), 
              color = "darkgreen", size = 1)+
   geom_point()+
-  geom_point(data= Yld_flowering %>% filter(year == 2024), 
+  geom_point(data= Yld_flowering %>% filter(year == 2023), 
              aes(x =Julian_days, max_yld_t_ha), colour ="red")+
   facet_wrap(.~ Sowing_date)+
   
@@ -141,7 +141,7 @@ plot2 <- Yld_flowering %>%
        subtitle = "Fixed sowing dates as facet",
        x = "Flowering dates Julian days",
        y = "Yield t/ha",
-       caption = "Green line indicated optimal flowering dates. Red dot =2024")
+       caption = "Green line indicated optimal flowering dates. Red dot =2023")
 plot2
 
 ggsave(plot = plot2,
@@ -179,13 +179,13 @@ plot2_box <- Yld_flowering %>%
   ggplot(aes(x =Sowing_date, max_yld_t_ha))+
   geom_boxplot()+
   geom_point(alpha =0.2)+
-  geom_point(data= Yld_flowering %>% filter(year == 2024), aes(x =Sowing_date, max_yld_t_ha), colour ="red")+
+  geom_point(data= Yld_flowering %>% filter(year == 2023), aes(x =Sowing_date, max_yld_t_ha), colour ="red")+
   theme_classic()+
   theme(legend.position = "none")+
   labs(title = "Yield vs sowing dates Lock 18046",
        y = "Yield t/ha",
        x ="",
-       caption = "Red dot = 2024."
+       caption = "Red dot = 2023."
        )
 plot2_box
 
