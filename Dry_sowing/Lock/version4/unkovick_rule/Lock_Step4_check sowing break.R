@@ -1,4 +1,4 @@
-# This file is for assigning rainfall decile years
+
 library(tidyverse)
 library(dplyr)
 library(readr)
