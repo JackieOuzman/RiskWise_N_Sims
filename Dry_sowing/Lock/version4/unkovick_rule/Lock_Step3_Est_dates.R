@@ -90,13 +90,14 @@ phenology_wide$Sim <- factor(phenology_wide$Sim , ordered = TRUE,
                                         "10-apr" ,
                                         "15-apr" ,
                                         "20-apr",
-                                        "25-may",
+                                        "25-apr",
                                         "1-may" ,
                                         "5-may" ,
                                         "10-may" ,
                                         "15-may" ,
                                         "20-may",
-                                        "25-apr" 
+                                        "25-may"
+                                         
                                       ))
 
 

@@ -96,13 +96,14 @@ Yld_flowering$Sowing_date <- factor(Yld_flowering$Sowing_date , ordered = TRUE,
                                               "10-apr" ,
                                               "15-apr" ,
                                               "20-apr",
-                                              "25-may",
+                                              "25-apr" ,
                                               "1-may" ,
                                               "5-may" ,
                                               "10-may" ,
                                               "15-may" ,
                                               "20-may",
-                                              "25-apr" 
+                                              
+                                              "25-may"
                                             ))
 
 Yld_flowering <- Yld_flowering %>% 
@@ -138,7 +139,7 @@ plot2 <- Yld_flowering %>%
   theme_classic()+
   theme(legend.position = "none")+
   labs(title = "Yield vs flowering dates Lock 18046",
-       subtitle = "Fixed sowing dates as facet",
+       subtitle = "Sowing dates as facet",
        x = "Flowering dates Julian days",
        y = "Yield t/ha",
        caption = "Green line indicated optimal flowering dates. Red dot =2023")
@@ -195,5 +196,5 @@ ggsave(plot = plot2_box,
 
 
 
-str(Sim_met_may102024)
+
 

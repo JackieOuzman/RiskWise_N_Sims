@@ -99,7 +99,11 @@ write.csv(climate ,
 
 climate2022_23_24 <- climate %>% 
   filter(year %in% c(2022, 2023, 2024))
-
+climate2015_to_2024 <- climate %>% 
+  filter(year %in% c(2015,2016,2017,2018,2019, 2020, 2021, 2022, 2023, 2024))
 
 write.csv(climate2022_23_24 ,
           "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/Results/Check_season_break/NeatClimate_18046_yrs2022_23_24.csv", row.names = FALSE )
+
+write.csv(climate2015_to_2024 ,
+          "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/Results/Check_season_break/NeatClimate_18046_yrs2015_to_2024.csv", row.names = FALSE )

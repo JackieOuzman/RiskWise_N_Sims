@@ -160,54 +160,54 @@ rain_season_wide <- rain_season_wide %>%
 str(rain_season_wide)        
 
 
-## new variable gs rain + 0.25 of summer --------------------------------------
+## new variable gs rain + 0.30 of summer --------------------------------------
 
 rain_season_wide <- rain_season_wide %>% 
-  mutate(gs_plus25_summer = gs+ (0.25*summer))
+  mutate(gs_plus30_summer = gs+ (0.30*summer))
 
 ## Cal percentiles for each year -----------------------------------------------
 
-GS_25_summer_decile_max_rain <- quantile(rain_season_wide$gs_plus25_summer, 
+GS_30_summer_decile_max_rain <- quantile(rain_season_wide$gs_plus30_summer, 
                                c(.1, .2, .3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0))
-GS_25_summer_deciles_names <- c("decile_1", "decile_2", "decile_3", "decile_4", "decile_5", "decile_6", "decile_7", "decile_8", "decile_9", "decile_10")
+GS_30_summer_deciles_names <- c("decile_1", "decile_2", "decile_3", "decile_4", "decile_5", "decile_6", "decile_7", "decile_8", "decile_9", "decile_10")
 
-GS_25_summer_decile_table <- data.frame(GS_25_summer_decile_max_rain, GS_25_summer_deciles_names, row.names = NULL)
-GS_25_summer_decile_table <- mutate(GS_25_summer_decile_table, GS_25_summer_decile_min_rain = lag(GS_25_summer_decile_max_rain+0.1))
+GS_30_summer_decile_table <- data.frame(GS_30_summer_decile_max_rain, GS_30_summer_deciles_names, row.names = NULL)
+GS_30_summer_decile_table <- mutate(GS_30_summer_decile_table, GS_30_summer_decile_min_rain = lag(GS_30_summer_decile_max_rain+0.1))
 
 
 #add in the min value to table
-GS_25_summer_decile_table[1,3] <-  min(rain_season_wide$gs_plus25_summer)
-GS_25_summer_decile_table <- GS_25_summer_decile_table %>%  
-  select (GS_25_summer_deciles_names, GS_25_summer_decile_min_rain, GS_25_summer_decile_max_rain)
+GS_30_summer_decile_table[1,3] <-  min(rain_season_wide$gs_plus30_summer)
+GS_30_summer_decile_table <- GS_30_summer_decile_table %>%  
+  select (GS_30_summer_deciles_names, GS_30_summer_decile_min_rain, GS_30_summer_decile_max_rain)
 
-GS_25_summer_decile_table
+GS_30_summer_decile_table
 
-GS_25_summer_decile_table <- GS_25_summer_decile_table %>% 
+GS_30_summer_decile_table <- GS_30_summer_decile_table %>% 
   mutate( site = site,
                  years_included = paste0(year(min(climate$date)) ," to ", year(max(climate$date))),
                  GS = GS_defined_as) 
 
 
 
-GS_25_summer_decile_table_df <- as.data.frame(GS_25_summer_decile_table)
-GS_25_summer_decile_table_df <- GS_25_summer_decile_table_df %>% 
+GS_30_summer_decile_table_df <- as.data.frame(GS_30_summer_decile_table)
+GS_30_summer_decile_table_df <- GS_30_summer_decile_table_df %>% 
   mutate(across(where(is.numeric), round, 2))
-GS_25_summer_decile_table_df
+GS_30_summer_decile_table_df
 
 
 rain_season_wide <- rain_season_wide %>%
   mutate(
     decile = case_when(
-      between(round(gs_plus25_summer, 1), round(GS_25_summer_decile_table_df[1,2],1) ,round(GS_25_summer_decile_table_df[1,3],1) ) ~ "decile_1",
-      between(round(gs_plus25_summer, 1), round(GS_25_summer_decile_table_df[2,2],1) ,round(GS_25_summer_decile_table_df[2,3],1) ) ~ "decile_2",
-      between(round(gs_plus25_summer, 1), round(GS_25_summer_decile_table_df[3,2],1) ,round(GS_25_summer_decile_table_df[3,3],1) ) ~ "decile_3",
-      between(round(gs_plus25_summer, 1), round(GS_25_summer_decile_table_df[4,2],1) ,round(GS_25_summer_decile_table_df[4,3],1) ) ~ "decile_4",
-      between(round(gs_plus25_summer, 1), round(GS_25_summer_decile_table_df[5,2],1) ,round(GS_25_summer_decile_table_df[5,3],1) ) ~ "decile_5",
-      between(round(gs_plus25_summer, 1), round(GS_25_summer_decile_table_df[6,2],1) ,round(GS_25_summer_decile_table_df[6,3],1) ) ~ "decile_6",
-      between(round(gs_plus25_summer, 1), round(GS_25_summer_decile_table_df[7,2],1) ,round(GS_25_summer_decile_table_df[7,3],1) ) ~ "decile_7",
-      between(round(gs_plus25_summer, 1), round(GS_25_summer_decile_table_df[8,2],1) ,round(GS_25_summer_decile_table_df[8,3],1) ) ~ "decile_8",
-      between(round(gs_plus25_summer, 1), round(GS_25_summer_decile_table_df[9,2],1) ,round(GS_25_summer_decile_table_df[9,3],1) ) ~ "decile_9",
-      between(round(gs_plus25_summer, 1), round(GS_25_summer_decile_table_df[10,2],1) ,round(GS_25_summer_decile_table_df[10,3],1) ) ~ "decile_10",
+      between(round(gs_plus30_summer, 1), round(GS_30_summer_decile_table_df[1,2],1) ,round(GS_30_summer_decile_table_df[1,3],1) ) ~ "decile_1",
+      between(round(gs_plus30_summer, 1), round(GS_30_summer_decile_table_df[2,2],1) ,round(GS_30_summer_decile_table_df[2,3],1) ) ~ "decile_2",
+      between(round(gs_plus30_summer, 1), round(GS_30_summer_decile_table_df[3,2],1) ,round(GS_30_summer_decile_table_df[3,3],1) ) ~ "decile_3",
+      between(round(gs_plus30_summer, 1), round(GS_30_summer_decile_table_df[4,2],1) ,round(GS_30_summer_decile_table_df[4,3],1) ) ~ "decile_4",
+      between(round(gs_plus30_summer, 1), round(GS_30_summer_decile_table_df[5,2],1) ,round(GS_30_summer_decile_table_df[5,3],1) ) ~ "decile_5",
+      between(round(gs_plus30_summer, 1), round(GS_30_summer_decile_table_df[6,2],1) ,round(GS_30_summer_decile_table_df[6,3],1) ) ~ "decile_6",
+      between(round(gs_plus30_summer, 1), round(GS_30_summer_decile_table_df[7,2],1) ,round(GS_30_summer_decile_table_df[7,3],1) ) ~ "decile_7",
+      between(round(gs_plus30_summer, 1), round(GS_30_summer_decile_table_df[8,2],1) ,round(GS_30_summer_decile_table_df[8,3],1) ) ~ "decile_8",
+      between(round(gs_plus30_summer, 1), round(GS_30_summer_decile_table_df[9,2],1) ,round(GS_30_summer_decile_table_df[9,3],1) ) ~ "decile_9",
+      between(round(gs_plus30_summer, 1), round(GS_30_summer_decile_table_df[10,2],1) ,round(GS_30_summer_decile_table_df[10,3],1) ) ~ "decile_10",
       
       TRUE                      ~ "other"
     )
@@ -216,8 +216,8 @@ rain_season_wide <- rain_season_wide %>%
 path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing", "Results")
 
 
-write_csv(GS_25_summer_decile_table, 
-          file =paste0(path_saved_files, "/GS_25_summer_decile_table_Lock18046", ".csv"))
+write_csv(GS_30_summer_decile_table, 
+          file =paste0(path_saved_files, "/GS_30_summer_decile_table_Lock18046", ".csv"))
 
 write_csv(rain_season_wide, 
           file =paste0(path_saved_files, "/deciles per year_Lock18046", ".csv"))

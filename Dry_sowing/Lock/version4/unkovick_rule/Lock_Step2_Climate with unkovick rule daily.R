@@ -288,7 +288,7 @@ plot1 <- summary_frost_details %>% filter(grouping == "frost" ) %>%
         axis.text.x = element_text(angle = 90, hjust = 1))+
   #scale_x_discrete(breaks=c(1960, 1970, 1980, 1990, 2000, 2010, 2020))+
   labs(title = "Climate station Lock 18046",
-       subtitle = "Days from sowing to harvest only. Fixed sowing dates as facet",
+       subtitle = "Days from sowing to harvest only. Sowing dates as facet",
        x = "years",
        y = "Count of days classified as frost (-4 to 1)",
        #caption = "Note; 1-19 frost events occured in sensitive period"
@@ -304,7 +304,7 @@ plot2 <- summary_frost_details %>%
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1))+
   labs(title = "Climate station Lock 18046",
-       subtitle = "Days from sowing to harvest only. Fixed sowing dates 10-May",
+       subtitle = "Days from sowing to harvest only. Sowing dates 10-May",
        x = "years",
        y = "Percentage of days classified as frost (-4 to 1)",
        caption = "")
