@@ -22,7 +22,7 @@ str(climate)
 climate$rain <- as.character(climate$rain)
 climate$rain <- as.double(climate$rain)
 
-#create a date clm # note you need to be aweare of the last day of downloaded met data
+#create a date clm # note you need to be aware of the last day of downloaded met data
 
 # Assign dates -------------------------------------------------
 download_date <- read_csv("X:/Riskwi$e/met_files/LOCK_18046.sim",
