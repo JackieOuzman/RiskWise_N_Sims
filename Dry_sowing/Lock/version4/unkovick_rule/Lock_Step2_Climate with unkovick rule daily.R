@@ -1,4 +1,4 @@
-# This file is for importing met file assigning frost days
+# This file is for assigning frost days
 library(tidyverse)
 library(dplyr)
 library(readr)
@@ -325,5 +325,5 @@ ggsave(plot = plot2,
        width = 20, height = 12, units = "cm")
 
 write_csv(summary_frost_details,
-          file = paste0(path_saved_files,"/summary_frost_details_Lock", ".csv"))
+          file = paste0(path_saved_files,"/summary_frost_details_Lock_not_all_years", ".csv"))
 
