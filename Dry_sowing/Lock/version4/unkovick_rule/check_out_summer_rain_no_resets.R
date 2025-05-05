@@ -229,13 +229,13 @@ plot_summer_rain <- soil_water_summer_rain %>%
   ggplot(aes(x = year, summer_rain))+
   
   geom_line()+
-  annotate("text", x =1963, y = 60, label = "Sum summer rainfall", colour = "black")+
+  annotate("text", x =1963, y = 40, label = "Sum summer rainfall", colour = "black")+
   
   geom_line(aes(y= SumESW), colour= "blue")+
   annotate("text", x =1963, y = 115, label = "Sum APSIM ESW at sowing", colour = "blue")+
   
   geom_line(aes(y= Sum_MM), colour= "darkolivegreen3")+
-  annotate("text", x =1963, y = 200, label = "Sum APSIM MM at sowing", colour = "darkolivegreen3")+
+  annotate("text", x =1963, y = 210, label = "Sum APSIM MM at sowing", colour = "darkolivegreen3")+
   
   # geom_line(aes(y= `Sum(Soil.SoilWater.PAWmm`), colour= "cyan3")+
   # annotate("text", x =1963, y = 150, label = "Sum APSIM PAW at sowing", colour = "cyan3")+
@@ -248,3 +248,13 @@ plot_summer_rain <- soil_water_summer_rain %>%
        y = "",
        caption = paste0("Inital APSIM soil water value MM", inital_Soil_water_values, ". Also note: Sum PAW and ESW are same values"))
 plot_summer_rain
+
+################################################################################
+
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Est_soil_starting_conditions", "Results")
+                                                      
+ggsave(plot = plot_summer_rain,
+       filename = paste0(path_saved_files,"/plot_summer_rain_APSIM_soil_water1961_75", ".png" ),
+       width = 20, height = 12, units = "cm")
+
+write_csv(soil_water_summer_rain, paste0(path_saved_files,"/plot_summer_rain_APSIM_soil_water1961_75.csv" ))
