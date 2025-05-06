@@ -11,8 +11,8 @@ library(readxl)
 
 
 # Download Daily climate files created in step 1 (with frost days) -------------------------------------------------------
-
-met_frost <- read_csv("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/Results/Fost_details_18046.csv")
+                     
+met_frost <- read_csv("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Results/Fost_details_18046.csv")
 str(met_frost)
 
 
@@ -31,11 +31,11 @@ str(met_frost)
 ## Define the GS period and assign season type ---------------------------------
 
 Day_start_GS_rainfall <- 1
-Month_start_GS_rainfall <- 4
+Month_start_GS_rainfall <- 8 # Aug, it was 4 April
 
 
 Day_end_GS_rainfall <- 1
-Month_end_GS_rainfall <- 11
+Month_end_GS_rainfall <- 10 # Nov, it was 11 Oct
 
 #File start date and end date
 paste("Start date in file is: ",
@@ -107,50 +107,57 @@ summary_frost_details_all_yrs <- summary_frost_details_all_yrs %>%
   mutate(frost_event_count = ifelse(is.na(frost_event_count), 0, frost_event_count),
          frost_event_percent = ifelse(is.na(frost_event_percent), 0, frost_event_percent))
 
+unique(days_GS$days_GS)
+GS_defined_as
+
 
 plot1 <- summary_frost_details_all_yrs %>% 
+  filter(year >= 1957) %>% 
   ggplot(aes(x = as.factor(year), frost_event_count ))+
   geom_bar(stat="identity")+
   theme_bw()+
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1))+
+  scale_y_continuous(limits = c(0, 11))+
   labs(title = "Frost Risk at Lock climate station number 18046",
-       subtitle = "Standard GS of 214 day. 1/4 to 1/11",
+       subtitle = paste0("Standard GS of ", unique(days_GS$days_GS)," days, defined as ", GS_defined_as),
        x = "years",
-       y = "Count of days classified as frost (-4 to 1)"
+       y = "Count of days classified as frost (< 1)"
   )
 plot1
 
 plot1_2015_2024 <- summary_frost_details_all_yrs %>% 
-  filter(year>= 2015) %>% 
+  filter(year>= 2014) %>% 
   ggplot(aes(x = as.factor(year), frost_event_count ))+
   geom_bar(stat="identity")+
   theme_bw()+
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1))+
+  scale_y_continuous(limits = c(0, 11))+
   labs(title = "Frost Risk at Lock climate station number 18046",
-       subtitle = "Standard GS of 214 day. 1/4 to 1/11",
+       subtitle = paste0("Standard GS of ", unique(days_GS$days_GS)," days, defined as ", GS_defined_as),
        x = "years",
-       y = "Count of days classified as frost (-4 to 1)"
+       y = "Count of days classified as frost (< 1)"
   )
 plot1_2015_2024
 
 
 plot2_perc <- summary_frost_details_all_yrs %>% 
+  filter(year >= 1957) %>% 
   ggplot(aes(x = as.factor(year), frost_event_percent ))+
   geom_bar(stat="identity")+
   theme_bw()+
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1))+
   labs(title = "Frost Risk at Lock climate station number 18046",
-       subtitle = "Standard GS of 214 day. 1/4 to 1/11",
+       subtitle = paste0("Standard GS of ", unique(days_GS$days_GS)," days, defined as ", GS_defined_as),
        x = "years",
-       y = "Percentage of days classified as frost (-4 to 1)"
+       y = "Percentage of days classified as frost (< 1)"
   )
 plot2_perc
 
 plot2_2015_2024perc <- summary_frost_details_all_yrs %>% 
-  filter(year>= 2015) %>% 
+  filter(year>= 2014) %>% 
   ggplot(aes(x = as.factor(year), frost_event_percent ))+
   geom_bar(stat="identity")+
   theme_bw()+
@@ -159,12 +166,14 @@ plot2_2015_2024perc <- summary_frost_details_all_yrs %>%
   labs(title = "Frost Risk at Lock climate station number 18046",
        subtitle = "Standard GS of 214 day. 1/4 to 1/11",
        x = "years",
-       y = "Percentage of days classified as frost (-4 to 1)"
+       y = "Percentage of days classified as frost (< 1)"
   )
 plot2_2015_2024perc
 
+                                                        
 
-path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing", "Results")
+
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing","version5" , "Results")
 path_saved_files
 ggsave(plot = plot1,
        filename = paste0(path_saved_files,"/Climate_Frost_days_Lock_std_GS", ".png" ),
@@ -172,7 +181,7 @@ ggsave(plot = plot1,
 
 
 ggsave(plot = plot1_2015_2024,
-       filename = paste0(path_saved_files,"/Climate_Frost_days_Lock_std_GS_2015_2024", ".png" ),
+       filename = paste0(path_saved_files,"/Climate_Frost_days_Lock_std_GS_2014_2024", ".png" ),
        width = 20, height = 12, units = "cm")
 
 
@@ -183,7 +192,7 @@ ggsave(plot = plot2_perc,
 
 
 ggsave(plot = plot2_2015_2024perc,
-       filename = paste0(path_saved_files,"/Climate_Frost_days_Lock_std_GS_2015_2024_Prec", ".png" ),
+       filename = paste0(path_saved_files,"/Climate_Frost_days_Lock_std_GS_2014_2024_Prec", ".png" ),
        width = 20, height = 12, units = "cm")
 
 

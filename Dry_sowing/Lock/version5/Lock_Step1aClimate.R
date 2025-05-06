@@ -61,7 +61,7 @@ str(climate)
 Fost_details <- climate %>% select(site, date, year,maxt, mint) %>% 
   mutate(frost_event = 
     case_when(
-      mint<=1 ~ "frost",
+      mint<1 ~ "frost",
       .default = "non_frost"
     ))
           
