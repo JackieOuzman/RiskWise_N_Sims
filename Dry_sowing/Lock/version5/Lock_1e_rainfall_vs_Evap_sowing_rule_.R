@@ -15,21 +15,6 @@ str(Lock_climate2015_2024)
 # Lock_climate_yr <- Lock_climate2015_2024 %>% filter(year == as.double(year_analysis))
 
 
-
-Lock_climate_yr <- Lock_climate2015_2024 %>% 
-  mutate(sum_rain_7_days = rollsumr(rain, k =7, fill= NA),
-         sum_evap_7_days = rollsumr(evap, k =7, fill= NA),
-         
-         sum_rain_4_days = rollsumr(rain, k =4, fill= NA),
-         sum_evap_4_days = rollsumr(evap, k =4, fill= NA),
-         
-         sum_rain_2_days = rollsumr(rain, k =2, fill= NA),
-         sum_evap_2_days = rollsumr(evap, k =2, fill= NA),
-         
-         rainfall_exceeds_evaporation_7days = sum_rain_7_days -sum_evap_7_days,
-         rainfall_exceeds_evaporation_4days = sum_rain_4_days -sum_evap_4_days,
-         rainfall_exceeds_evaporation_2days = sum_rain_2_days -sum_evap_2_days)
-
 # Did the conditions meet unkovich rule ----------------------------------------
 Lock_climate_yr <- Lock_climate_yr %>% 
   mutate(Threshold_7day_0 = case_when(rainfall_exceeds_evaporation_7days >0 ~ "Sowing_break")) %>% 
