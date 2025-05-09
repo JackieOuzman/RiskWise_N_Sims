@@ -7,15 +7,31 @@ library(readxl)
 library(zoo)
 
 
-Lock_climate2015_2024 <- read_csv( "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Results/NeatClimate_18046_yrs2014_to_2024.csv")
-str(Lock_climate2015_2024)
+Lock_climate <- read_csv( "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Results/Fost_details_18046.csv")
+str(Lock_climate)
 
 
-# year_analysis <- c("2014", "2015","2016","2017","2018","2019", "2020", "2021", "2022", "2023", "2024")
-# Lock_climate_yr <- Lock_climate2015_2024 %>% filter(year == as.double(year_analysis))
+year_analysis <- c(2014, 2015,2016,2017,2018,2019, 2020, 2021, 2022, 2023, 2024)
+Lock_climate_yr <- Lock_climate %>% filter(year %in%  year_analysis)
 
 
+Lock_climate_yr
 # Did the conditions meet unkovich rule ----------------------------------------
+
+Lock_climate_yr <- Lock_climate_yr %>% 
+  mutate(sum_rain_7_days = rollsumr(rain, k =7, fill= NA),
+         sum_evap_7_days = rollsumr(evap, k =7, fill= NA),
+         
+         sum_rain_4_days = rollsumr(rain, k =4, fill= NA),
+         sum_evap_4_days = rollsumr(evap, k =4, fill= NA),
+         
+         sum_rain_2_days = rollsumr(rain, k =2, fill= NA),
+         sum_evap_2_days = rollsumr(evap, k =2, fill= NA),
+         
+         rainfall_exceeds_evaporation_7days = sum_rain_7_days -sum_evap_7_days,
+         rainfall_exceeds_evaporation_4days = sum_rain_4_days -sum_evap_4_days,
+         rainfall_exceeds_evaporation_2days = sum_rain_2_days -sum_evap_2_days)
+
 Lock_climate_yr <- Lock_climate_yr %>% 
   mutate(Threshold_7day_0 = case_when(rainfall_exceeds_evaporation_7days >0 ~ "Sowing_break")) %>% 
   
@@ -55,6 +71,7 @@ Unkovich_rule <- climate_yr_long %>%
   geom_point()+
   theme_bw()+
   facet_wrap(vars(year), scales = "free_x")+
+  #scale_y_continuous(limits = c(0, 40))+
   theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position="bottom")+
   labs(title = "Unkovich rule using different sum periods",
        subtitle = "The amount of rainfall required to trigger optimal sowing ",
@@ -70,6 +87,7 @@ Unkovich_rule_2023_2024 <- climate_yr_long %>%
   geom_point()+
   theme_bw()+
   facet_wrap(vars(year), scales = "free_x")+
+  scale_y_continuous(limits = c(0, 45))+
   theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position="bottom")+
   labs(title = "Unkovich rule using different sum periods",
        subtitle = "The amount of rainfall required to trigger optimal sowing ",
@@ -94,15 +112,16 @@ ggsave(plot = Unkovich_rule_2023_2024,
        width = 20, height = 12, units = "cm")
 
 ## but are these really different for example on the 
+climate_yr_long
 
 climate_yr_long <- climate_yr_long %>% 
   mutate(optimal_sowing_7days = case_when(
-    Threshold_7day_0 == "Sowing_break" ~ 40,
+    Threshold_7day_0 == "Sowing_break" ~ "40",
     .default = Threshold_7day_0
   ))
 climate_yr_long  
 sowing_rules7 <- climate_yr_long %>%  filter(!is.na(Threshold_7day_0)) %>% select(date, year, optimal_sowing_7days)
-sowing_rules
+sowing_rules7
 
 Unkovich_rule_2023_2024_7days <- climate_yr_long %>% 
   filter(year %in% c(2023, 2024)) %>% 
@@ -111,6 +130,7 @@ Unkovich_rule_2023_2024_7days <- climate_yr_long %>%
   geom_line()+
   theme_bw()+
   facet_wrap(vars(year), scales = "free_x")+
+  #scale_y_continuous(limits = c(0, 40))+
   geom_vline(data = filter(sowing_rules7, year %in% c(2023, 2024)), 
                aes(xintercept = date),  color = "grey")+
   
@@ -146,7 +166,9 @@ Unkovich_rule_2023_2024_4days <- climate_yr_long %>%
   ggplot(aes(x = date, value , color= period))+
   geom_line()+
   theme_bw()+
-  facet_wrap(vars(year), scales = "free_x")+
+  facet_wrap(vars(year), 
+             scales = "free_x")+
+  #scale_y_continuous(limits = c(0, 40))+
   geom_vline(data = filter(sowing_rules4, year %in% c(2023, 2024)), 
              aes(xintercept = date),  color = "grey")+
   
@@ -180,6 +202,7 @@ Unkovich_rule_2023_2024_2days <- climate_yr_long %>%
   geom_line()+
   theme_bw()+
   facet_wrap(vars(year), scales = "free_x")+
+  #scale_y_continuous(limits = c(0, 40))+
   geom_vline(data = filter(sowing_rules2, year %in% c(2023, 2024)), 
              aes(xintercept = date),  color = "grey")+
   
