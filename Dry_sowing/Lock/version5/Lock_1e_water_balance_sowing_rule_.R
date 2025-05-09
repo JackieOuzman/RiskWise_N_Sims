@@ -7,7 +7,7 @@ library(readxl)
 library(zoo)
 
 
-Lock_climate2015_2024 <- read_csv( "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Results/NeatClimate_18046_yrs2014_to_2024.csv")
+Lock_climate2015_2024 <- read_csv( "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Results/Fost_details_18046.csv")
 str(Lock_climate2015_2024)
 
 
