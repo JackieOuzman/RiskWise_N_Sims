@@ -152,3 +152,38 @@ str(summary_frost_details_all_yrs)
 write_csv(summary_frost_details_all_yrs,
           file = paste0(path_saved_files,"/summary_frost_details_Lock_count_etc", ".csv"))
 
+
+
+
+###############################################################################
+climate_FR_period<- met_frost_FR %>% select(date, year, maxt, mint)
+climate_long <- climate_FR_period %>% pivot_longer(
+  cols = starts_with("m"),
+  names_to = "temp_max_min",
+  #names_prefix = "wk",
+  values_to = "temp",
+  values_drop_na = TRUE
+)
+
+
+
+plot3_2015_2024temperature <- climate_long %>% 
+  filter(year>= 2014) %>% 
+  ggplot(aes(x = year, temp, colour =  temp_max_min))+
+  geom_point()+
+  geom_point(data = climate_long %>% filter(year>= 2014) %>% filter(temp<1),aes(year, temp), colour= "black")+
+  stat_summary(fun = "mean", geom="line")+
+  
+  theme_bw()+
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust = 1))+
+  labs(title = "Min and Max temperature per day in the frost period station number 18046",
+       subtitle = "Standard FR of 214 day. 1/4 to 1/11",
+       x = "years",
+       y = "Min and Max temperature per day"
+  )
+plot3_2015_2024temperature
+
+ggsave(plot = plot3_2015_2024temperature,
+       filename = paste0(path_saved_files,"/plot3_2015_2024temperature_max_min_frost_risk_period_site18046", ".png" ),
+       width = 20, height = 12, units = "cm")
