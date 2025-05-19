@@ -11,19 +11,20 @@ Lock_climate <- read_csv( "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Resul
 str(Lock_climate)
 
 
-year_analysis <- c(2014, 2015,2016,2017,2018,2019, 2020, 2021, 2022, 2023, 2024)
-Lock_climate2015_2024 <- Lock_climate %>% filter(year %in%  year_analysis)
+
+# year_analysis <- c(2014, 2015,2016,2017,2018,2019, 2020, 2021, 2022, 2023, 2024)
+# Lock_climate2015_2024 <- Lock_climate %>% filter(year %in%  year_analysis)
 
 
-Lock_climate2015_2024 <- Lock_climate2015_2024 %>% 
-  mutate(sum_rain_3_days = rollsumr(rain, k =7, fill= NA))
+Lock_climate <- Lock_climate %>% 
+  mutate(sum_rain_3_days = rollsumr(rain, k =3, fill= NA))
          
          
-Lock_climate2015_2024 <- Lock_climate2015_2024 %>% 
+Lock_climate <- Lock_climate %>% 
   mutate(Threshold_3day_15 = case_when(sum_rain_3_days >=15 ~ "Sowing_break")) 
 
-Lock_climate2015_2024
-Lock_climate_yr_long_spring <- Lock_climate2015_2024 %>%
+Lock_climate
+Lock_climate_yr_long_spring <- Lock_climate %>%
   select(
     month_name,
     day_of_month,
@@ -64,13 +65,13 @@ Rain_sum_rule_2023_2024
 
 path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing","version5" , "Results")
 path_saved_files
-ggsave(plot = Rain_sum_rule,
-       filename = paste0(path_saved_files,"/Rain_sum_rule_2014_2024", ".png" ),
-       width = 20, height = 12, units = "cm")
-
-ggsave(plot = Rain_sum_rule_2023_2024,
-       filename = paste0(path_saved_files,"/Rain_sum_rule_2023_2024", ".png" ),
-       width = 20, height = 12, units = "cm")
+# ggsave(plot = Rain_sum_rule,
+#        filename = paste0(path_saved_files,"/Rain_sum_rule_2014_2024", ".png" ),
+#        width = 20, height = 12, units = "cm")
+# 
+# ggsave(plot = Rain_sum_rule_2023_2024,
+#        filename = paste0(path_saved_files,"/Rain_sum_rule_2023_2024", ".png" ),
+#        width = 20, height = 12, units = "cm")
 
 
 
@@ -130,10 +131,12 @@ Rain_sum_rule_3days <- Lock_climate_yr_long_spring %>%
 Rain_sum_rule_3days
 
 
-ggsave(plot = Rain_sum_rule_3days,
-       filename = paste0(path_saved_files,"/Rain_sum_rule_optimal_sowing_2014_2024", ".png" ),
-       width = 20, height = 12, units = "cm")
+# ggsave(plot = Rain_sum_rule_3days,
+#        filename = paste0(path_saved_files,"/Rain_sum_rule_optimal_sowing_2014_2024", ".png" ),
+#        width = 20, height = 12, units = "cm")
 
 ggsave(plot = Rain_sum_rule_2023_2024_3days,
        filename = paste0(path_saved_files,"/Rain_sum_rule_optimal_sowing2023_2024", ".png" ),
        width = 20, height = 12, units = "cm")
+
+write_csv(Lock_climate, paste0(path_saved_files, "/Lock_sum_rain_3days_15mm_rule_R_cals.csv") )
