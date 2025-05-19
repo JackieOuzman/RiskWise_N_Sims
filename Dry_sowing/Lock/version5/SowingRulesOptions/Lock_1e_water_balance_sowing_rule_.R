@@ -7,26 +7,35 @@ library(readxl)
 library(zoo)
 
 
-Lock_climate2015_2024 <- read_csv( "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Results/Fost_details_18046.csv")
-str(Lock_climate2015_2024)
+Lock_climate <- read_csv( "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Results/Fost_details_18046.csv")
+str(Lock_climate)
 
 
-# year_analysis <- c("2014", "2015","2016","2017","2018","2019", "2020", "2021", "2022", "2023", "2024")
-# Lock_climate_yr <- Lock_climate2015_2024 %>% filter(year == as.double(year_analysis))
 
-Lock_climate2015_2024
+Lock_climate <- Lock_climate %>% 
+  mutate(
+    # First pass - calculate WB1 and initial WB2
+    WB1 = (rain + lag(WB2, default = 0)) - evap,
+    WB2 = case_when(WB1 < 1 ~ 0, .default = WB1),
+    
+    # Reset WB2 to zero on 2020-01-01 and calculate subsequent values
+    WB2 = case_when(
+      as.Date(date) == as.Date(paste0(year, "-04", "-01")) ~ 0,  # Set to zero on April 1, 2020
+      as.Date(date) < as.Date(paste0(year, "-04", "-01")) ~ WB2,  # Use initial values before April 1, 2020
+      TRUE ~ WB2  # Use calculated values after Jan 1, 2020
+    ),
+    
+    # Thresholds remain the same
+    Threshold_WB_5mm = case_when(WB2 > 5 ~ "Sowing_break"),
+    Threshold_WB_10mm = case_when(WB2 > 10 ~ "Sowing_break")
+  ) 
 
-Lock_climate_yr <- Lock_climate2015_2024 %>% 
-  mutate(WB = rain - evap,
-         WB_recode = case_when(WB <1 ~0, .default = WB ),
-         WB_1 = lag(WB_recode) + WB ,
-         WB_2 = case_when(lag(WB_1)+ WB <1 ~0, .default = lag(WB_1)+ WB ),
-         Threshold_WB_5mm = case_when(WB_2 > 5 ~ "Sowing_break"),
-         Threshold_WB_10mm = case_when(WB_2 > 10 ~ "Sowing_break")
-         )
 
-names(Lock_climate_yr)
-Lock_climate_yr_spring <- Lock_climate_yr %>%
+# Check_Lock_climate <- Lock_climate %>% select(year, date, rain, evap, WB1, WB2,Threshold_WB_5mm ) %>% 
+#   filter(year == 2021)
+
+names(Lock_climate)
+Lock_climate_yr_spring <- Lock_climate %>%
    select(
      month_name,
      day_of_month,
@@ -118,4 +127,8 @@ ggsave(plot = sowing_rulesWB10mm_plot,
        filename = paste0(path_saved_files,"/sowing_rulesWB10mm_plot2023_2024", ".png" ),
        width = 20, height = 12, units = "cm")
 
+
+
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing","version5" , "Results")
+write_csv(Lock_climate, paste0(path_saved_files, "/Lock_water_balance_rule_R_cals.csv") )
 
