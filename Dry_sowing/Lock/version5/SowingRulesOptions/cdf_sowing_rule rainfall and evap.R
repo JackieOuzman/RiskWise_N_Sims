@@ -124,3 +124,11 @@ ggsave(
        width = 20, height = 12, units = "cm")
 
 
+
+###  cdf input for plots
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing","version5" , "Results")
+write_csv(first_occurance_Rain_Evap7_4_2Days, 
+          paste0(path_saved_files, "/Lock_rain_Ev_rule_R_cdf_inputs.csv") )
+
+
+first_occurance_Rain_Evap7_4_2Days
