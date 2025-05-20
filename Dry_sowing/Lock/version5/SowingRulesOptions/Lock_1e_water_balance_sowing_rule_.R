@@ -16,21 +16,20 @@ str(Lock_climate)
   # Create copy of input data
   df <- Lock_climate
   
-  # Initialize variables
+  # Initialize variables to zero
   df <- df %>%
     mutate(
       WB1 = 0,
       WB2 = 0,
-      previousDayWB2 = 0,
-      WaterBalanceStep1 = 0,
-      WaterBalanceStep2 = 0
+      previousDayWB2 = 0 #,
+     
     )
   
   # Determine reset days (April 1st)
   df <- df %>%
     mutate(isResetDay = format(date, "%m-%d") == "04-01")
   
-  # Process each day sequentially
+  # Process each day sequentially ### this is a bit hairy for me - but it works!
   for (i in 1:nrow(df)) {
     # Get today's values
     today <- df[i, ]
@@ -39,9 +38,8 @@ str(Lock_climate)
     isResetDay <- today$isResetDay
     
     if (i == 1) {
-      # First day of simulation
+      # First day of df set everything to zero
       df$WB2[i] <- 0
-      df$WaterBalanceStep2[i] <- 0
       df$previousDayWB2[i] <- 0
     } else {
       # Get previous day's WB2
@@ -61,7 +59,6 @@ str(Lock_climate)
         ((todaysRain + previousDayWB2) - todaysEvap)
       )
       df$WB1[i] <- WB1
-      df$WaterBalanceStep1[i] <- WB1
       
       # Calculate WB2: WB1 if >= 0, otherwise 0
       WB2 <- ifelse(WB1 < 0, 0, WB1)
@@ -72,17 +69,15 @@ str(Lock_climate)
       }
       
       df$WB2[i] <- WB2
-      df$WaterBalanceStep2[i] <- WB2
-    }
+          }
   }
   
   # Determine sowing conditions
   df <- df %>%
     mutate(
-      # Add these lines if you want to check sowing conditions as in the original code
-      # Adjust parameters as needed
-      Threshold_WB_5mm = ifelse(WaterBalanceStep2 > 5, "Sowing_break", NA_character_),
-      Threshold_WB_10mm = ifelse(WaterBalanceStep2 > 10, "Sowing_break", NA_character_)
+     
+      Threshold_WB_5mm = ifelse(WB2 > 5, "Sowing_break", NA_character_),
+      Threshold_WB_10mm = ifelse(WB2 > 10, "Sowing_break", NA_character_)
     )
   
   
@@ -95,7 +90,7 @@ str(Lock_climate)
    filter(year == 2020)
 
 names(Lock_climate)
-Lock_climate_yr_spring <- Lock_climate %>%
+df_spring <- df %>%
    select(
      month_name,
      day_of_month,
@@ -109,23 +104,23 @@ Lock_climate_yr_spring <- Lock_climate %>%
    filter(month_name %in% c("Apr" , "May" , "Jun" , "Jul"))
 
 #########################################################################
-climate_yr_long <- Lock_climate_yr_spring %>% 
+df_spring_long <- df_spring %>% 
    pivot_longer(cols = rain:evap,
                 names_to = "variable",
                 values_to = "value"
    )
-climate_yr_long
+df_spring_long
 
 
-climate_yr_long <- climate_yr_long %>% 
+df_spring_long <- df_spring_long %>% 
   mutate(optimal_sowing_WB_5mm = case_when(
     Threshold_WB_5mm == "Sowing_break" ~ 40,
     .default = 0
   ))
-sowing_rulesWB5mm <- climate_yr_long %>%  filter(!is.na(Threshold_WB_5mm)) %>% select(date, year, optimal_sowing_WB_5mm)
+sowing_rulesWB5mm <- df_spring_long %>%  filter(!is.na(Threshold_WB_5mm)) %>% select(date, year, optimal_sowing_WB_5mm)
 
 
-sowing_rulesWB5mm_plot <- climate_yr_long %>% 
+sowing_rulesWB5mm_plot <- df_spring_long %>% 
   filter(year %in% c(2023, 2024)) %>% 
   ggplot(aes(x = date, value , color= variable))+
   geom_line()+
@@ -155,15 +150,15 @@ ggsave(plot = sowing_rulesWB5mm_plot,
 
 
 
-climate_yr_long <- climate_yr_long %>% 
+df_spring_long <- df_spring_long %>% 
   mutate(optimal_sowing_WB_10mm = case_when(
     Threshold_WB_10mm == "Sowing_break" ~ 40,
     .default = 0
   ))
-sowing_rulesWB10mm <- climate_yr_long %>%  filter(!is.na(Threshold_WB_10mm)) %>% select(date, year, optimal_sowing_WB_10mm)
+sowing_rulesWB10mm <- df_spring_long %>%  filter(!is.na(Threshold_WB_10mm)) %>% select(date, year, optimal_sowing_WB_10mm)
 
 
-sowing_rulesWB10mm_plot <- climate_yr_long %>% 
+sowing_rulesWB10mm_plot <- df_spring_long %>% 
   filter(year %in% c(2023, 2024)) %>% 
   ggplot(aes(x = date, value , color= variable))+
   geom_line()+
