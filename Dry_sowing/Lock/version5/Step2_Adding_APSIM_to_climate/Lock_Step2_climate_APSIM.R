@@ -41,6 +41,8 @@ Lock_Daily_APSIM <- Lock_Daily_APSIM %>% select(
 
 ## Make a 2 new clm called 'Sowing_date' that will match the other files and a temp file to work out what to keep
 
+
+
 Lock_Daily_APSIM <- Lock_Daily_APSIM %>% 
   mutate(Sowing_window = paste0(StartDate, " to ",EndDate ))
 unique(Lock_Daily_APSIM$Sowing_window)
