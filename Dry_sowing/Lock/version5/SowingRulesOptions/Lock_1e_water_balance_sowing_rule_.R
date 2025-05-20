@@ -12,27 +12,87 @@ str(Lock_climate)
 
 
 
-Lock_climate <- Lock_climate %>% 
-  mutate(
-    # First pass - calculate WB1 and initial WB2
-    WB1 = (rain + lag(WB2, default = 0)) - evap,
-    WB2 = case_when(WB1 < 1 ~ 0, .default = WB1),
+
+  # Create copy of input data
+  df <- Lock_climate
+  
+  # Initialize variables
+  df <- df %>%
+    mutate(
+      WB1 = 0,
+      WB2 = 0,
+      previousDayWB2 = 0,
+      WaterBalanceStep1 = 0,
+      WaterBalanceStep2 = 0
+    )
+  
+  # Determine reset days (April 1st)
+  df <- df %>%
+    mutate(isResetDay = format(date, "%m-%d") == "04-01")
+  
+  # Process each day sequentially
+  for (i in 1:nrow(df)) {
+    # Get today's values
+    today <- df[i, ]
+    todaysRain <- today$rain
+    todaysEvap <- today$evap
+    isResetDay <- today$isResetDay
     
-    # Reset WB2 to zero on 2020-01-01 and calculate subsequent values
-    WB2 = case_when(
-      as.Date(date) == as.Date(paste0(year, "-04", "-01")) ~ 0,  # Set to zero on April 1, 2020
-      as.Date(date) < as.Date(paste0(year, "-04", "-01")) ~ WB2,  # Use initial values before April 1, 2020
-      TRUE ~ WB2  # Use calculated values after Jan 1, 2020
-    ),
-    
-    # Thresholds remain the same
-    Threshold_WB_5mm = case_when(WB2 > 5 ~ "Sowing_break"),
-    Threshold_WB_10mm = case_when(WB2 > 10 ~ "Sowing_break")
-  ) 
+    if (i == 1) {
+      # First day of simulation
+      df$WB2[i] <- 0
+      df$WaterBalanceStep2[i] <- 0
+      df$previousDayWB2[i] <- 0
+    } else {
+      # Get previous day's WB2
+      if (isResetDay) {
+        # On reset day (April 1st), set previous day WB2 to 0
+        previousDayWB2 <- 0
+      } else {
+        # Otherwise use the previous day's calculated WB2
+        previousDayWB2 <- df$WB2[i-1]
+      }
+      df$previousDayWB2[i] <- previousDayWB2
+      
+      # Calculate WB1: min of 20 and (rain + previous WB2 - evap)
+      WB1 <- ifelse(
+        ((todaysRain + previousDayWB2) - todaysEvap) > 20,
+        20,
+        ((todaysRain + previousDayWB2) - todaysEvap)
+      )
+      df$WB1[i] <- WB1
+      df$WaterBalanceStep1[i] <- WB1
+      
+      # Calculate WB2: WB1 if >= 0, otherwise 0
+      WB2 <- ifelse(WB1 < 0, 0, WB1)
+      
+      # If today is April 1st, reset WB2 to 0 after calculation
+      if (isResetDay) {
+        WB2 <- 0
+      }
+      
+      df$WB2[i] <- WB2
+      df$WaterBalanceStep2[i] <- WB2
+    }
+  }
+  
+  # Determine sowing conditions
+  df <- df %>%
+    mutate(
+      # Add these lines if you want to check sowing conditions as in the original code
+      # Adjust parameters as needed
+      Threshold_WB_5mm = ifelse(WaterBalanceStep2 > 5, "Sowing_break", NA_character_),
+      Threshold_WB_10mm = ifelse(WaterBalanceStep2 > 10, "Sowing_break", NA_character_)
+    )
+  
+  
 
 
-# Check_Lock_climate <- Lock_climate %>% select(year, date, rain, evap, WB1, WB2,Threshold_WB_5mm ) %>% 
-#   filter(year == 2021)
+
+
+
+ Check_Lock_climate <- df %>% select(year, date, rain, evap, WB1, WB2,Threshold_WB_5mm ) %>% 
+   filter(year == 2020)
 
 names(Lock_climate)
 Lock_climate_yr_spring <- Lock_climate %>%
