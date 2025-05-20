@@ -23,6 +23,7 @@ Lock_Daily_APSIM <- read_csv("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/AP
 names(Lock_Daily_APSIM)
 str(Lock_Daily_APSIM)
 max(Lock_Daily_APSIM$Clock.Today)
+min(Lock_Daily_APSIM$Clock.Today)
 
 Lock_Daily_APSIM <- Lock_Daily_APSIM %>% select(
   CheckpointName,

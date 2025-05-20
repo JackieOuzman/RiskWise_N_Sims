@@ -185,5 +185,5 @@ ggsave(plot = sowing_rulesWB10mm_plot,
 
 
 path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing","version5" , "Results")
-write_csv(Lock_climate, paste0(path_saved_files, "/Lock_water_balance_rule_R_cals.csv") )
+write_csv(df, paste0(path_saved_files, "/Lock_water_balance_rule_R_cals.csv") )
 
