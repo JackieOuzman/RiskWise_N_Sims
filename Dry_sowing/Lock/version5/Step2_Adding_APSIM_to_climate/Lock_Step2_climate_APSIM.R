@@ -25,6 +25,8 @@ str(Lock_Daily_APSIM)
 max(Lock_Daily_APSIM$Clock.Today)
 min(Lock_Daily_APSIM$Clock.Today)
 
+## subset APSIM data
+
 Lock_Daily_APSIM <- Lock_Daily_APSIM %>% select(
   CheckpointName,
   SimulationName,
@@ -33,6 +35,7 @@ Lock_Daily_APSIM <- Lock_Daily_APSIM %>% select(
   Clock.Today ,
   Wheat.Phenology.Zadok.Stage,
   Wheat.Phenology.CurrentStageName,
+  Wheat.Phenology.Stage,
   Yield ,
   Yield_Adj_t_ha ,
  
@@ -71,6 +74,8 @@ sowing_window_retain <- c("1-apr to 30-jun",
                           "25-jun to 30-jun"
                           )
                           
+## keep only the sowing dates I want (I think this is all of them)
+
 sowing_window_retain <- Lock_Daily_APSIM %>% 
   filter(Sowing_window %in% sowing_window_retain)
 unique(sowing_window_retain$Sowing_window)
@@ -82,137 +87,139 @@ names(Lock_Daily_APSIM)
 
 
 
-
-
-
-
-
-
-
-
-
-#### Not sure what is happening with this step
-
-## Now we can use the template / structure from Step2 
-Dry_sowing_Lock_factor <- Dry_sowing_Lock_factor_KPV2_Daily
-
 ### Make a new clm with Sensitive period of frost = 6.49 - 9.5  ------------------
-summary(Dry_sowing_Lock_factor)
-str(Dry_sowing_Lock_factor)
+summary(Lock_Daily_APSIM)
+str(Lock_Daily_APSIM)
 
-Dry_sowing_Lock_factor <- Dry_sowing_Lock_factor %>% 
+Lock_Daily_APSIM <- Lock_Daily_APSIM %>% 
   mutate(frost_Sensitive_period = 
            case_when(
              between(Wheat.Phenology.Stage, 6.49, 9.5) ~ "frost_sensitive_period",
              .default = "outside_Sensitive_period"
            ))
 ### Make a new Most sensitive period 8-9.5  -----------------------------------------------
-Dry_sowing_Lock_factor <- Dry_sowing_Lock_factor %>% 
+Lock_Daily_APSIM <- Lock_Daily_APSIM %>% 
   mutate(frost_most_Sensitive_period = 
            case_when(
              between(Wheat.Phenology.Stage, 8.0, 9.5) ~ "frost_most_sensitive_period",
              .default = "outside_period"
            ))
 
-#check <- Dry_sowing_Lock_factor %>%  filter(between(Wheat.Phenology.Zadok.Stage, 6.49, 9.5))
-
+#this check is for above code
+#check <- Lock_Daily_APSIM %>%  filter(between(Wheat.Phenology.Stage, 6.49, 9.5))
+#rm(check)
 
 ## Append met_frost ------------------------------------------------------------
-str(Dry_sowing_Lock_factor)
+str(Lock_Daily_APSIM)
 str(met_frost)
 
-Dry_sowing_Lock_factor$Clock.Today <- as.Date(Dry_sowing_Lock_factor$Clock.Today)
-Dry_sowing_Lock_factor_with_met <- left_join(Dry_sowing_Lock_factor,met_frost, by = join_by("Clock.Today" == "date"))
+Lock_Daily_APSIM$Clock.Today <- as.Date(Lock_Daily_APSIM$Clock.Today)
+Lock_APSIM_Met <- left_join(Lock_Daily_APSIM,met_frost, by = join_by("Clock.Today" == "date"))
 
 
 
 
 
-# plot /summaries results - number of frost days in sensitive period etc ----
+
+
+# Create new clms to classify if frost occurred in frost sensitive period or most sensitive period etc ----
 
 
 ## Create a new clm which defines the season and only keep data in GS ----
-unique(Dry_sowing_Lock_factor_with_met$Sowing_date)
+unique(Lock_APSIM_Met$Sowing_date)
 
-#testing process with subset of data
-# test_1_apri_2000 <- Dry_sowing_Lock_factor_with_met %>% 
-#   filter(Sowing_date == "1-apr") %>% 
-#   filter(year == 2000)
-# str(test_1_apri_2000)
-# unique(Dry_sowing_Lock_factor_with_met$Wheat.Phenology.CurrentStageName)
-
-
-
-## add a clm with two dates marked as start and end
-Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% mutate(
+## use the phenology stages to work out the GS - add a clm with two dates marked as start and end
+Lock_APSIM_Met <- Lock_APSIM_Met %>% mutate(
   start_end_GS = case_when(
     Wheat.Phenology.CurrentStageName == "Sowing"  ~ "start_gs",
     Wheat.Phenology.CurrentStageName == "HarvestRipe"  ~ "end_gs",
     TRUE ~ NA))
 ### fill the blanks
-Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% fill(start_end_GS) %>%
+Lock_APSIM_Met <- Lock_APSIM_Met %>% fill(start_end_GS) %>%
   mutate(
     season = case_when(
       start_end_GS == "start_gs" ~ "gs",
       TRUE ~ "other"))
 ## not quite right here I still need to keep   "HarvestRipe"
-Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% mutate(
+Lock_APSIM_Met <- Lock_APSIM_Met %>% mutate(
   season = case_when(
     Wheat.Phenology.CurrentStageName == "HarvestRipe"  ~ "gs",
     TRUE ~ season))
 
 
-Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% select(-start_end_GS)  
-str(Dry_sowing_Lock_factor_with_met)
+Lock_APSIM_Met <- Lock_APSIM_Met %>% select(-start_end_GS)  
+str(Lock_APSIM_Met)
+
+
+
+
 
 ## Only keep data in the season
-Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% filter(season == "gs")
+Lock_APSIM_Met_gs <- Lock_APSIM_Met %>% filter(season == "gs")
 
 ## new clm when frost_Sensitive_period and frost----
-unique(Dry_sowing_Lock_factor_with_met$frost_event)
-unique(Dry_sowing_Lock_factor_with_met$frost_Sensitive_period)
-unique(Dry_sowing_Lock_factor_with_met$frost_most_Sensitive_period)    
-
-
-
-
+unique(Lock_APSIM_Met_gs$frost_event)
+unique(Lock_APSIM_Met_gs$frost_Sensitive_period)
+ 
 
 ## new clm when a frost event occur is sensitive period
-Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% 
+Lock_APSIM_Met_gs <- Lock_APSIM_Met_gs %>% 
   mutate(
     frost_in_Sensitive_period = case_when(
-      frost_event == "frost" | frost_Sensitive_period == "frost_most_sensitive_period"~ "frost_in_Sensitive_period",
+      frost_event == "frost" & frost_Sensitive_period == "frost_sensitive_period"~ "frost_in_Sensitive_period",
+      frost_event == "frost" & frost_Sensitive_period == "outside_Sensitive_period"~ "no_frost_Sensitive_period",
+      
+      frost_event == "non_frost" & frost_Sensitive_period == "frost_sensitive_period"~ "no_frost_Sensitive_period",
+      frost_event == "non_frost" & frost_Sensitive_period == "outside_Sensitive_period"~ "no_frost_Sensitive_period",
+      
       TRUE ~ "no_frost_Sensitive_period"))
 
-
-Dry_sowing_Lock_factor_with_met <- Dry_sowing_Lock_factor_with_met %>% 
+unique(Lock_APSIM_Met_gs$frost_most_Sensitive_period)   
+Lock_APSIM_Met_gs <- Lock_APSIM_Met_gs %>% 
   mutate(
     frost_in_most_Sensitive_period = case_when(
-      frost_event == "frost" | 
-        frost_most_Sensitive_period == "frost_most_Sensitive_period"~ "frost_in_most_Sensitive_period",
+      
+      frost_event == "frost" & frost_most_Sensitive_period == "frost_most_sensitive_period"~ "frost_in_most_Sensitive_period",
+      frost_event == "frost" & frost_most_Sensitive_period == "outside_period"~ "no_frost_most_Sensitive_period",
+      
+      frost_event == "non_frost" & frost_most_Sensitive_period == "frost_most_sensitive_period"~ "no_frost_most_Sensitive_period",
+      frost_event == "non_frost" & frost_most_Sensitive_period == "outside_period"~ "no_frost_most_Sensitive_period",
+      
       TRUE ~ "no_frost_most_Sensitive_period"))
 
 #test
-str(Dry_sowing_Lock_factor_with_met)
-test <- Dry_sowing_Lock_factor_with_met %>% filter(year == 2024) %>%  filter(Sowing_date== "10-may")
+str(Lock_APSIM_Met_gs)
+test <- Lock_APSIM_Met_gs %>% filter(year == 2024) %>%  filter(Sowing_date== "10-may") %>% 
+  select(Clock.Today,Wheat.Phenology.Stage, mint, frost_event, 
+         frost_Sensitive_period, frost_in_Sensitive_period,
+         frost_most_Sensitive_period, frost_in_most_Sensitive_period)
+
+rm(test)
+
+
 
 
 # Save file
-write.csv(Dry_sowing_Lock_factor_with_met ,
-          "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/Results/Dry_sowing_Lock_factor_with_met_18046_v2.csv", row.names = FALSE )
+write.csv(Lock_APSIM_Met_gs ,
+          "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/Results/Dry_sowing_Lock_factor_with_met_18046_v2_gs.csv", row.names = FALSE )
+
+
+## Summaries the frost days
+
+
 
 
 ## Summaries data how many frost days in GS by year----
-names(Dry_sowing_Lock_factor_with_met)
-str(Dry_sowing_Lock_factor_with_met)
+names(Lock_APSIM_Met_gs)
+str(Lock_APSIM_Met_gs)
 
-days_GS <- Dry_sowing_Lock_factor_with_met %>% 
+days_GS <- Lock_APSIM_Met_gs %>% 
   group_by(year,Sowing_date ) %>% 
   count(season)
 days_GS <- days_GS %>%  rename(days_GS = n)
 days_GS
 
-frost_event_count_year <- Dry_sowing_Lock_factor_with_met %>% 
+frost_event_count_year <- Lock_APSIM_Met_gs %>% 
   group_by(year,Sowing_date) %>% 
   count(frost_event)
 
@@ -222,7 +229,7 @@ frost_event_count_year <- frost_event_count_year %>%
 frost_event_count_year
 
 
-frost_in_Sensitive_period_count_year <- Dry_sowing_Lock_factor_with_met %>% 
+frost_in_Sensitive_period_count_year <- Lock_APSIM_Met_gs %>% 
   group_by(year,Sowing_date) %>% 
   count(frost_in_Sensitive_period)
 frost_in_Sensitive_period_count_year <- frost_in_Sensitive_period_count_year %>% 
@@ -230,7 +237,7 @@ frost_in_Sensitive_period_count_year <- frost_in_Sensitive_period_count_year %>%
          grouping = frost_in_Sensitive_period)
 frost_in_Sensitive_period_count_year
 
-frost_in_most_Sensitive_period_count_year <- Dry_sowing_Lock_factor_with_met %>% 
+frost_in_most_Sensitive_period_count_year <- Lock_APSIM_Met_gs %>% 
   group_by(year,Sowing_date) %>% 
   count(frost_in_most_Sensitive_period)
 frost_in_most_Sensitive_period_count_year <- frost_in_most_Sensitive_period_count_year %>% 
@@ -254,6 +261,16 @@ summary_frost_details <- summary_frost_details %>% mutate(
 
 summary_frost_details
 
+
+#remove the temp files 
+rm( days_GS, 
+    frost_event_count_year,
+    frost_in_Sensitive_period_count_year,
+    frost_in_most_Sensitive_period_count_year
+    )
+
+
+
 # Check_1_apri_2000 <- summary_frost_details %>%
 #   filter(Sowing_date == "1-apr") %>%
 #   filter(year == 2000)# 
@@ -269,13 +286,23 @@ summary_frost_details$Sowing_date <- factor(summary_frost_details$Sowing_date , 
                                               "10-apr" ,
                                               "15-apr" ,
                                               "20-apr",
-                                              "25-may",
+                                              "25-apr" ,
+                                              "30-apr" ,
+                                              
                                               "1-may" ,
                                               "5-may" ,
                                               "10-may" ,
                                               "15-may" ,
                                               "20-may",
-                                              "25-apr" 
+                                              "25-may",
+                                              "30-may",
+                                              
+                                              "1-jun" ,
+                                              "5-jun" ,
+                                              "10-jun" ,
+                                              "15-jun" ,
+                                              "20-jun",
+                                              "25-jun"
                                             ))
 
 
