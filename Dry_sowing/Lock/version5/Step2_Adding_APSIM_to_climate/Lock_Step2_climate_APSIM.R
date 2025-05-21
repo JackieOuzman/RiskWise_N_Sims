@@ -12,7 +12,7 @@ library(readxl)
 
 # Download Daily climate files created in step 1 (with frost days) -------------------------------------------------------
 
-met_frost <- read_csv("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/Results/Fost_details_18046.csv")
+met_frost <- read_csv("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Results/Fost_details_18046.csv")
 str(met_frost)
 
 # Download Daily APSIM output -------------------------------------------------------
@@ -201,7 +201,7 @@ rm(test)
 
 # Save file
 write.csv(Lock_APSIM_Met_gs ,
-          "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/Results/Dry_sowing_Lock_factor_with_met_18046_v2_gs.csv", row.names = FALSE )
+          "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Results/Dry_sowing_Lock_factor_with_met_18046_v2_gs.csv", row.names = FALSE )
 
 
 ## Summaries the frost days
@@ -339,7 +339,7 @@ plot2
 ## Save files ----
 
 
-path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing", "Results")
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing", "version5", "Results")
 path_saved_files
 ggsave(plot = plot1,
        filename = paste0(path_saved_files,"/Climate_Frost_days_Lock_v2", ".png" ),

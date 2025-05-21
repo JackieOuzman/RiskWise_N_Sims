@@ -187,3 +187,4 @@ plot3_2015_2024temperature
 ggsave(plot = plot3_2015_2024temperature,
        filename = paste0(path_saved_files,"/plot3_2015_2024temperature_max_min_frost_risk_period_site18046", ".png" ),
        width = 20, height = 12, units = "cm")
+
