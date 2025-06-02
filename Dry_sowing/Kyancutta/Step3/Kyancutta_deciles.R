@@ -9,8 +9,8 @@ library(readxl)
 
 # Download Daily climate files -------------------------------------------------------
 
-climate <- read.table("X:/Riskwi$e/met_files/LOCK_18046.sim", 
-                      skip = 22, header = TRUE, sep ="")
+climate <- read.table("X:/Riskwi$e/met_files/Kyancutta_18170.sim", 
+                      skip = 21, header = TRUE, sep ="")
 climate <- climate [-1,]
 ### need to make a clm that has all the dates not just day of year and year
 str(climate)
@@ -20,7 +20,7 @@ climate$rain <- as.double(climate$rain)
 #create a date clm # note you need to be aware of the last day of downloaded met data
 
 ## Assign dates, site detial and format -------------------------------------------------
-download_date <- read_csv("X:/Riskwi$e/met_files/LOCK_18046.sim",
+download_date <- read_csv("X:/Riskwi$e/met_files/Kyancutta_18170.sim",
                           col_names = FALSE, skip = 7)
 download_date <-download_date[1,1] #just the row with the download date
 download_date <-stringr::str_extract(download_date, "[[:digit:]]+") #just the numbers
@@ -30,21 +30,22 @@ download_date <- as.Date(as.character(download_date),format="%Y%m%d")
 download_date <- lubridate::ymd(download_date) - days(1)
 str(download_date)
 
-download_date <-"20250403" # "2025/04/03"
+download_date <-"20250416" # "2025/04/16" #you can use this to find out the date https://www.epochconverter.com/days/2025
 download_date <- as.Date(as.character(download_date),format="%Y%m%d")
 download_date
 
 
 
 climate <- climate %>% 
-  mutate(date = seq(as.Date("1900/1/1"), download_date, "days"))
+  mutate(date = seq(as.Date("1957/1/1"), download_date, "days"))
+  #mutate(date = seq(as.Date("1900/1/1"), download_date, "days"))
 # set date as a date
 climate <- climate %>% 
   mutate(year = year(date),
          month =month(date),
          day_of_month = day(date),
          month_name = lubridate::month(date, label = TRUE),
-         site = paste0("Lock","_", 018046))
+         site = paste0("Kyancutta","_", 018170))
 str(climate)
 
 climate$maxt <- as.numeric(climate$maxt)
@@ -52,7 +53,7 @@ climate$mint <- as.numeric(climate$mint)
 
 ## Write out neat climate file ------------------------------------------------
 write.csv(climate ,
-          "X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Deciles/NeatClimate_18046.csv", row.names = FALSE )
+          "X:/Riskwi$e/Dry_sowing/Kyancutta/Deciles/NeatClimate_18170.csv", row.names = FALSE )
           
           
 ## Define the GS period and assign season type ---------------------------------
@@ -131,11 +132,12 @@ plot_rainfall_season_type <- climate %>%
 plot_rainfall_season_type
 
 
-path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing", "version5", "Deciles")
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Deciles")
 
 ggsave(plot = plot_rainfall_season_type,
-       filename = paste0(path_saved_files,"/plot_rainfall_season_type_Lock2023", ".png" ),
+       filename = paste0(path_saved_files,"/plot_rainfall_season_type_Kyancutta2023", ".png" ),
        width = 20, height = 12, units = "cm")
+
 
 
 ## Group by year and season type and report sum of rain -------------------------
@@ -143,7 +145,7 @@ rain_season <- climate %>%
   group_by(year, season) %>%
   summarise(sum_rain_season = sum(rain, na.rm = TRUE)) 
 str(rain_season)
-site <- "Lock_18046"
+site <- "Kyancutta_18170"
 
 rain_season_wide <- rain_season %>% 
   pivot_wider(
@@ -213,12 +215,11 @@ rain_season_wide <- rain_season_wide %>%
     )
   )
 
-path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Lock", "Dry_sowing", "version5","Deciles")
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Deciles")
 
 
 write_csv(GS_30_summer_decile_table, 
-          file =paste0(path_saved_files, "/GS_30_summer_decile_table_Lock18046", ".csv"))
+          file =paste0(path_saved_files, "/GS_30_summer_decile_table_Kyancutta18170", ".csv"))
 
 write_csv(rain_season_wide, 
-          file =paste0(path_saved_files, "/deciles per year_Lock18046", ".csv"))
-
+          file =paste0(path_saved_files, "/deciles per year_Kyancutta18170", ".csv"))
