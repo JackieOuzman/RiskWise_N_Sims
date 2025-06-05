@@ -11,13 +11,13 @@ library(lubridate)
 library(readxl)
 
 # Download Daily climate files created in step 1 (with frost days) -------------------------------------------------------
-                      #"X:\Riskwi$e\Dry_sowing\Kyancutta\Results"
+#"X:\Riskwi$e\Dry_sowing\Kyancutta\Results"
 met_frost <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/Results/Fost_details_18170.csv")
 str(met_frost)
 
 # Download Daily APSIM output -------------------------------------------------------
 Kyancutta_Daily_APSIM <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/APSIM_runs/Kyancutta_Water_balance_v5.Daily.csv", 
-                                                            col_types = cols(Clock.Today = col_date(format = "%Y-%m-%d")))
+                                  col_types = cols(Clock.Today = col_date(format = "%Y-%m-%d")))
 
 
 names(Kyancutta_Daily_APSIM)
@@ -38,7 +38,7 @@ Kyancutta_Daily_APSIM <- Kyancutta_Daily_APSIM %>% select(
   Wheat.Phenology.Stage,
   Yield ,
   Yield_Adj_t_ha ,
- 
+  
 )
 
 
@@ -72,8 +72,8 @@ sowing_window_retain <- c("1-apr to 30-jun",
                           "15-jun to 30-jun",
                           "20-jun to 30-jun",
                           "25-jun to 30-jun"
-                          )
-                          
+)
+
 ## keep only the sowing dates I want (I think this is all of them)
 
 sowing_window_retain <- Kyancutta_Daily_APSIM %>% 
@@ -160,7 +160,7 @@ Kyancutta_APSIM_Met_gs <- Kyancutta_APSIM_Met %>% filter(season == "gs")
 ## new clm when frost_Sensitive_period and frost----
 unique(Kyancutta_APSIM_Met_gs$frost_event)
 unique(Kyancutta_APSIM_Met_gs$frost_Sensitive_period)
- 
+
 
 ## new clm when a frost event occur is sensitive period
 Kyancutta_APSIM_Met_gs <- Kyancutta_APSIM_Met_gs %>% 
@@ -267,7 +267,7 @@ rm( days_GS,
     frost_event_count_year,
     frost_in_Sensitive_period_count_year,
     frost_in_most_Sensitive_period_count_year
-    )
+)
 
 
 

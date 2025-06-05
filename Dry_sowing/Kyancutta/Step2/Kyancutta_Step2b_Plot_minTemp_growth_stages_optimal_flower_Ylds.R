@@ -11,6 +11,7 @@ Dry_sowing_Kyancutta_factor_with_met <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancut
 str(Dry_sowing_Kyancutta_factor_with_met)
 
 unique(Dry_sowing_Kyancutta_factor_with_met$Wheat.Phenology.CurrentStageName)
+unique(Dry_sowing_Kyancutta_factor_with_met$Sowing_date)
 
 ## Filter just to plot one year and one sowing date - frost year with typical sowing date
 
@@ -155,7 +156,9 @@ plot2 <- Yld_flowering %>%
   theme_classic()+
   theme(legend.position = "none")+
   labs(title = "Yield vs flowering dates Kyancutta 18046",
-       subtitle = "Dry sowing dates as facet. \nOptimal germination conditions using water balance with threshold of 5mm",
+       subtitle = "Dry sowing dates as facet. 
+       Optimal germination conditions using water balance with threshold of 5mm
+       If optimal germination conditions are not met no crop will reach flowering",
        x = "Flowering dates",
        y = "Yield t/ha",
        caption = "Green line indicated optimal flowering dates. Red dot =2023")
@@ -182,8 +185,8 @@ plot2_box <- Yld_flowering %>%
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+
   
   ylim(0,6)+
-  labs(title = "Yield vs dry sowing dates Kyancutta 18046. \nOptimal germination conditions using water balance with threshold of 5mm",
-      subtitle = "This is not the optimal germination conditions, but the start of window",
+  labs(title = "Yield vs dry sowing dates Kyancutta 18046.\nOptimal germination conditions using water balance with threshold of 5mm",
+       subtitle = "This is not the optimal germination conditions, but the start of window.\nIf optimal germination conditions are not met no gernimation will occur and no yield will be produced.",
        y = "Yield t/ha",
        x ="Dry sowing date",
        caption = "Red dot = 2023.\nMany dry sowing dates recorded:\nLow yields in 1977.\nHigh yields in 1996"
@@ -296,7 +299,7 @@ plot3_box <- Yld_germination_date %>%
   
   ylim(0,6)+
   labs(title = "Yield vs germination dates Kyancutta 18046. \nOptimal germination conditions using water balance with threshold of 5mm",
-       subtitle = "Years when germination date falls inside date window on x axis",
+       subtitle = "Years when germination date falls inside date window on x axis\nIf optimal germination conditions are not met no gernimation will occur and no yield will be produced.",
        y = "Yield t/ha",
        x ="Date range when germination occured"
        
