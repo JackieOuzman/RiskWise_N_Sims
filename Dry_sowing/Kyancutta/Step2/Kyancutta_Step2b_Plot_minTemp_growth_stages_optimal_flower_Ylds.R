@@ -310,3 +310,74 @@ ggsave(plot = plot3_box,
        filename = paste0(path_saved_files,"/Box_yield_vs_germination_datesKyancutta_v2", ".png" ),
        width = 20, height = 12, units = "cm")
 
+
+
+
+#################################################################################
+#More details for plot 3 Yld vs germination dates.
+# how many data point per grouping
+# colour the sowing dates
+
+str(Yld_germination_date)
+
+count_yrs_germination_date <- Yld_germination_date %>% 
+  group_by(germination_between) %>% 
+  summarise(count_years = n())
+
+
+Yld_germination_date$Sowing_date <- factor(
+  Yld_germination_date$Sowing_date ,
+  ordered = TRUE,
+  levels = c(
+    "1-apr" ,
+    "5-apr" ,
+    "10-apr" ,
+    "15-apr" ,
+    "20-apr",
+    "25-apr",
+    "30-apr",
+    
+    "1-may" ,
+    "5-may" ,
+    "10-may" ,
+    "15-may" ,
+    "20-may",
+    "25-may",
+    "30-may",
+    
+    "1-jun" ,
+    "5-jun" ,
+    "10-jun" ,
+    "15-jun" ,
+    "20-jun",
+    "25-jun"
+  )
+)
+
+
+plot4_box <- Yld_germination_date %>% 
+  ggplot(aes(x =germination_between, max_yld_t_ha))+
+  geom_boxplot()+
+  geom_text(data = count_yrs_germination_date, aes(x = germination_between, y = 5, 
+                                                   label = count_years))+
+ 
+  geom_point(data = Yld_germination_date, aes(x =germination_between, max_yld_t_ha, 
+                                              colour = as.factor(Sowing_date)),alpha =0.2)+
+  theme_classic()+
+  theme(
+        legend.position = "bottom",
+        legend.title=element_blank(),
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+
+  
+  ylim(0,6)+
+  labs(title = "Yield vs germination dates Kyancutta 18046. \nOptimal germination conditions using water balance with threshold of 5mm",
+       subtitle = "Years when germination date falls inside date window on x axis\nIf optimal germination conditions are not met no gernimation will occur and no yield will be produced.",
+       y = "Yield t/ha",
+       x ="Date range when germination occured"
+       
+  )
+plot4_box
+
+ggsave(plot = plot4_box,
+       filename = paste0(path_saved_files,"/Box_yield_vs_germination_dates_count_coloursKyancutta_v2", ".png" ),
+       width = 20, height = 12, units = "cm")
