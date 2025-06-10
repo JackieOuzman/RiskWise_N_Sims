@@ -5,7 +5,7 @@ library(readr)
 library(stringr)
 library(lubridate)
 library(readxl)
-                                            #"X:\Riskwi$e\Dry_sowing\Lock\Dry_sowing\version5\Results\Dry_sowing_Lock_factor_with_met_18046_v2_gs.csv""
+                                            #"Kyancutta_Water_balance_v5 5mm fixed.Daily""
 Dry_sowing_Lock_factor_with_met <- read_csv("X:/Riskwi$e/Dry_sowing/Lock/Dry_sowing/version5/Results/Dry_sowing_Lock_factor_with_met_18046_v2_gs.csv")
 str(Dry_sowing_Lock_factor_with_met)
 

@@ -11,12 +11,13 @@ library(lubridate)
 library(readxl)
 
 # Download Daily climate files created in step 1 (with frost days) -------------------------------------------------------
-#"X:\Riskwi$e\Dry_sowing\Kyancutta\Results"
+#"X:\Riskwi$e\Dry_sowing\Kyancutta\Results
+#Kyancutta_Water_balance_v5 5mm fixed.Daily
 met_frost <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/Results/Fost_details_18170.csv")
 str(met_frost)
 
 # Download Daily APSIM output -------------------------------------------------------
-Kyancutta_Daily_APSIM <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/APSIM_runs/Kyancutta_Water_balance_v5.Daily.csv", 
+Kyancutta_Daily_APSIM <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/APSIM_runs/Kyancutta_Water_balance_v5 5mm fixed.Daily.csv", 
                                   col_types = cols(Clock.Today = col_date(format = "%Y-%m-%d")))
 
 
@@ -50,27 +51,27 @@ Kyancutta_Daily_APSIM <- Kyancutta_Daily_APSIM %>%
   mutate(Sowing_window = paste0(StartDate, " to ",EndDate ))
 unique(Kyancutta_Daily_APSIM$Sowing_window)
 # what I want to keep is:
-sowing_window_retain <- c("1-apr to 30-jun",
-                          "5-apr to 30-jun",
-                          "10-apr to 30-jun",
-                          "15-apr to 30-jun",
-                          "20-apr to 30-jun",
-                          "25-apr to 30-jun",
-                          "30-apr to 30-jun",
+sowing_window_retain <- c("1-apr to 5-apr",
+                          "5-apr to 10-apr",
+                          "10-apr to 15-apr",
+                          "15-apr to 20-apr",
+                          "20-apr to 25-apr",
+                          "25-apr to 30-apr",
+                          "30-apr to 1-may",
                           
-                          "1-may to 30-jun",
-                          "5-may to 30-jun",
-                          "10-may to 30-jun",
-                          "15-may to 30-jun",
-                          "20-may to 30-jun",
-                          "25-may to 30-jun",
-                          "30-may to 30-jun",
+                          "1-may to 5-may",
+                          "5-may to 10-may",
+                          "10-may to 15-may",
+                          "15-may to 20-may",
+                          "20-may to 25-may",
+                          "25-may to 30-may",
+                          "30-may to 1-jun",
                           
-                          "1-jun to 30-jun",
-                          "5-jun to 30-jun",
-                          "10-jun to 30-jun",
-                          "15-jun to 30-jun",
-                          "20-jun to 30-jun",
+                          "1-jun to 5-jun",
+                          "5-jun to 10-jun",
+                          "10-jun to 15-jun",
+                          "15-jun to 20-jun",
+                          "20-jun to 25-jun",
                           "25-jun to 30-jun"
 )
 
@@ -79,8 +80,10 @@ sowing_window_retain <- c("1-apr to 30-jun",
 sowing_window_retain <- Kyancutta_Daily_APSIM %>% 
   filter(Sowing_window %in% sowing_window_retain)
 unique(sowing_window_retain$Sowing_window)
+unique(Kyancutta_Daily_APSIM$Sowing_window)
 
-Kyancutta_Daily_APSIM <- Kyancutta_Daily_APSIM %>% 
+
+Kyancutta_Daily_APSIM <- sowing_window_retain %>% 
   rename(Sowing_date = StartDate)
 names(Kyancutta_Daily_APSIM)
 
@@ -201,7 +204,7 @@ rm(test)
 
 # Save file
 write.csv(Kyancutta_APSIM_Met_gs ,
-          "X:/Riskwi$e/Dry_sowing/Kyancutta/Results/Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv", row.names = FALSE )
+          "X:/Riskwi$e/Dry_sowing/Kyancutta/Results/Short_window_Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv", row.names = FALSE )
 
 
 ## Summaries the frost days
