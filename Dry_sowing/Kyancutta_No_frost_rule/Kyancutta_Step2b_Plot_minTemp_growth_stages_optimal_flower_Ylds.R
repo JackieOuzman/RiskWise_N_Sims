@@ -7,7 +7,7 @@ library(lubridate)
 library(readxl)
                                               #X:\Riskwi$e\Dry_sowing\Kyancutta\Results
 
-Dry_sowing_Kyancutta_factor_with_met <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/Results/NOFROST_Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv")
+Dry_sowing_Kyancutta_factor_with_met <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/Results/Frost_RuleWB_5mm/NOFROST_Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv")
 str(Dry_sowing_Kyancutta_factor_with_met)
 
 unique(Dry_sowing_Kyancutta_factor_with_met$Wheat.Phenology.CurrentStageName)
@@ -56,7 +56,7 @@ plot1 <- Sim_met_may102023 %>%
   annotate("text", x= as.Date("2023-10-30"), y=1.5, label="Frost definition", color = "red")+ 
   geom_vline(data = phenology_stages, aes(xintercept = Clock.Today), linetype="dashed", color = "grey")+
   
-  labs(title = "Climate station Kyancutta 18046",
+  labs(title = "Climate station Kyancutta 18046. Frost rule not used",
        subtitle = "Days from sowing to harvest only. Dry sowing dates 10-May 2023.\nOptimal germination conditions using water balance with threshold of 5mm",
        x = "",
        y = "Min temp",
@@ -64,7 +64,7 @@ plot1 <- Sim_met_may102023 %>%
 plot1
 
 
-path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Results")
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Results", "Frost_RuleWB_5mm")
 
 # ggsave(plot = plot1,
 #        filename = paste0(path_saved_files,"/MinTemp_vs_days_growthStages_Kyancutta2023_v2", ".png" ),
@@ -155,7 +155,7 @@ plot2 <- Yld_flowering %>%
   
   theme_classic()+
   theme(legend.position = "none")+
-  labs(title = "Yield vs flowering dates Kyancutta 18046",
+  labs(title = "Yield vs flowering dates Kyancutta 18046. Frost rule not used",
        subtitle = "Dry sowing dates as facet. 
        Optimal germination conditions using water balance with threshold of 5mm
        If optimal germination conditions are not met no crop will reach flowering",
@@ -185,7 +185,7 @@ plot2_box <- Yld_flowering %>%
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+
   
   ylim(0,6)+
-  labs(title = "Yield vs dry sowing dates Kyancutta 18046, FROST rule off.\nOptimal germination conditions using water balance with threshold of 5mm",
+  labs(title = "Yield vs dry sowing dates Kyancutta 18046, FROST rule not used.\nOptimal germination conditions using water balance with threshold of 5mm",
        subtitle = "This is not the optimal germination conditions, but the start of window.\nIf optimal germination conditions are not met no gernimation will occur and no yield will be produced.",
        y = "Yield t/ha",
        x ="Dry sowing date",
@@ -298,7 +298,7 @@ plot3_box <- Yld_germination_date %>%
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+
   
   ylim(0,6)+
-  labs(title = "Yield vs germination dates Kyancutta 18046, FROST rule off. \nOptimal germination conditions using water balance with threshold of 5mm",
+  labs(title = "Yield vs germination dates Kyancutta 18046, FROST rule not used. \nOptimal germination conditions using water balance with threshold of 5mm",
        subtitle = "Years when germination date falls inside date window on x axis\nIf optimal germination conditions are not met no gernimation will occur and no yield will be produced.",
        y = "Yield t/ha",
        x ="Date range when germination occured"
@@ -370,7 +370,7 @@ plot4_box <- Yld_germination_date %>%
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+
   
   ylim(0,6)+
-  labs(title = "Yield vs germination dates Kyancutta 18046 NO FROST rule. \nOptimal germination conditions using water balance with threshold of 5mm",
+  labs(title = "Yield vs germination dates Kyancutta 18046 FROST rule not used. \nOptimal germination conditions using water balance with threshold of 5mm",
        subtitle = "Years when germination date falls inside date window on x axis\nIf optimal germination conditions are not met no gernimation will occur and no yield will be produced.",
        y = "Yield t/ha",
        x ="Date range when germination occured"

@@ -6,7 +6,7 @@ library(stringr)
 library(lubridate)
 library(readxl)
  
-Dry_sowing_Kyancutta_factor_with_met <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/Results/NOFROST_Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv")
+Dry_sowing_Kyancutta_factor_with_met <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/Results/Frost_RuleWB_5mm/NOFROST_Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv")
 str(Dry_sowing_Kyancutta_factor_with_met)
 
 unique(Dry_sowing_Kyancutta_factor_with_met$Wheat.Phenology.CurrentStageName)
@@ -63,14 +63,14 @@ years_germ <- sowing_germination_event_trigger %>%
   theme(legend.position = "none")+
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+
-  labs(title = "Count of years when Optimal germination conditions was triggered. ",
+  labs(title = "Count of years when Optimal germination conditions was triggered. Frost rule not used ",
        subtitle = "Kyancutta 18046. \nUsing water balance with threshold of 5mm",
        x = "Dry sowing date ie start of window",
        y = "count of years that water balance triggered germination",
        caption = "Years 1957 -2024")
 years_germ
 ################################################################################
-path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Results")
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Results", "Frost_RuleWB_5mm")
 ggsave(plot = years_germ,
        filename = paste0(path_saved_files,"/NO_FROST_Rule_years_Optimal germination conditions was triggered Kyancutta", ".png" ),
        width = 20, height = 12, units = "cm")
@@ -154,7 +154,7 @@ plot2_box <- Yield_with_zeros %>%
         panel.border = element_rect(colour = "blue", fill=NA, linewidth=1))+
   
   ylim(0,6)+
-  labs(title = "Yield vs dry sowing dates Kyancutta 18046, No FROST rule.\nOptimal germination conditions using water balance with threshold of 5mm",
+  labs(title = "Yield vs dry sowing dates Kyancutta 18046, FROST rule not used.\nOptimal germination conditions using water balance with threshold of 5mm",
        subtitle = 
        "This is not the optimal germination conditions, but the start of window.
        If optimal germination conditions are not met no gernimation will occur and no yield will be produced.
@@ -173,6 +173,62 @@ plot2_box
 ggsave(plot = plot2_box,
        filename = paste0(path_saved_files,"/NO FROST RULE Box_yield_vs_drySowing_dates_dummy_zero_ylds_Kyancutta", ".png" ),
        width = 20, height = 12, units = "cm")
+
+
+#################################################################################
+### now just the mean value 
+str(Yield_with_zeros)
+
+Yield_with_zeros_summary <- Yield_with_zeros %>% 
+  group_by(Sowing_date) %>% 
+  summarize(mean_yld=mean(max_yld_t_ha), 
+            sd_yld=sd(max_yld_t_ha), 
+            N_yld=n(), 
+            se=sd_yld/sqrt(N_yld), 
+            upper_limit=mean_yld+se, 
+            lower_limit=mean_yld-se 
+  ) 
+
+Yield_with_zeros_summary
+
+ggplot(Yield_with_zeros_summary, aes(x=Sowing_date, y=mean_yld)) + 
+  geom_bar(stat="identity") + 
+  geom_errorbar(aes(ymin=lower_limit, ymax=upper_limit))
+
+
+plot3_mean_yld <- Yield_with_zeros_summary %>% 
+  ggplot(aes(x =Sowing_date, mean_yld))+
+  geom_bar(stat="identity") + 
+  geom_errorbar(aes(ymin=lower_limit, ymax=upper_limit))+
+  
+  
+  theme_classic()+
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
+        panel.border = element_rect(colour = "blue", fill=NA, linewidth=1))+
+  
+  #ylim(0,6)+
+  labs(title = "Yield vs dry sowing dates Kyancutta 18046.No Frost rule used\nOptimal germination conditions using water balance with threshold of 5mm",
+       subtitle = 
+         "This is not the optimal germination conditions, but the start of window.
+       If optimal germination conditions are not met no gernimation will occur and no yield will be produced.
+       Here these years have been replaced with zero yield",
+       y = "Yield t/ha",
+       x ="Dry sowing date",
+       # caption = ""
+  )
+
+plot3_mean_yld
+
+
+ggsave(plot = plot3_mean_yld,
+       filename = paste0(path_saved_files,"/NoFrost_mean_yield_vs_drySowing_dates_dummy_zero_ylds_Kyancutta", ".png" ),
+       width = 20, height = 12, units = "cm")
+
+
+
+
+
 
 
 

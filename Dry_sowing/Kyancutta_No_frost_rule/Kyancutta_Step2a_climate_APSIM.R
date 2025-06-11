@@ -201,7 +201,7 @@ rm(test)
 
 # Save file
 write.csv(Kyancutta_APSIM_Met_gs ,
-          "X:/Riskwi$e/Dry_sowing/Kyancutta/Results/NOFROST_Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv", row.names = FALSE )
+          "X:/Riskwi$e/Dry_sowing/Kyancutta/Results/Frost_RuleWB_5mm/NOFROST_Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv", row.names = FALSE )
 
 
 ## Summaries the frost days
@@ -339,7 +339,7 @@ plot2
 ## Save files ----
 
 
-path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Results")
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Results","Frost_RuleWB_5mm")
 path_saved_files
 # ggsave(plot = plot1,
 #        filename = paste0(path_saved_files,"/Climate_Frost_days_Kyancutta_v2", ".png" ),
@@ -349,5 +349,5 @@ path_saved_files
 #        filename = paste0(path_saved_files,"/Climate_Frost_days_Kyancutta_10-May_v2", ".png" ),
 #        width = 20, height = 12, units = "cm")
 # 
-# write_csv(summary_frost_details,
-#           file = paste0(path_saved_files,"/summary_frost_details_Kyancutta_v2", ".csv"))
+write_csv(summary_frost_details,
+          file = paste0(path_saved_files,"/NO_Frost_summary_frost_details_Kyancutta_v2", ".csv"))
