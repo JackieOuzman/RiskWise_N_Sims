@@ -176,5 +176,64 @@ ggsave(plot = plot2_box,
 
 
 
+#################################################################################
+### now just the mean value 
+str(Yield_with_zeros)
+
+Yield_with_zeros_summary <- Yield_with_zeros %>% 
+  group_by(Sowing_date) %>% 
+  summarize(mean_yld=mean(max_yld_t_ha), 
+            sd_yld=sd(max_yld_t_ha), 
+            N_yld=n(), 
+            se=sd_yld/sqrt(N_yld), 
+            upper_limit=mean_yld+se, 
+            lower_limit=mean_yld-se 
+  ) 
+
+Yield_with_zeros_summary
+
+ggplot(Yield_with_zeros_summary, aes(x=Sowing_date, y=mean_yld)) + 
+  geom_bar(stat="identity") + 
+  geom_errorbar(aes(ymin=lower_limit, ymax=upper_limit))
+
+
+plot3_mean_yld <- Yield_with_zeros_summary %>% 
+  ggplot(aes(x =Sowing_date, mean_yld))+
+  geom_bar(stat="identity") + 
+  geom_errorbar(aes(ymin=lower_limit, ymax=upper_limit))+
+  
+  
+  theme_classic()+
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
+        panel.border = element_rect(colour = "blue", fill=NA, linewidth=1))+
+  
+  #ylim(0,6)+
+  labs(title = "Yield vs dry sowing dates Kyancutta 18046.\nOptimal germination conditions using water balance with threshold of 10mm",
+       subtitle = 
+         "This is not the optimal germination conditions, but the start of window.
+       If optimal germination conditions are not met no gernimation will occur and no yield will be produced.
+       Here these years have been replaced with zero yield",
+       y = "Yield t/ha",
+       x ="Dry sowing date",
+       # caption = ""
+  )
+
+plot3_mean_yld
+
+
+ggsave(plot = plot3_mean_yld,
+       filename = paste0(path_saved_files,"/NoFrost_mean_yield_vs_drySowing_dates_dummy_zero_ylds_Kyancutta", ".png" ),
+       width = 20, height = 12, units = "cm")
+
+
+
+
+
+
+
+
+
+
 
 
