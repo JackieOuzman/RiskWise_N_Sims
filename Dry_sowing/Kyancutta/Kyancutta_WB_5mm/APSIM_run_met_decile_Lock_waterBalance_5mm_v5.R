@@ -6,7 +6,7 @@ library(lubridate)
 library(readxl)
 
 
-Dry_sowing_Kyancutta_factor_with_met <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/Results/Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv")
+Dry_sowing_Kyancutta_factor_with_met <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/Results/WB_5/WB_5mmDry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv")
 Decile_18170 <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/Deciles/deciles per year_Kyancutta18170.csv")
 
 str(Dry_sowing_Kyancutta_factor_with_met)
@@ -52,7 +52,7 @@ Quantile_sow_date_decile
 
 
 write_csv(Quantile_sow_date_decile, 
-          file =paste0("X:/Riskwi$e/Dry_sowing/Kyancutta/for_Decile_cal", 
+          file =paste0("X:/Riskwi$e/Dry_sowing/Kyancutta/for_Decile_cal/Kyancutta_WB_5mm", 
                        "/APSIM_yld_Decile_waterBalnce_TB5mm_Kyancutta18170", ".csv"))
 
 
@@ -72,7 +72,7 @@ Yld_Dry_sowing_Kyancutta_factor_with_met_decile_summary_germ_date <- Yld_Dry_sow
            
            
 write_csv(Yld_Dry_sowing_Kyancutta_factor_with_met_decile_summary_germ_date, 
-          file =paste0("X:/Riskwi$e/Dry_sowing/Kyancutta/for_Decile_cal", 
+          file =paste0("X:/Riskwi$e/Dry_sowing/Kyancutta/for_Decile_cal/Kyancutta_WB_5mm", 
                        "/APSIM_yld_Decile_GermDate_waterBalnce_TB5mm_Kyancutta18170_No_summary", ".csv"))
 
 
@@ -137,5 +137,5 @@ Yld_Dry_sowing_Kyancutta_factor_with_met_decile_summary_germ_date$germination_be
 
 
 write_csv(Yld_Dry_sowing_Kyancutta_factor_with_met_decile_summary_germ_date, 
-          file =paste0("X:/Riskwi$e/Dry_sowing/Kyancutta/for_Decile_cal", 
+          file =paste0("X:/Riskwi$e/Dry_sowing/Kyancutta/for_Decile_cal/Kyancutta_WB_5mm", 
                        "/APSIM_yld_Decile_GermDate_waterBalnce_TB5mm_Kyancutta18170_No_summary", ".csv"))

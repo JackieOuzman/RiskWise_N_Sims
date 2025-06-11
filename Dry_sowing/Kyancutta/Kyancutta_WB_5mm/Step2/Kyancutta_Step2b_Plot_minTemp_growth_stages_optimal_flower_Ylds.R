@@ -7,7 +7,7 @@ library(lubridate)
 library(readxl)
                                               #X:\Riskwi$e\Dry_sowing\Kyancutta\Results
 
-Dry_sowing_Kyancutta_factor_with_met <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/Results/Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv")
+Dry_sowing_Kyancutta_factor_with_met <- read_csv("X:/Riskwi$e/Dry_sowing/Kyancutta/Results/WB_5/WB_5mmDry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv")
 str(Dry_sowing_Kyancutta_factor_with_met)
 
 unique(Dry_sowing_Kyancutta_factor_with_met$Wheat.Phenology.CurrentStageName)
@@ -64,7 +64,7 @@ plot1 <- Sim_met_may102023 %>%
 plot1
 
 
-path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Results")
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Results", "WB_5")
 
 ggsave(plot = plot1,
        filename = paste0(path_saved_files,"/MinTemp_vs_days_growthStages_Kyancutta2023_v2", ".png" ),
