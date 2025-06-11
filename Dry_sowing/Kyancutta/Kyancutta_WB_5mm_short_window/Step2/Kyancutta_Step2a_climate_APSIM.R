@@ -204,7 +204,7 @@ rm(test)
 
 # Save file
 write.csv(Kyancutta_APSIM_Met_gs ,
-          "X:/Riskwi$e/Dry_sowing/Kyancutta/Results/Short_window_Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv", row.names = FALSE )
+          "X:/Riskwi$e/Dry_sowing/Kyancutta/Results/short_window_5mm/Short_window_Dry_sowing_Kyancutta_factor_with_met_18170_v2_gs.csv", row.names = FALSE )
 
 
 ## Summaries the frost days
@@ -321,7 +321,7 @@ plot1 <- summary_frost_details %>% filter(grouping == "frost" ) %>%
        subtitle = "Days from sowing to harvest only.",
        x = "years",
        y = "Percentage of days classified as frost (-4 to 1)",
-       caption = "Note; 1-19 frost events occured in sensitive period")
+       caption = "")
 plot1
 
 plot2 <- summary_frost_details %>% 
@@ -342,15 +342,15 @@ plot2
 ## Save files ----
 
 
-path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Results")
+path_saved_files <- file_path_input_data<-file.path("X:","Riskwi$e", "Dry_sowing", "Kyancutta", "Results", "short_window_5mm")
 path_saved_files
 ggsave(plot = plot1,
-       filename = paste0(path_saved_files,"/Climate_Frost_days_Kyancutta_v2", ".png" ),
+       filename = paste0(path_saved_files,"/Short_window_Climate_Frost_days_Kyancutta_v2", ".png" ),
        width = 20, height = 12, units = "cm")
 
 ggsave(plot = plot2,
-       filename = paste0(path_saved_files,"/Climate_Frost_days_Kyancutta_10-May_v2", ".png" ),
+       filename = paste0(path_saved_files,"/Short_window_Climate_Frost_days_Kyancutta_10-May_v2", ".png" ),
        width = 20, height = 12, units = "cm")
 
 write_csv(summary_frost_details,
-          file = paste0(path_saved_files,"/summary_frost_details_Kyancutta_v2", ".csv"))
+          file = paste0(path_saved_files,"/Short_window_summary_frost_details_Kyancutta_v2", ".csv"))
