@@ -56,7 +56,7 @@ unique(Dry_sowing_Kyancutta_factor_with_met$Sowing_date)
 #   annotate("text", x= as.Date("2023-10-30"), y=1.5, label="Frost definition", color = "red")+ 
 #   geom_vline(data = phenology_stages, aes(xintercept = Clock.Today), linetype="dashed", color = "grey")+
 #   
-#   labs(title = "Climate station Kyancutta 18046",
+#   labs(title = "Climate station Kyancutta 18170",
 #        subtitle = "Days from sowing to harvest only. Dry sowing dates 10-May 2023.\nOptimal germination conditions using water balance with threshold of 5mm",
 #        x = "",
 #        y = "Min temp",
@@ -155,7 +155,7 @@ plot2 <- Yld_flowering %>%
   
   theme_classic()+
   theme(legend.position = "none")+
-  labs(title = "Yield vs flowering dates Kyancutta 18046. 5 days windows.",
+  labs(title = "Yield vs flowering dates Kyancutta 18170. 5 days windows.",
        subtitle = "Dry sowing dates as facet, note these are short windows only 5 days. 
        Optimal germination conditions using water balance with threshold of 5mm
        If optimal germination conditions are not met no crop will reach flowering",
@@ -185,7 +185,7 @@ plot2_box <- Yld_flowering %>%
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+
   
   ylim(0,6)+
-  labs(title = "Yield vs dry sowing dates Kyancutta 18046. **5 days windows**.\nOptimal germination conditions using water balance with threshold of 5mm",
+  labs(title = "Yield vs dry sowing dates Kyancutta 18170. **5 days windows**.\nOptimal germination conditions using water balance with threshold of 5mm",
        subtitle = "This is not the optimal germination conditions, but the start of window.\nIf optimal germination conditions are not met no gernimation will occur and no yield will be produced.",
        y = "Yield t/ha",
        x ="Dry sowing date",
@@ -298,7 +298,7 @@ plot3_box <- Yld_germination_date %>%
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+
   
   ylim(0,6)+
-  labs(title = "Yield vs germination dates Kyancutta 18046.**5 day window** \nOptimal germination conditions using water balance with threshold of 5mm",
+  labs(title = "Yield vs germination dates Kyancutta 18170.**5 day window** \nOptimal germination conditions using water balance with threshold of 5mm",
        subtitle = "Years when germination date falls inside date window on x axis\nIf optimal germination conditions are not met no gernimation will occur and no yield will be produced.",
        y = "Yield t/ha",
        x ="Date range when germination occured"
@@ -370,7 +370,7 @@ plot4_box <- Yld_germination_date %>%
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+
   
   ylim(0,6)+
-  labs(title = "Yield vs germination dates Kyancutta 18046.**5 days window** \nOptimal germination conditions using water balance with threshold of 5mm",
+  labs(title = "Yield vs germination dates Kyancutta 18170.**5 days window** \nOptimal germination conditions using water balance with threshold of 5mm",
        subtitle = "Years when germination date falls inside date window on x axis\nIf optimal germination conditions are not met no gernimation will occur and no yield will be produced.",
        y = "Yield t/ha",
        x ="Date range when germination occured"

@@ -64,7 +64,7 @@ years_germ <- sowing_germination_event_trigger %>%
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))+
   labs(title = "Count of years when Optimal germination conditions was triggered. ",
-       subtitle = "Kyancutta 18046. \nUsing water balance with threshold of 10mm. **5 days window**",
+       subtitle = "Kyancutta 18170. \nUsing water balance with threshold of 10mm. **5 days window**",
        x = "Dry sowing date ie start of window",
        y = "count of years that water balance triggered germination",
        caption = "Years 1957 -2024")
@@ -155,7 +155,7 @@ plot2_box <- Yield_with_zeros %>%
         panel.border = element_rect(colour = "blue", fill=NA, linewidth=1))+
   
   ylim(0,6)+
-  labs(title = "Yield vs dry sowing dates Kyancutta 18046.**5 days window**\nOptimal germination conditions using water balance with threshold of 10mm",
+  labs(title = "Yield vs dry sowing dates Kyancutta 18170.**5 days window**\nOptimal germination conditions using water balance with threshold of 10mm",
        subtitle = 
        "This is not the optimal germination conditions, but the start of window.
        If optimal germination conditions are not met no gernimation will occur and no yield will be produced.
@@ -208,7 +208,7 @@ plot3_mean_yld <- Yield_with_zeros_summary %>%
         panel.border = element_rect(colour = "blue", fill=NA, linewidth=1))+
   
   #ylim(0,6)+
-  labs(title = "Yield vs dry sowing dates Kyancutta 18046.**5 days window**\nOptimal germination conditions using water balance with threshold of 10mm",
+  labs(title = "Yield vs dry sowing dates Kyancutta 18170.**5 days window**\nOptimal germination conditions using water balance with threshold of 10mm",
        subtitle = 
           "This is not the optimal germination conditions, but the start of window.
        If optimal germination conditions are not met no gernimation will occur and no yield will be produced.
