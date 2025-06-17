@@ -14,7 +14,7 @@ df_selection  <- Trial_setup_outputs %>%
          Crop = `Species` ,
          Treatment = `Treatment name`, #was System 
          InCropFert =  `Fertiliser total N rate (kg/ha)` ,
-         Yield_t_ha = `Yield (t/ha)`,
+         Yield_t_ha = `Yield (t/ha)`, # this is from another clm that called - Grain yield (machine) (area and moisture  corrected) (t/ha)
          Harvest_Date_M = `Harvest date (machine)`,
          Grain_moisture = `Grain moisture (%)`
          

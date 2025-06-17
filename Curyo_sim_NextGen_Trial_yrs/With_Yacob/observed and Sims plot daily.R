@@ -143,7 +143,7 @@ plotyld <- APSIM_NextGen_daily_select %>%
   theme_bw() +
   labs(
     title = "Yield Cuyro Sims ",
-    caption =   "2023 has no trial harvest date",
+    caption =   "2023 has no trial harvest date.\nTrial data is machine harvest area and moisture corrected.\nSimulation data not adjusted for moisture",
     colour = "",
     x = "Year",
     y = ""   
@@ -158,3 +158,48 @@ plotyld <- APSIM_NextGen_daily_select %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 plotyld
 
+
+###############################################################################
+## adjust sim for moisture
+names(APSIM_NextGen_daily_select)
+unique(APSIM_NextGen_daily_select$Crop)
+
+APSIM_NextGen_daily_select <- APSIM_NextGen_daily_select %>% 
+  mutate(demoniator = 
+           case_when(
+             Crop == "Chickpea" ~ 0.860, # 1-(14/100)
+             Crop == "Wheat" ~   0.875,  # 1-(12.5/100)
+             Crop == "Canola" ~  0.875,  # 1-(12.5/100)
+             Crop == "Barley" ~  0.875,  # 1-(12.5/100)
+             ),
+         numerator = (1-(Yield_predicted/100)),
+         Yield_predicted_Moisture_adjused = Yield_predicted*(numerator/demoniator)
+         ) 
+
+
+plotyld_moisture <- APSIM_NextGen_daily_select %>%
+  filter(!is.na(Zone)) %>% 
+  ggplot(aes(x = (Date), y = Yield_predicted_Moisture_adjused )) +
+  geom_line(colour = "darkgreen")+
+  geom_line(aes(x = Date, y = Yield_predicted ), colour = "blue")+
+  theme_bw() +
+  labs(
+    title = "Yield Cuyro Sims ",
+    caption =   "2023 has no trial harvest date.\nTrial data is machine harvest area and moisture corrected.\nSimulation data adjusted for moisture 12.5 and 14%.\nPredYld*((1-(PredYld/100))/(1-(12.5/100)))",
+    colour = "",
+    x = "Year",
+    y = ""   
+  ) +
+  theme(plot.caption = element_text(hjust = 0)) +
+  facet_wrap(.~Zone)+
+  
+  trial_data_only %>%
+  filter(!is.na(Zone)) %>%  
+  geom_point(mapping = aes(x = Date, y = Yield_t_ha_observed),
+             colour = "black")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+plotyld_moisture
+
+path <- "X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/Results/With_Yacob_July2025/"
+ggsave(plot = plotyld_moisture,filename =  paste0(path,"_plotyld_moisture.png"), width = 20, height = 12, units = "cm")
+ggsave(plot = plotyld,filename =  paste0(path,"_plotyld.png"), width = 20, height = 12, units = "cm")

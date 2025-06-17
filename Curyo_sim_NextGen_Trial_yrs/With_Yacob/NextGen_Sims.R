@@ -79,4 +79,4 @@ write_csv(crops_yld, "X:/Riskwi$e/Curyo/3_Sims_post_Nov2024/crops_yld_trial.csv"
 rm(barley, wheat, wheat1, canola, canola1, canola_max_yld, Chickpea, Chickpea1)
 
 
-database <- read_excel()
+
